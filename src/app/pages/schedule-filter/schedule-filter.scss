@@ -1,0 +1,112 @@
+/*
+ * Material Design
+ */
+
+.md ion-toolbar ion-button {
+  text-transform: capitalize;
+  letter-spacing: 0;
+}
+.fundclass{
+  margin-left: 3%;
+  color: #f55a1f;
+  font-weight: bold;
+  font-size: 10px;
+  margin-top: 13px;
+  margin-right: 11px;
+}
+.pleasewait-cls{
+  margin-left: 3%;
+  color: #383a3e;
+  font-weight: bold;
+  font-size: 10px;
+  margin-top: 6px;
+  margin-right: -15px;
+}
+.pleasewait-mobReq-cls{
+  margin-left: 3%;
+  color: #383a3e;
+  font-weight: bold;
+  font-size: 10px;
+  margin-top: 6px;
+}
+
+.logo-cls2{
+  width: 47px;
+  margin-left: 3px;
+  height: 46px;
+  margin-top: 4px;
+  box-shadow: inset -3px -3px 20px 20px #f2f2f2;
+  border-radius: 26px;
+}
+
+icon-cls{
+  font-size: 38px;
+  margin-left: 0px;
+  margin-right: -14px;
+  margin-top:6px;
+
+}
+.logo-cls{
+  width: 161px;
+  margin-left: -5px;
+}
+.toolbar_class{
+   
+  --ion-background-color:#222428;
+  border: none !important;
+  box-shadow: 3px 6px 5px 0px grey;
+}
+.md ion-checkbox {
+  --background-checked: transparent;
+  --border-color: transparent;
+  --border-color-checked: transparent;
+  --checkmark-color: var(--ion-color-primary);
+}
+
+.md ion-list {
+  background: inherit;
+}
+.more-icon{
+  margin-inline-start: auto;
+  color: #4c8dff;
+}
+.tiles-header{
+  
+  color: #013a6b !important;
+  font-weight: bold;
+  font-size: 15px;
+  font-kerning: none;
+}
+
+/*
+ * iOS
+ */
+
+.ios ion-list-header {
+  margin-top: 10px;
+}
+
+.ios ion-label {
+  color: var(--ion-color-primary);
+}
+.text-cls{
+  font-size: 15px;
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: bold;
+    font-size: 15px;
+    -webkit-font-kerning: none;
+    font-kerning: none;
+}
+//vertical scroll bar
+div[scrollx=true],div[scrolly=true] {
+  position: relative;
+  overflow: hidden;
+}
+
+div[scrollx=true] {
+ overflow-x: auto;
+}
+
+div[scrolly=true] {
+ overflow-y: auto;
+}

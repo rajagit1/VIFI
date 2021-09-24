@@ -1,0 +1,463 @@
+<ion-header class="toolbar_class" translucent="true">
+  <ion-toolbar style="color:white">
+    <ion-buttons *ngIf="!showSearchbar" slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>    
+    <!--<ion-title _ngcontent-kef-c2="" style="margin-left: -14px;padding-top: 0px;width: 91px;float: left;" class="md title-default hydrated"><img _ngcontent-kef-c2="" class="logo-cls2" src="../../../assets/icons/Black And Red.png"></ion-title>-->
+    
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref={{defaultHref}}></ion-back-button>
+      </ion-buttons>
+      <ion-title style="color:white !important;" size="large">
+        <ion-icon name="flame"></ion-icon>Trending</ion-title>
+    
+     <ion-searchbar  *ngIf="showSearchbar"  [(ngModel)]="queryText"
+      (ionChange)="setFilteredItems()" (ionCancel)="showSearchbar = false" placeholder="Search your stories"></ion-searchbar>
+    <div scrollY="true" style="height: 250px;" *ngIf="isItemAvailable"  >
+         <ion-list class="schdule-list" *ngIf="isItemAvailable">
+            <ion-item style="color: white;" *ngFor="let item of items">
+              <img (click)="goToDetail(item)" *ngIf="item.image!==''" class="search-logo" src={{item.image}}/>
+              <span  (click)="goToDetail(item)">{{ item.title }}</span>
+            </ion-item>
+          </ion-list>
+    </div>  
+   <ion-buttons slot="end">
+      <ion-button *ngIf="!ios && !showSearchbar" (click)="showSearchbar = true">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+    <!--  <ion-button class="animate__animated animate__tada" *ngIf="!showSearchbar" (click)="presentFilter()">
+        <span *ngIf="ios">Filter</span>
+        <span *ngIf="!ios">
+          <ion-icon slot="icon-only" name="notifications"></ion-icon> 
+          //<ion-badge *ngIf="this.notify !== undefined && this.notify.length > 0 && localnotifyCount > 0"  style="margin-left: -9px;height: 19px;" color="danger">{{ this.notify.length}}</ion-badge> 
+          <ion-badge *ngIf="(localnotifyCount + vifiLocalCount + whatsNotificationCount) > 0" style="margin-left: -9px;height: 19px;" color="danger">{{ (localnotifyCount + vifiLocalCount + whatsNotificationCount)}}</ion-badge>
+        </span>
+      </ion-button>-->
+    </ion-buttons> 
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content fullscreen="true" class="ioncontent schdule">
+  <!--<ion-refresher slot="fixed" > -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">  
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Schedule</ion-title>
+    </ion-toolbar>
+    <ion-toolbar>
+      <ion-searchbar [(ngModel)]="queryText" (ionChange)="updateSchedule()" placeholder="Search"></ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item-divider style="width: 355px;margin-left: -7px;" sticky>
+          <ion-label class="tiles-header">
+            ShootMode Films
+          </ion-label>          
+        </ion-item-divider>
+        <div class="container" >
+          <ion-slides pager="false" style="height: 200px;" pager="true" [options]="slideOptsOne" #slideWithNav
+            (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+            <ng-container *ngIf="isLoaded; else elseTemplate">
+              <ion-slide *ngFor="let post of shootingYes">
+                <img   style=" opacity: 0.8;width: 220px;" src={{post.image}}>
+               <!-- <img  (click)="showTicketNumber(post)" style=" opacity: 0.8;width: 347px;" src={{post.image}}> -->
+                <div  class="tag-shoot-progress">
+                  <div class="gener"  >{{post.title}}</div>                  
+                </div>
+            
+                <!--<div class="content">
+                  
+                  <p>
+                    <ion-icon  (click)="showTicketNumber(post)" name="receipt"></ion-icon> &nbsp;{{post.title}}
+                  </p>
+                </div>-->  
+                <div class="thumbnail">
+                  <div class="tag" style="height: 39px;border-radius: 10%;font-weight:bold">
+                    <span class="blink" ><b><ion-icon name="videocam"></ion-icon></b></span>
+                  </div>
+                </div>
+              </ion-slide>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <ion-slide style="background-image: linear-gradient(black, rgb(78, 77, 77));"  *ngFor="let post of dummyData">
+                
+                <div class="content">
+                  <p>
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                  </p>
+                </div>
+              </ion-slide>
+            </ng-template>
+           
+          </ion-slides>
+        </div>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+<ion-list>
+    
+<ion-item-group *ngIf="userType == 'P' && this.userData.isCertified ==true" >
+      <!--Special Feature film stories starts-->
+    <ion-item-divider sticky>
+      <ion-label  class="tiles-header">
+        Feature Film Special Stories
+      </ion-label>      
+    </ion-item-divider>
+      <ion-icon class="more-icon" name="chevron-forward-circle-outline"></ion-icon>    
+      <ion-slides class="slider-cls" [options]="slideOptsCards" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)" >  
+        <ng-container *ngIf="isLoaded; else elseTemplate">
+          <ion-slide class="style2" *ngFor="let post of topViewedToProducer;let i=index;">
+              <ion-card class="scroll-card-2" (click)="goToDetail(post)">
+                <img style="width: -webkit-fill-available;height:188px" src={{post.image}}>
+                <div class="thumbnail">
+                  <div class="tag">
+                    <div class="gener">{{post.generType}}</div>
+                  </div>
+                  
+                </div>
+                <ion-item-divider style="border: none;">
+                  <ion-label class="tiles-header">
+                    {{post.title}}
+                  </ion-label>                
+                  <ion-button color="dark" class="icon-view" *ngIf="username!=null && userType!='V'">
+                    <ion-icon src="../../../assets/icons/rupee-indian.svg"></ion-icon>{{post.budget | shortNumber}}
+                  </ion-button>
+                </ion-item-divider>
+                <div class="ion-text-start" *ngIf="post.views == 0" style="margin-left: 15px;">0 Views</div>
+                <div class="ion-text-start" *ngIf="post.views !== 0" style="margin-left: 15px;">{{post.views | shortNumber }} Views</div>
+                <div class="ion-text-start" *ngIf="post.likes.length == 0" style="margin-left: 15px;">0 Likes</div>
+                <div *ngIf="post.likes.length !== 0"  class="ion-text-end view-class">
+                  <ion-icon name="heart"></ion-icon> {{post.likes.length | shortNumber}} Likes
+                </div>
+                <div class="ion-text-end view-class">
+                  <ion-icon name="time-outline"></ion-icon> {{ago(post.uploadedOn)}} ago
+                </div>
+              </ion-card>
+          </ion-slide>
+        </ng-container>
+        </ion-slides>
+       <!--Special Feature film stories ends-->
+
+        <!--Special NonFeature film stories starts-->   
+        <ion-item-divider sticky>
+          <ion-label class="tiles-header">
+            Non-Feature Film Special Stories
+          </ion-label>      
+        </ion-item-divider>   
+      <ion-icon class="more-icon" name="chevron-forward-circle-outline"></ion-icon>
+      <ion-slides class="slider-cls" [options]="slideOptsCards" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)" >  
+        <ng-container *ngIf="isLoaded; else elseTemplate">
+            <ion-slide class="style2" *ngFor="let post of topBudgetToProducer;let i=index;">
+              <ion-card class="scroll-card-2" (click)="goToDetail(post)">
+                <img style="width: -webkit-fill-available;height:188px" src={{post.image}}>
+                <div class="thumbnail">
+                  <div class="tag">
+                    <div class="gener">{{post.generType}}</div>
+                  </div>
+                  
+                </div>
+                <ion-item-divider style="border: none;">
+                  <ion-label class="tiles-header">
+                    {{post.title}}
+                  </ion-label>                
+                  <ion-button color="dark" class="icon-view" *ngIf="username!=null && userType!='V'">
+                    <ion-icon src="../../../assets/icons/rupee-indian.svg"></ion-icon>{{post.budget | shortNumber}}
+                  </ion-button>
+                </ion-item-divider>
+                <div class="ion-text-start" *ngIf="post.views == 0" style="margin-left: 15px;">0 Views</div>
+                <div class="ion-text-start" *ngIf="post.views !== 0" style="margin-left: 15px;">{{post.views | shortNumber }} Views</div>
+                <div class="ion-text-start" *ngIf="post.likes.length == 0" style="margin-left: 15px;">0 Likes</div>
+                <div *ngIf="post.likes.length !== 0" class="ion-text-end view-class">
+                  <ion-icon name="heart"></ion-icon> {{post.likes.length | shortNumber}} Likes
+                </div>
+                <div class="ion-text-end view-class">
+                  <ion-icon name="time-outline"></ion-icon> {{ago(post.uploadedOn)}} ago
+                </div>
+              </ion-card>
+             </ion-slide>
+           </ng-container>
+         </ion-slides>    
+  </ion-item-group>
+    <!--Special NonFeature film stories ends-->
+
+    <!--Public stories starts-->
+    <ion-item-group *ngFor="let group of groups;let i=index;" [hidden]="group.hide">
+      <ion-item-divider sticky>
+        <ion-label class="tiles-header">
+          {{group}}
+        </ion-label>
+        <ion-label *ngIf="group !== 'Feature Film Special Stories' && group !=='Non-Feature Film Special Stories'
+         && group !=='Most Viewed - Feature film' && group !=='Most Viewed - Non Feature film' && group !=='Top Music Directors' && group !=='Top Directors'" class="filter-title-header">
+          Filter
+        </ion-label>
+        <ion-icon *ngIf="group !== 'Feature Film Special Stories' && group !=='Non-Feature Film Special Stories'
+        && group !=='Most Viewed - Feature film' && group !=='Most Viewed - Non Feature film' && group !=='Top Music Directors' && group !=='Top Directors'"
+        class="more-icon" (click)="filterList(group)" name="chevron-forward-circle-outline"></ion-icon>
+
+        <ion-label *ngIf="group =='Top Music Directors'" class="filter-title-header-music">
+          Filter
+        </ion-label>
+        <ion-icon *ngIf=" group =='Top Music Directors'"
+        class="more-icon" (click)="filterList(group)" name="chevron-forward-circle-outline"></ion-icon>
+        
+        <ion-label *ngIf="group =='Top Directors'" class="filter-title-header-director">
+          Filter
+        </ion-label>
+        <ion-icon *ngIf=" group =='Top Directors'"
+        class="more-icon" (click)="filterList(group)" name="chevron-forward-circle-outline"></ion-icon>
+
+      </ion-item-divider>
+      <ion-slides class="slider-cls" [options]="slideOptsCards" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)" *ngIf="i==0">
+        <ng-container *ngIf="isLoaded; else elseTemplate">
+          <ion-slide class="style2" *ngFor="let post of topViewed;let i=index;">
+            <ion-card class="scroll-card-2" (click)="goToDetail(post)">
+              <img style="width: -webkit-fill-available;height:188px" src={{post.image}}>
+              <div class="thumbnail">
+                <div class="tag">
+                  <div class="gener">{{post.generType}}</div>
+                </div>
+                
+              </div>
+              <ion-item-divider style="border: none;">
+                <ion-label class="tiles-header">
+                  {{post.title}}
+                </ion-label>                
+                <ion-button color="dark" class="icon-view" *ngIf="username!=null && userType!='V'">
+                  <ion-icon src="../../../assets/icons/rupee-indian.svg"></ion-icon>{{post.budget | shortNumber}}
+                </ion-button>
+              </ion-item-divider>
+              <div class="ion-text-start" *ngIf="post.views == 0" style="margin-left: 15px;">0 Views</div>
+              <div class="ion-text-start" *ngIf="post.views !== 0" style="margin-left: 15px;">{{post.views | shortNumber }} Views</div>
+              <div class="ion-text-start" *ngIf="post.likes.length == 0" style="margin-left: 15px;">0 Likes</div>
+              <div *ngIf="post.likes.length !== 0" class="ion-text-end view-class">
+                <ion-icon name="heart"></ion-icon> {{post.likes.length | shortNumber}} Likes
+              </div>
+              <div class="ion-text-end view-class">
+                <ion-icon name="time-outline"></ion-icon> {{ago(post.uploadedOn)}} ago
+              </div>
+            </ion-card>
+          </ion-slide>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <ion-slide class="style2" *ngFor="let post of dummyData;let i=index;">
+
+            <ion-card style="background-image: linear-gradient(black, white);"  class="scroll-card-2" (click)="goToDetail(post)">
+              <span style="width: -webkit-fill-available;height:188px">
+                <ion-skeleton-text animated></ion-skeleton-text>
+              </span>
+              <div class="thumbnail">
+                <div class="tag">
+                  <div class="gener">
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                  </div>
+                </div>
+              </div>
+              <ion-item-divider style="border: none;">
+                <ion-label class="tiles-header">
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-label>
+
+
+
+                <ion-skeleton-text animated></ion-skeleton-text>
+
+
+              </ion-item-divider>
+
+
+            </ion-card>
+          </ion-slide>
+        </ng-template>
+
+      </ion-slides>
+
+      <!-- music -->
+      
+      <ion-slides  class="slider-cls" [options]="slideOptsCards" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)"  *ngIf="i==1">
+        <ng-container *ngIf="isLoaded; else elseTemplate">
+          <ion-slide class="style2"  *ngFor="let post of topBudget;let i=index;">
+            <ion-card class="scroll-card-2" (click)="goToDetail(post)">
+              <img style="width: -webkit-fill-available;height:188px" src={{post.image}}>
+              <div class="thumbnail">
+                <div class="tag">
+                  <div class="gener">{{post.generType}}</div>
+                </div>
+                <div  class="tag-left">
+                  <div class="gener" *ngIf="post.filmType===4" >PilotFilm</div>
+                  <div class="gener" *ngIf="post.filmType===3" >TeleFilm</div>
+                  <div class="gener" *ngIf="post.filmType===2" >ShortFilm</div>
+                </div>
+              </div>
+              <ion-item-divider style="border: none;">
+                <ion-label class="tiles-header">
+                  {{post.title}}
+                </ion-label>                
+                <ion-button color="dark" *ngIf="userType!='V'" class="icon-view">
+                  <ion-icon src="../../../assets/icons/rupee-indian.svg"></ion-icon>{{post.budget | shortNumber}}
+                </ion-button>
+
+              </ion-item-divider>
+              <div class="ion-text-start" *ngIf="post.views == 0" style="margin-left: 15px;">0 Views</div>
+              <div class="ion-text-start" *ngIf="post.views !== 0" style="margin-left: 15px;">{{post.views | shortNumber}} Views</div>
+              <div class="ion-text-start" *ngIf="post.likes.length == 0" style="margin-left: 15px;">0 Likes</div>
+              <div *ngIf="post.likes.length !== 0" class="ion-text-end view-class">
+                <ion-icon name="heart"></ion-icon> {{post.likes.length | shortNumber}} Likes
+              </div>
+              <div class="ion-text-end view-class">
+                <ion-icon name="time-outline"></ion-icon> {{ago(post.uploadedOn)}} ago
+              </div>
+
+            </ion-card>
+          </ion-slide>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <ion-slide class="style2" *ngFor="let post of dummyData;let i=index;">
+
+            <ion-card class="scroll-card-2" style="background-image: linear-gradient(black, white);" (click)="goToDetail(post)">
+              <span style="width: -webkit-fill-available;height:188px">
+                <ion-skeleton-text animated></ion-skeleton-text>
+              </span>
+              <div class="thumbnail">
+                <div class="tag">
+                  <div class="gener">
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                  </div>
+                </div>
+              </div>
+              <ion-item-divider style="border: none;">
+                <ion-label class="tiles-header">
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-label>
+
+
+
+                <ion-skeleton-text animated></ion-skeleton-text>
+
+
+              </ion-item-divider>
+
+
+            </ion-card>
+          </ion-slide>
+        </ng-template>
+
+
+      </ion-slides>
+      
+      <ion-slides  [options]="slideOptsActors" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)"  *ngIf="i==2">
+        <ion-slide *ngFor="let post of topActors;let i=index;" class="style4">
+          <div  class="item">
+            <img src={{post.image}} (click)="showDetail(post)" class="avatar" />
+            <span class="caption">
+              <ion-label class="actor-cls">{{post.displayName}}</ion-label>
+            </span>
+          </div>
+        </ion-slide>
+      </ion-slides>
+      <ion-slides [options]="slideOptsActors" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)" *ngIf="i==3">
+        <ion-slide *ngFor="let post of topActress;let i=index;" class="style4">
+          <div  class="item">
+            <img src={{post.image}} (click)="showDetail(post)" class="avatar" />
+            <span class="caption">
+              <ion-label class="actor-cls">{{post.displayName}}</ion-label>
+            </span>
+          </div>
+        </ion-slide>
+      </ion-slides>
+      <ion-slides  [options]="slideOptsActors" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)"  *ngIf="i==4">
+        <ion-slide *ngFor="let post of topMusic;let i=index;" class="style4">
+          <div  class="item">
+            <img src={{post.image}} (click)="showDetail(post)" class="avatar" />
+            <span class="caption">
+              <ion-label class="actor-cls">{{post.displayName}}</ion-label>
+            </span>
+          </div>
+        </ion-slide>
+      </ion-slides>
+      <!--New function starts-->
+      <ion-slides  [options]="slideOptsActors" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)"  *ngIf="i==5">
+        <ion-slide *ngFor="let post of topSingers;let i=index;" class="style4">
+          <div  class="item">
+            <img src={{post.image}} (click)="showDetail(post)" class="avatar" />
+            <span class="caption">
+              <ion-label class="actor-cls">{{post.displayName}}</ion-label>
+            </span>
+          </div>
+        </ion-slide>
+      </ion-slides>
+      <ion-slides  [options]="slideOptsActors" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)"  *ngIf="i==6">
+        <ion-slide *ngFor="let post of topDOPList;let i=index;" class="style4">
+          <div  class="item">
+            <img src={{post.image}} (click)="showDetail(post)" class="avatar" />
+            <span class="caption">
+              <ion-label class="actor-cls">{{post.displayName}}</ion-label>
+            </span>
+          </div>
+        </ion-slide>
+      </ion-slides>
+      <ion-slides  [options]="slideOptsActors" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)"  *ngIf="i==7">
+        <ion-slide *ngFor="let post of topEditors;let i=index;" class="style4">
+          <div  class="item">
+            <img src={{post.image}} (click)="showDetail(post)" class="avatar" />
+            <span class="caption">
+              <ion-label class="actor-cls">{{post.displayName}}</ion-label>
+            </span>
+          </div>
+        </ion-slide>
+      </ion-slides>
+      <ion-slides  [options]="slideOptsActors" #slideWithNav
+      (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)"  *ngIf="i==8">
+        <ion-slide *ngFor="let post of topDirectors;let i=index;" class="style4">
+          <div  class="item">
+            <img src={{post.image}} (click)="showDetail(post)" class="avatar" />
+            <span class="caption">
+              <ion-label class="actor-cls">{{post.displayName}}</ion-label>
+            </span>
+          </div>
+        </ion-slide>
+      </ion-slides>
+      <!--New function ends-->
+    </ion-item-group>
+    <!--Publis stories ends-->
+  </ion-list>
+  <ion-fab *ngIf="userType !==undefined && userType !== '' && userType =='D'" slot="fixed" vertical="bottom" horizontal="end" #fab>
+    <ion-fab-button color="danger">
+      <span class="blink">
+      <ion-icon name="ellipsis-horizontal-circle" style="font-size: 42px;"></ion-icon>
+      </span>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <!-- <ion-fab-button color="facebook" tooltip="Add Actors" (click)="createactor('add', fab)">
+        <ion-icon name="person-add"> </ion-icon>                   
+      </ion-fab-button> -->
+      <ion-fab-button *ngIf="username!=null" color="facebook" (click)="openPostList()">
+        <ion-icon name="arrow-forward-circle" style="font-size: 42px;"></ion-icon>
+      </ion-fab-button>
+
+    </ion-fab-list>
+  </ion-fab>
+  <div class="overlay" *ngIf="notifyImPopup">
+    <div class="popup">                    
+        <a class="close" (click)="callnotifyImagePopupClose()">&times;</a>
+        <div class="content">
+         <img src='{{notifiedImg}}' />
+        </div>
+    </div>
+</div>
+</ion-content>

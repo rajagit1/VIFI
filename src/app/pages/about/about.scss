@@ -1,0 +1,152 @@
+ion-content {
+  position: relative;
+  height: 100%;
+  width: 100%;
+
+  ion-button {
+      margin-top: 1em;
+      margin-bottom: 1em
+  }
+}
+
+ion-toolbar {
+  --background: transparent;
+}
+
+ion-chip {
+  --background:#cf3c4f;
+  --color: #fff;
+}
+
+.card {
+  margin: 0 auto;
+
+  .header {
+      height: 200px; // 20vh;
+
+      .avatar {
+          width: 160px; //40vw
+          height: 70px;
+          position: relative;
+          margin: 0 auto;
+
+          img {
+              display: block;
+              border-radius: 10%;
+              position: absolute;
+              bottom: calc(-1*(80px + 4px)); // -42px;
+              box-shadow: 1px 3px 37px 7px grey;
+              background-color: #fff;
+          }
+      }
+  }
+}
+::ng-deep .custom-list.list-md{
+ 
+  --ion-background-color: black;
+  
+   }
+   ::ng-deep ion-item{
+    color:white;
+   }
+
+.card-body {
+  background: #383a3e;
+  padding: 30px;
+  height: calc(91vh - (203px + 15px));
+  overflow: hidden;
+
+  .user-meta {
+      padding-top: 10px;
+
+      .playername {
+        font-size: 37px;
+        font-weight: 600;
+        color: white;
+      }
+
+      .country {
+          font-size: 90%;
+          color: #949ea6 !important;
+          text-transform: uppercase !important;
+          margin: 0 auto;
+      }
+  }
+}
+.sml-cls-cropped-img{
+  //margin-left:30px;
+  //margin-top: 14px;
+  margin: auto;
+  //width: 300px;
+  //height: 192px;
+  border-radius: 5%;
+  //box-shadow: -1px 10px 8px 6px grey;
+  opacity: 1;
+  padding-right: 0px;
+    /* width: 160px; */
+    width: 164px;
+    //40vw: ;
+    height: 70px;
+    height: 148px;
+    /* position: relative; */
+    /* margin: 0 auto; */
+    margin-left: 111px;
+}
+::ng-deep custom-list{
+  //  background: #e50914;
+  background: none;
+   }
+#container {
+    position:relative;
+}
+
+#img2 {
+    position: absolute;
+    left: 50px;
+    top: 50px;
+}
+#img3 {
+  position: absolute;
+    left: 84px;
+    top: 140px;
+    width: 44px;
+    height: 36px;
+}
+.express-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 146px;
+  height: 121px;
+  margin:-66px 0 0px -51px;
+  -webkit-animation:spin 4s linear infinite;
+  -moz-animation:spin 4s linear infinite;
+  animation:spin 4s linear infinite;
+  mix-blend-mode: multiply;
+}
+#gradient {
+  width: 200px;
+  border: 30px solid;
+  border-image: repeating-linear-gradient(45deg, #f33, #3bf, #f33 30px) 60;
+  padding: 20px;
+}
+.progress-cls{
+  margin-left: auto;
+  height: 20px;
+  //box-shadow: 1px 3px 1px 1px #d7d8da;
+  width: 67%;
+  //margin-right: auto;
+}
+progress {
+  text-align: center;
+  height: 1.5em;
+  width: 100%;
+  -webkit-appearance: none;
+  border: none;
+  
+  /* Set the progressbar to relative */
+  position:relative;
+}
+.img-loaded + ion-spinner {
+  display:none;
+}

@@ -1,0 +1,131 @@
+<ion-header class="toolbar_class" translucent="true">
+  <ion-toolbar style="color:white;height: 48px;">
+    <ion-buttons *ngIf="!showSearchbar" slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>    
+    <ion-title _ngcontent-kef-c2="" style="margin-left: -14px;padding-top: 0px;width: 91px;float: left;" class="md title-default hydrated"><img _ngcontent-kef-c2="" class="logo-cls2" src="../../../assets/icons/Black And Red.png"></ion-title>
+      <ion-title class="md title-default hydrated viability" >Viability Film</ion-title>
+     
+   <!-- <ion-textarea readonly  rows="1" cols="20"    style="background:white;
+      margin-left: -3px;
+      /* margin-right: 7px; */
+      height: 35px;
+      width: 358px;font-size: initial;
+      background: #da5768;opacity: 1.4 !important;
+      --text-align: initial !important;--padding-top: inherit !important;font-weight: bold !important;" placeholder="Post your thoughts here...">
+      
+      </ion-textarea> -->
+      <ion-buttons slot="end">        
+        <ion-button class="animate__animated animate__tada" *ngIf="!showSearchbar" (click)="presentFilter()">
+          <span *ngIf="ios">Filter</span>
+          <span *ngIf="!ios">
+            <ion-icon slot="icon-only" name="notifications"></ion-icon>            
+            <ion-badge class="blink" *ngIf="(localnotifyCount + vifiLocalCount + whatsNotificationCount) > 0" style="margin-left: -29px;
+    height: 14px;
+    width: 14px;
+    margin-bottom: 7px;
+    border-radius: 14px;" color="danger">
+            <ion-icon  name="message" ></ion-icon>
+            </ion-badge>
+          </span>
+        </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+<ion-item-divider style="padding-left: 0px;
+margin-left: 0px;"  >
+    <ion-button  style="--background:white;height: 28px;width: 358px;margin-left: 0px;padding-right: 0px;" (click)="postYourActivities()">
+      
+          <ion-label class="ionlabel-postthoughts">Post your thoughts here... 
+          </ion-label>
+         
+    </ion-button>
+    <ion-button  style="--background:white;height: 28px;width: 358px;margin-left: -18px;padding-right: 0px;font-size: large;" (click)="postYourActivities()">
+      <ion-icon name="images-outline" style="color:grey"></ion-icon>
+</ion-button>
+</ion-item-divider>
+<ion-content fullscreen="true" >
+  <!--<ion-refresher slot="fixed" > -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">  
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
+  <ion-grid style="background:white" fixed >     
+    <ion-row>
+      <ng-container >
+        <ion-col class="cell-class" size="12" size-md="6" *ngFor="let activity of activities">
+          <div  style="margin-left: 0px;margin-right: 0px;background:white">
+            <img (click)="showDetail(activity.uploaderUserName)" src="{{activity.uploaderImg}}"  class="avatar_activityUploader" /> 
+            <ion-text (click)="showDetail(activity.uploaderUserName)" style="font-size: large;font-weight: bolder;"> {{(activity.uploaderName | slice:0:7)}}...</ion-text>
+            <span class="margin-cls">
+              <ion-icon  style="width: 24px;
+              height: 23px;" name="thumbs-up-outline" (click)="isAlreadyLiked(activity,true)"></ion-icon>{{activity.likes.length}}
+            </span> 
+            <span class="margin-cls">
+              <ion-icon style="width: 24px;
+              height: 23px;"  name="chatbox-outline" large (click)="showOrAddComments(activity)"></ion-icon>{{activity.activityComment.length}}
+            </span> 
+            <span class="margin-cls">
+              <ion-icon style="width: 24px;
+              height: 23px;"  name="arrow-redo-outline" (click)="presentActionSheet(activity.userThought,activity.mediaFile)"></ion-icon> 
+             <!-- <ion-icon *ngIf="heartClass=='heart-cls-red'" style="width: 30px;
+              height: 32px;
+              margin-top: 0px;
+              margin-bottom: -8px;" 
+                class='heart-cls-red animate__animated animate__tada' name="heart"></ion-icon>
+             <ion-icon *ngIf="heartClass=='heart-cls-white'" style="width: 30px;
+             height: 32px;
+             margin-top: 0px;
+             margin-bottom: -8px;"  (click)="isAlreadyLiked(activity)"
+             class='heart-cls-white animate__animated animate__tada' name="heart"></ion-icon> -->
+            </span> 
+            <ion-label style="font-size: 10px;color:black !important;">{{ago(activity.uploadedOn)}} ago</ion-label> 
+          </div>
+          <div  style="text-align: justify;" *ngIf="activity.userThought.length>100 && activity.userThought !== '' ">
+            <ion-text style="font-size: large" color="black"> {{(activity.userThought.length>100)? (activity.userThought | slice:0:100)+'...':(activity.userThought)}}
+              </ion-text><a (click)="showOrAddComments(activity)">More</a>
+          </div>
+          <div  style="text-align: justify;" *ngIf="activity.userThought.length <= 100 && activity.userThought !== '' ">
+            <ion-text style="font-size: large" color="black"> {{(activity.userThought.length>100)? (activity.userThought | slice:0:100)+'...More':(activity.userThought)}}
+              </ion-text>
+          </div>
+          <ion-card style="margin-left: 0px;" >
+            <div  class="activity-mediaFile" *ngIf="activity.mediaFile !== '' && activity.mediaFile !== undefined && activity.mediaFileType=='video'">
+              <video preload="metadata" #video class="activity-mediaFile#t=0.5" src ="{{activity.mediaFile}}"  controls >
+              </video>               
+            </div>
+            <div  class="activity-audioFile" *ngIf="activity.mediaFile !== '' && activity.mediaFile !== undefined && activity.mediaFileType=='audio'">
+              <audio class="activity-audioFile"   src ="{{activity.mediaFile}}"  controls >
+              </audio>  
+                                      
+            </div>
+            <div  class="activity-mediaFile" *ngIf="activity.mediaFile !== '' && activity.mediaFile !== undefined && activity.mediaFileType=='image'" >
+              <img   class="activity-mediaFile" src ="{{activity.mediaFile}}"   />
+                                    
+            </div>
+          </ion-card>
+        </ion-col>
+      </ng-container>
+      <!-- skeleton loading -->
+      <ng-template #elseTemplate>
+      <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+        <ion-card style="height:320px;background-image: linear-gradient(black, white);">
+          <ion-avatar slot="start">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-avatar>
+          <ion-item-divider style="border: none;">
+            <ion-label>
+              <h2><ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text></h2>
+              <p><ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text></p>
+            </ion-label>
+          </ion-item-divider>
+        </ion-card>
+      </ion-col>
+    </ng-template>
+      <!-- end skeleton loading -->
+      
+    </ion-row>
+  </ion-grid>
+ 
+</ion-content>

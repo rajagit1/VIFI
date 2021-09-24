@@ -1,0 +1,496 @@
+<ion-header class="toolbar_class" translucent="true">
+  <ion-toolbar style="color:white">
+    <ion-buttons slot="start">
+      <ion-back-button *ngIf="!showSearchbar && this.confData.isFromPage =='profile'" (click)="logout()"></ion-back-button>
+      <ion-back-button *ngIf="!showSearchbar && this.confData.isFromPage !=='profile'" defaultHref={{defaultHref}}></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title  *ngIf="!showSearchbar && this.confData.isFromPage !=='profile' || this.confData.isFromPage==''" style="margin-left: -14px;"><img class="logo-cls" src="../../../assets/icons/cat-red.png"></ion-title>
+    <ion-title  *ngIf="!showSearchbar && this.confData.isFromPage =='profile'" style="margin-left: -14px;"><img class="logo-cls-category" src="../../../assets/icons/survey.svg">
+      <ion-label style="font-size: 22px">
+        Posted Stories
+      </ion-label>
+    </ion-title>
+    <ion-searchbar *ngIf="showSearchbar" [(ngModel)]="queryText" (ionChange)="setFilteredItems()"
+      (ionCancel)="showSearchbar = false" placeholder="Search your stories"></ion-searchbar>
+   <!-- <ion-list class="schdule-list" *ngIf="isItemAvailable">
+      <ion-item style="color: white;" *ngFor="let item of items">
+        <img (click)="navigateToDetalil(item)" class="search-logo" src={{item.image}} />
+        <span (click)="navigateToDetalil(item)">{{ item.title }}</span></ion-item>
+    </ion-list>-->
+
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!ios && !showSearchbar" (click)="showSearchbar = true">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="speaker-list-page" fullscreen="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Speakers</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-segment (ionChange)="changeCategory($event)" [(ngModel)]="segment" class="seg-class" sticky>
+    
+    <ion-segment-button value="drama">
+      Drama /      
+      <ion-icon src="../../../assets/icons/theater.svg"></ion-icon>
+      <ion-label>Love</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="comedy">
+      Comedy /
+      <ion-icon src="../../../assets/icons/fun.svg"></ion-icon>
+      <ion-label>Sports</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="adventure">
+      SciFi /
+      <ion-icon src="../../../assets/icons/mountain.svg"></ion-icon>
+      <ion-label>Adventure</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="crime">
+      Horror /
+      <ion-icon src="../../../assets/icons/gun.svg"></ion-icon>
+      <ion-label>Crime</ion-label>
+    </ion-segment-button>
+
+
+  </ion-segment>
+
+  <ion-grid fixed *ngIf="generType=='comedy'">
+    <ion-row>
+      <ng-container *ngIf="isLoaded; else elseTemplate">
+        <ion-col size="12" size-md="6">
+          <ion-card *ngFor="let post of comedyStories">
+
+            <img (click)="navigateToDetalil(post)" style="width: -webkit-fill-available;height:320px"
+              src={{post.image}} />
+            
+            <div class="thumbnail" *ngIf="post.shooting">
+              <div class="tag">
+                <span class="blink"><b>
+                    <ion-icon name="ellipse"></ion-icon> &nbsp;Shooting
+                  </b></span>
+              </div>
+            </div>
+
+            <ion-item text-wrap class="itemIon">
+              <ion-label>
+                <ion-label>
+                  <h2 class="title-cls" (click)="navigateToDetalil(post)">
+                    <ion-icon *ngIf="!getStatus(post)" class='heart-cls-white animate__animated animate__tada'
+                      name="heart"></ion-icon>
+                    <ion-icon *ngIf="getStatus(post)" class='heart-cls-red animate__animated animate__tada'
+                      name="heart"></ion-icon>
+                    {{post.title}}
+                  </h2>
+                  <p class="synopsis-cls" (click)="navigateToDetalil(post)">
+                    <ion-icon name="create"></ion-icon> {{post.synopsis}} &nbsp; - <b>
+                      <ion-icon name="time-outline"></ion-icon> &nbsp; {{ago(post.uploadedOn)}} ago
+                    </b>
+                  </p>
+                </ion-label>
+
+              </ion-label>
+
+
+            </ion-item>
+
+
+
+            <ion-row class="bottom-bar">
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+              margin-left: 1px;
+              font-size: 13px;
+              margin-top: 10px;">
+                  <ion-icon name="thumbs-up"></ion-icon> {{post.likes.length }} likes
+                </p>
+              </ion-col>
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+              margin-left: -13px;
+              font-size: 13px;
+              margin-top: 10px;">
+                  <ion-icon name="eye"></ion-icon> {{post.views }} views
+                </p>
+              </ion-col>
+              <ion-col *ngIf='post.uploadedBy == this.userData.userName'  (click)='editStory(post)' class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: -13px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-button style="margin-top: -7px;height: 23px;" color="danger">Edit</ion-button>
+                </p>
+              </ion-col>
+              <ion-col class="comment-section">
+                <ion-chip class="chip-css ion-text-start md ion-activatable hydrated">
+                  <ion-avatar class="md hydrated"><img src="../../../assets/icons/profiles-2.png"></ion-avatar>
+                  <ion-label style ="color:black !important" class="sc-ion-label-md-h sc-ion-label-md-s md hydrated">
+                    {{post.uploadedBy?post.uploadedBy.substring(0, 5):''}}</ion-label>
+                </ion-chip>
+              </ion-col>
+            </ion-row>
+
+
+          </ion-card>
+        </ion-col>
+      </ng-container>
+      <!-- skeleton loading -->
+      <ng-template #elseTemplate>
+        <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+          <ion-card style="height:320px;background-image: linear-gradient(black, white);">
+            <ion-avatar slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            <ion-item-divider style="border: none;">
+              <ion-label>
+                <h2>
+                  <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+                </h2>
+                <p>
+                  <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item-divider>
+          </ion-card>
+        </ion-col>
+      </ng-template>
+      <!-- end skeleton loading -->
+
+    </ion-row>
+  </ion-grid>
+
+
+  <ion-grid fixed *ngIf="generType=='adventure'">
+    <ion-row>
+      <ng-container *ngIf="isLoaded; else elseTemplate">
+        <ion-col size="12" size-md="6">
+          <ion-card *ngFor="let post of advStories">
+
+
+            <img (click)="navigateToDetalil(post)" style="width: -webkit-fill-available;height:320px"
+              src={{post.image}} />
+            <div class="thumbnail" *ngIf="post.shooting">
+              <div class="tag">
+                <span class="blink"><b>
+                    <ion-icon name="ellipse"></ion-icon> &nbsp;Shooting
+                  </b></span>
+              </div>
+            </div>
+
+            <ion-item text-wrap class="itemIon">
+              <ion-label>
+                <ion-label>
+                  <h2 class="title-cls" (click)="navigateToDetalil(post)">
+                    <ion-icon *ngIf="!getStatus(post)" class='heart-cls-white animate__animated animate__tada'
+                      name="heart"></ion-icon>
+                    <ion-icon *ngIf="getStatus(post)" class='heart-cls-red animate__animated animate__tada'
+                      name="heart"></ion-icon>
+                    {{post.title}}
+                  </h2>
+                  <p class="synopsis-cls" (click)="navigateToDetalil(post)">
+                    <ion-icon name="create"></ion-icon> {{post.synopsis}} &nbsp; - <b>
+                      <ion-icon name="time-outline"></ion-icon> &nbsp; {{ago(post.uploadedOn)}} ago
+                    </b>
+                  </p>
+                </ion-label>
+
+              </ion-label>
+
+
+
+            </ion-item>
+
+
+
+            <ion-row class="bottom-bar">
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: 1px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-icon name="thumbs-up"></ion-icon> {{post.likes.length }} likes
+                </p>
+              </ion-col>
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: -13px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-icon name="eye"></ion-icon> {{post.views }} views
+                </p>
+              </ion-col>
+              <ion-col *ngIf='post.uploadedBy == this.userData.userName'  (click)='editStory(post)' class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: -13px;
+                font-size: 13px;
+                margin-top: 10px;">
+                 <ion-button style="margin-top: -7px;height: 23px;" color="danger">Edit</ion-button>
+                </p>
+              </ion-col>
+              <ion-col class="comment-section">
+                <ion-chip class="chip-css ion-text-start md ion-activatable hydrated">
+                  <ion-avatar class="md hydrated"><img src="../../../assets/icons/profiles-2.png"></ion-avatar>
+                  <ion-label style="color:black !important" class="sc-ion-label-md-h sc-ion-label-md-s md hydrated">{{post.uploadedBy.substring(0, 5)}}
+                  </ion-label>
+                </ion-chip>
+              </ion-col>
+            </ion-row>
+
+          </ion-card>
+        </ion-col>
+      </ng-container>
+      <!-- skeleton loading -->
+      <ng-template #elseTemplate>
+        <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+          <ion-card style="height:320px;background-image: linear-gradient(black, white);">
+            <ion-avatar slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            <ion-item-divider style="border: none;">
+              <ion-label>
+                <h2>
+                  <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+                </h2>
+                <p>
+                  <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item-divider>
+          </ion-card>
+        </ion-col>
+      </ng-template>
+      <!-- end skeleton loading -->
+
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid fixed *ngIf="generType=='crime'">
+    <ion-row>
+      <ng-container *ngIf="isLoaded; else elseTemplate">
+        <ion-col size="12" size-md="6">
+          <ion-card *ngFor="let post of crimeStories">
+
+
+            <img (click)="navigateToDetalil(post)" style="width: -webkit-fill-available;height:320px"
+              src={{post.image}} />
+            <div class="thumbnail" *ngIf="post.shooting">
+              <div class="tag">
+                <span class="blink"><b>
+                    <ion-icon name="ellipse"></ion-icon> &nbsp;Shooting
+                  </b></span>
+              </div>
+            </div>
+
+            <ion-item text-wrap class="itemIon">
+              <ion-label>
+                <ion-label>
+                  <h2 class="title-cls" (click)="navigateToDetalil(post)">
+                    <ion-icon *ngIf="!getStatus(post)" class='heart-cls-white animate__animated animate__tada'
+                      name="heart"></ion-icon>
+                    <ion-icon *ngIf="getStatus(post)" class='heart-cls-red animate__animated animate__tada'
+                      name="heart"></ion-icon>
+                    {{post.title}}
+                  </h2>
+                  <p class="synopsis-cls" (click)="navigateToDetalil(post)">
+                    <ion-icon name="create"></ion-icon> {{post.synopsis}} &nbsp; - <b>
+                      <ion-icon name="time-outline"></ion-icon> &nbsp; {{ago(post.uploadedOn)}} ago
+                    </b>
+                  </p>
+                </ion-label>
+
+              </ion-label>
+
+
+            </ion-item>
+
+
+
+            <ion-row class="bottom-bar">
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: 1px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-icon name="thumbs-up"></ion-icon> {{post.likes.length }} likes
+                </p>
+              </ion-col>
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: -13px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-icon name="eye"></ion-icon> {{post.views }} views
+                </p>
+              </ion-col>
+              <ion-col *ngIf='post.uploadedBy == this.userData.userName'  (click)='editStory(post)' class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: -13px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-button style="margin-top: -7px;height: 23px;" color="danger">Edit</ion-button>
+                </p>
+              </ion-col>
+              <ion-col class="comment-section">
+                <ion-chip class="chip-css ion-text-start md ion-activatable hydrated">
+                  <ion-avatar class="md hydrated"><img src="../../../assets/icons/profiles-2.png"></ion-avatar>
+                  <ion-label style="color:black !important" class="sc-ion-label-md-h sc-ion-label-md-s md hydrated">{{post.uploadedBy.substring(0, 5)}}
+                  </ion-label>
+                </ion-chip>
+              </ion-col>
+            </ion-row>
+
+          </ion-card>
+        </ion-col>
+      </ng-container>
+      <!-- skeleton loading -->
+      <ng-template #elseTemplate>
+        <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+          <ion-card style="height:320px;background-image: linear-gradient(black, white);">
+            <ion-avatar slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            <ion-item-divider style="border: none;">
+              <ion-label>
+                <h2>
+                  <ion-skeleton-text anigitmated style="width: 100px;"></ion-skeleton-text>
+                </h2>
+                <p>
+                  <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item-divider>
+          </ion-card>
+        </ion-col>
+      </ng-template>
+      <!-- end skeleton loading -->
+
+    </ion-row>
+  </ion-grid>
+  <ion-grid fixed *ngIf="generType=='drama'">
+    <ion-row>
+      <ng-container *ngIf="isLoaded; else elseTemplate">
+        <ion-col size="12" size-md="6">
+          <ion-card *ngFor="let post of dramaStories">
+
+
+            <img (click)="navigateToDetalil(post)" style="width: -webkit-fill-available;height:320px"
+              src={{post.image}} />
+            <div class="thumbnail" *ngIf="post.shooting">
+              <div class="tag">
+                <span class="blink"><b>
+                    <ion-icon name="ellipse"></ion-icon> &nbsp;Shooting
+                  </b></span>
+              </div>
+            </div>
+
+            <ion-item text-wrap class="itemIon">
+              <ion-label>
+                <ion-label>
+                  <h2 class="title-cls" (click)="navigateToDetalil(post)">
+                    <ion-icon *ngIf="!getStatus(post)" class='heart-cls-white animate__animated animate__tada'
+                      name="heart"></ion-icon>
+                    <ion-icon *ngIf="getStatus(post)" class='heart-cls-red animate__animated animate__tada'
+                      name="heart"></ion-icon>
+                    {{post.title}}
+                  </h2>
+                  <p class="synopsis-cls" (click)="navigateToDetalil(post)">
+                    <ion-icon name="create"></ion-icon> {{post.synopsis}} &nbsp; - <b>
+                      <ion-icon name="time-outline"></ion-icon> &nbsp; {{ago(post.uploadedOn)}} ago
+                    </b>
+                  </p>
+                </ion-label>
+
+              </ion-label>
+
+
+            </ion-item>
+
+
+
+            <ion-row class="bottom-bar">
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: 1px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-icon name="thumbs-up"></ion-icon> {{post.likes.length }} likes
+                </p>
+              </ion-col>
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: -13px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-icon name="eye"></ion-icon> {{post.views }} views
+                </p>
+              </ion-col>
+              <ion-col *ngIf='post.uploadedBy == this.userData.userName'  (click)='editStory(post)' class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: -13px;
+                font-size: 13px;
+                margin-top: 10px;">
+                 <ion-button style="margin-top: -7px;height: 23px;" color="danger">Edit</ion-button>
+                </p>
+              </ion-col>
+              <ion-col class="comment-section">
+                <ion-chip class="chip-css ion-text-start md ion-activatable hydrated">
+                  <ion-avatar class="md hydrated"><img src="../../../assets/icons/profiles-2.png"></ion-avatar>
+                  <ion-label style="color:black !important" class="sc-ion-label-md-h sc-ion-label-md-s md hydrated">
+                    {{post.uploadedBy?post.uploadedBy.substring(0, 5):''}}</ion-label>
+                </ion-chip>
+              </ion-col>
+            </ion-row>
+
+          </ion-card>
+        </ion-col>
+      </ng-container>
+      <!-- skeleton loading -->
+      <ng-template #elseTemplate>
+        <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+          <ion-card style="height:320px;background-image: linear-gradient(black, gray);">
+            <ion-avatar slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            <ion-item-divider style="border: none;">
+              <ion-label>
+                <h2>
+                  <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+                </h2>
+                <p>
+                  <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item-divider>
+          </ion-card>
+        </ion-col>
+      </ng-template>
+      <!-- end skeleton loading -->
+
+    </ion-row>
+  </ion-grid>
+  <ion-fab slot="fixed" *ngIf="userType =='D'" vertical="bottom" horizontal="end" #fab>
+    <ion-fab-button color="danger">
+      <ion-icon src="../../../assets/icons/whatapplogosvg.svg" style="font-size:100px;"></ion-icon>
+
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="facebook" tooltip="Add Actors" (click)="showActors()">
+        <ion-icon name="arrow-forward-circle" style="font-size:45px;"></ion-icon>
+      </ion-fab-button>
+
+
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>

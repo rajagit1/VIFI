@@ -1,0 +1,303 @@
+<ion-header class="custom-header">
+
+  <ion-toolbar class="custom-toolbar">
+    <ion-title style="font-size:16px"><ion-icon name="person-add"></ion-icon> &nbsp; {{technician_or_cast_title}}</ion-title>
+    <ion-buttons  slot="end">   
+      <ion-button *ngIf="isCastPage" (click)="editMapping()">Edit
+      </ion-button>    
+      <ion-button (click)="closeModal2()">
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-item-divider *ngIf="this.assistantDirectorName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.assistantDirector_img}}">
+   <table style='margin-left: 19px;'>
+    
+    <tr> Type:<b>Assistant Director</b>
+     <tr> Name:<b> {{this.assistantDirectorName}}</b>
+    </tr>
+    <tr>      
+      Mobile :<b> {{this.assistantDirector_mobile}}</b>
+      </tr>
+      <tr>      
+        Description: "{{this.assistantDirector_skills }}"
+      </tr>
+    
+    
+  </table>
+ 
+  </ion-item-divider>
+  <ion-item-divider *ngIf="this.scriptWriterName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.scriptWriter_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Script Writer</b>
+     <tr> Name:<b> {{this.scriptWriterName}}</b>
+    </tr>
+    <tr>      
+      Mobile :<b> {{this.scriptWriter_mobile}}</b>
+      </tr>
+      <tr>      
+        Description: "{{this.scriptWriter_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+  <ion-item-divider *ngIf="dopName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.dop_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Cinematography</b>
+     <tr> Name:<b> {{this.dopName}}</b>
+    </tr>
+    <tr>      
+      Mobile :<b> {{this.dop_mobile}}</b>
+      </tr>
+      <tr>      
+        Description: "{{this.dop_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+  <ion-item-divider *ngIf="this.editorName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.editor_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Editor</b>
+     <tr> Name:<b> {{this.editorName}}</b>
+    </tr>
+    <tr>      
+      Mobile :<b> {{this.editor_mobile}}</b>
+      </tr>
+      <tr>      
+        Description: "{{this.editor_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+  <ion-item-divider *ngIf="this.supportingActorMaleName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.supportingActorMale_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Supporting Actor-Male</b>
+     <tr> Name:<b> {{this.supportingActorMaleName}}</b>
+    </tr>
+    <tr>      
+      Mobile :<b> {{this.supportingActorMale_mobile}}</b>
+      </tr>
+      <tr>      
+        Description: "{{this.supportingActorMale_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+  <ion-item-divider *ngIf="this.supportingActorFemaleName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.supportingActorFemale_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Supporting Actor-Female</b>
+     <tr> Name:<b> {{this.supportingActorFemaleName}}</b>
+    </tr>
+    <tr>      
+     <!-- Mobile :<b> {{this.supportingActorFemale_mobile}}</b> -->
+     Mobile : <ion-chip  class="ion-text-end" class="chip-cls" button> 
+      <ion-icon  src="../../../assets/icons/whatsapp.svg"></ion-icon> 
+      <ion-label   (click)="showdialer(this.supportingActorFemaleName,this.supportingActorFemale_mobile,duplicateClickCount)" style="color:#0aa547;font-weight: bold;font-size: medium" >{{showStatus(this.supportingActorFemaleName,this.supportingActorFemale_mobile)}}</ion-label>
+    </ion-chip>
+      </tr>
+      <tr>      
+        Description: "{{this.supportingActorFemale_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+  <ion-item-divider *ngIf="this.dubbingMaleName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.dubbingMale_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Dubbing Male Artist</b>
+     <tr> Name:<b> {{this.dubbingMaleName}}</b>
+    </tr>
+    <tr>      
+      Mobile :<b> {{this.dubbingMale_mobile}}</b>
+      </tr>
+      <tr>      
+        Description: "{{this.dubbingMale_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+  <ion-item-divider *ngIf="this.dubbingFemaleName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.dubbingFemale_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Dubbing Female Artist</b>
+     <tr> Name:<b> {{this.dubbingFemaleName}}</b>
+    </tr>
+    <tr>      
+     <!-- Mobile :<b> {{this.dubbingFemale_mobile}}</b> -->
+     Mobile : <ion-chip  class="ion-text-end" class="chip-cls" button> 
+      <ion-icon  src="../../../assets/icons/whatsapp.svg"></ion-icon> 
+       <ion-label   (click)="showdialer(this.dubbingFemaleName,this.dubbingFemale_mobile,duplicateClickCount)" style="color:#0aa547;font-weight: bold;font-size: medium" >{{showStatus(this.dubbingFemaleName,this.dubbingFemale_mobile)}}</ion-label>
+    </ion-chip>
+      </tr>
+      <tr>      
+        Description: "{{this.dubbingFemale_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+  <ion-item-divider *ngIf="this.choreographerName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.choreographer_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>ChoreoGrapher</b>
+     <tr> Name:<b> {{this.choreographerName}}</b>
+    </tr>
+    <tr>      
+      Mobile :<b> {{this.choreographer_mobile}}</b>
+      </tr>
+      <tr>      
+        Description: "{{this.choreographer_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+  <ion-item-divider *ngIf="this.studioName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.studio_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Studio</b>
+     <tr> Name:<b> {{this.studioName}}</b>
+    </tr>
+    <tr>      
+      Mobile :<b> {{this.studio_mobile}}</b>
+      </tr>
+      <tr>      
+        Description: "{{this.studio_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+  <ion-item-divider *ngIf="this.equipmentName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.equipment_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Equipment</b>
+     <tr> Name:<b> {{this.equipmentName}}</b>
+    </tr>
+    <tr>      
+      Mobile :<b> {{this.equipment_mobile}}</b>
+      </tr>
+      <tr>      
+        Description: "{{this.equipment_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+
+  <ion-item-divider *ngIf="this.actor_displayName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.actor_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Actor</b>
+      <tr> Age:<b> {{this.actor_age}}</b></tr>
+      <tr> Experience:<b> {{this.actor_experience}}</b></tr>
+     <tr> Name:<b> {{this.actor_displayName}}</b>
+    </tr>
+      <tr>      
+        Description: "{{this.actor_skills }}"
+      </tr>
+  </table>   
+  </ion-item-divider>
+
+  <ion-item-divider *ngIf="this.actress_displayName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.actress_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Actress</b></tr>
+    <tr> Age:<b> {{this.actress_age}}</b></tr>
+      <tr> Experience:<b> {{this.actress_experience}}</b></tr>
+     <tr> Name:<b> {{this.actress_displayName}}</b>
+    </tr>
+      <tr>      
+        Description: "{{this.actress_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+
+  <ion-item-divider *ngIf="this.femaleSinger_displayName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.femaleSinger_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Female Singer</b>
+      <tr> Age:<b> {{this.femaleSinger_age}}</b></tr>
+        <tr> Experience:<b> {{this.femaleSinger_experience}}</b></tr>
+     <tr> Name:<b> {{this.femaleSinger_displayName}}</b>
+    </tr>
+      <tr>      
+        Description: "{{this.femaleSinger_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+
+  <ion-item-divider *ngIf="this.maleSinger_displayName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.maleSinger_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Male Singer</b>
+      <tr> Age:<b> {{this.maleSinger_age}}</b></tr>
+      <tr> Experience:<b> {{this.maleSinger_experience}}</b></tr>
+     <tr> Name:<b> {{this.maleSinger_displayName}}</b>
+    </tr>
+      <tr>      
+        Description: "{{this.maleSinger_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+
+  <ion-item-divider *ngIf="this.music_female_displayName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.music_female_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Music Female Director</b>
+      <tr> Age:<b> {{this.music_female_age}}</b></tr>
+      <tr> Experience:<b> {{this.music_female_experience}}</b></tr>
+     <tr> Name:<b> {{this.music_female_displayName}}</b>
+    </tr>
+      <tr>      
+        Description: "{{this.music_female_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+
+  <ion-item-divider *ngIf="this.music_male_displayName" style='margin-top:10px;    background: linear-gradient(
+    96deg
+    , #efc2c2, #2a262600);'> 
+    <img class="actor-cls" src="{{this.music_male_img}}">
+   <table style='margin-left: 19px;'>
+    <tr> Type:<b>Music Director</b>
+      <tr> Age:<b> {{this.music_male_age}}</b></tr>
+      <tr> Experience:<b> {{this.music_male_experience}}</b></tr>
+     <tr> Name:<b> {{this.music_male_displayName}}</b>
+    </tr>
+      <tr>      
+        Description: "{{this.music_male_skills }}"
+      </tr>
+  </table>
+  </ion-item-divider>
+  
+</ion-content>
+

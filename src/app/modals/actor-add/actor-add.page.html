@@ -1,0 +1,1354 @@
+<ion-header class="custom-header">
+
+  <ion-toolbar class="custom-toolbar">
+    <ion-title style="font-size:16px"><ion-icon name="person-add"></ion-icon> &nbsp; Crew Setup</ion-title>
+    <ion-buttons (click)="closeModal2()" slot="end">
+      <ion-button >
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-grid> 
+
+    <span *ngIf="showActress=='actor'">
+       
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12">
+       
+          <ion-radio-group allow-empty-selection="false" name="radio-group" (ionChange)="radioGroupChange($event,'2')"
+            #radioGroup>
+            <ion-list-header>
+              <img class="img-thumb" src="../../../assets/icons/hand-drawn-2.jfif"/>
+              <!-- forward backward arrow starts-->
+              <ion-fab *ngIf="showActress=='actor'" vertical="bottom" horizontal="end" style="margin-right: -9px;">
+                <ion-fab-button [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" color="dark"> 
+                  <ion-icon  name="arrow-forward-circle" (click)="checkActorSelected('actress')"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>                 
+              <!-- forward backward arrow ends-->
+            </ion-list-header>
+            <div style="height: 450px;
+            overflow-x: scroll;">
+            <ion-row (click)="skipActorCrew()" class="rowStyle-skip">
+              <span style="margin-left: 19px;
+              margin-top: 3px;
+              font-family: fantasy;">Skip</span>
+            </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+            <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('actor')" class="txtClass" placeholder="Filter By Experience(Actor)" [(ngModel)]="queryText_actor"></ion-input>
+          </ion-row>
+           <ion-item *ngFor="let item of q3" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+           (ionBlur)="radioBlur()">
+           <ion-avatar style="margin-left: 0px;">
+             <img src={{item.image}} >
+           </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+           <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+           <ion-chip>
+            <!-- <ion-label color="dark">Tags</ion-label>-->
+           
+               <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+             </ion-chip>
+           <!--  crewpage popup implemention starts-->
+           <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+            <ion-button style="color:black !important;margin-left: 0px;">
+              <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+            </ion-button>            
+          </ion-buttons> 
+         <!-- <div class="overlay" style="height: 615px;" *ngIf="popup">
+            <div class="popup" style="height: 526px;width: 339px;">                    
+                <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                <span  style="color:black !important;">
+                  <b>{{popupActorName}}</b>
+                   has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+                   <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+                 <span  style="color:black !important;">
+                  {{popupActorSkills}}
+                 </span><br><br>
+                 <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+
+                 <div class="container" *ngIf="safeURLs.length > 0 && safeURLs !== undefined && safeURLs !== null">
+                  <ion-slides  style="height: 200px;" pager="true" [options]="slideOptsOne" #slideWithNav
+                    (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+                    <ng-container >
+                      <ion-slide *ngFor="let eachUrl of safeURLs">
+                        <iframe  width="100%" height="100%" [src]="eachUrl" frameborder="0" allowfullscreen>
+                        </iframe>
+                      </ion-slide>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <ion-slide style="background-image: linear-gradient(black, rgb(78, 77, 77));"  *ngFor="let post of dummyData">
+                        
+                        <div class="content">
+                          <p>
+                            <ion-skeleton-text animated></ion-skeleton-text>
+                          </p>
+                        </div>
+                      </ion-slide>
+                    </ng-template>
+                   
+                  </ion-slides>
+                </div>
+
+                 <div *ngIf="mediaFile !=='' && mediaFile !== undefined && mediaFile !== null" class="ion-text-center">
+                  <video style="width: 100%;height: 200px;" autoplay="false"  src = "{{mediaFile}}#t=0.1" controls >
+                  </video>                 
+                </div>
+              </div>
+        </div>  -->
+          <!-- crewpage popup implemention ends-->
+           <ion-radio  style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+         </ion-item>
+          </div>
+
+          </ion-radio-group>
+        </ion-col>
+
+      </ion-row>
+    </span>
+    <span *ngIf="showActress=='actress'">
+      
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12">
+           
+          <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'1')"
+            #radioGroup>
+            <ion-list-header>
+              <img class="img-thumb" src="../../../assets/icons/hand-drawn-actors-background_23-2147733984.jpg"/>
+              <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='actress'" vertical="bottom" horizontal="end" style="margin-right: -9px;">
+                <ion-fab-button color="dark"> 
+                  <ion-icon name="arrow-forward-circle" (click)="checkActressSelected('maleSinger')"></ion-icon>
+                </ion-fab-button>
+              </ion-fab> 
+              <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='actress'" vertical="bottom" horizontal="left">
+                <ion-fab-button color="medium">
+                  <ion-icon name="arrow-back-circle"  (click)="showActress='actor'"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>
+              <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='music'" vertical="bottom" horizontal="left">
+                <ion-fab-button color="medium">
+                  <ion-icon name="arrow-back-circle"  (click)="showActress='actress'"></ion-icon>
+                </ion-fab-button>
+              </ion-fab> 
+            </ion-list-header>
+            <div style="height: 450px;
+            overflow-x: scroll;">
+            <ion-row (click)="skipActressCrew()" class="rowStyle-skip">
+              <span style="margin-left: 19px;
+              margin-top: 3px;
+              font-family: fantasy;">Skip</span>
+            </ion-row>
+               <ion-row class="rowStyle">
+                <ion-icon name="search" color="dark"></ion-icon>
+              <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }"  (ionChange)="setFilteredItems('actress')" class="txtClass" placeholder="Filter By Experience(Actress)" [(ngModel)]="queryText_actress"></ion-input>
+            </ion-row>
+             <ion-item *ngFor="let item of q1" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+              (ionBlur)="radioBlur()">
+              <ion-avatar style="margin-left: 0px;">
+                <img src={{item.image}}>
+              </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label>
+              <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+              <!-- <ion-label style="color:black !important" (click)="showActorDetails()" color="dark">Tags</ion-label>-->
+                <ion-chip>
+                  <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+                </ion-chip>
+              <!--  crewpage popup implemention starts-->
+           <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+            <ion-button style="color:black !important;margin-left: 0px;">
+              <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+            </ion-button>            
+          </ion-buttons> 
+          <div class="overlay" style="height: 599px;" *ngIf="popup">
+            <div class="popup" style="height: 526px;width: 339px;">                    
+                <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                <span  style="color:black !important;">
+                  <b>{{popupActorName}}</b>
+                   has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+                   <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+                 <span  style="color:black !important;">
+                  {{popupActorSkills}}
+                 </span><br><br>
+                 <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+                 <span>
+                  <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+                  </iframe>
+                 </span>
+              </div>
+        </div>
+          <!-- crewpage popup implemention ends-->
+              <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+            </ion-item>
+            </div>
+
+
+          </ion-radio-group>
+        </ion-col>
+
+      </ion-row>
+    </span>
+    <!--Singer Male starts-->
+    <span *ngIf="showActress=='maleSinger'">
+       
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12">
+       
+          <ion-radio-group allow-empty-selection="false" name="radio-group" (ionChange)="radioGroupChange($event,'3')"
+            #radioGroup>
+            <ion-list-header>
+              <img style='background:#b69a9e' class="img-thumb" src="../../../assets/icons/male-singer.png"/>
+              <!-- forward backward arrow starts-->
+              <ion-fab *ngIf="showActress=='maleSinger'" vertical="bottom" horizontal="end" style="margin-right: -9px;">
+                <ion-fab-button [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" color="dark"> 
+                  <ion-icon  name="arrow-forward-circle" (click)="checkMaleSingerSelected('femaleSinger')"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>   
+              <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='maleSinger'" vertical="bottom" horizontal="left">
+                <ion-fab-button color="medium">
+                  <ion-icon name="arrow-back-circle"  (click)="showActress='actress'"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>              
+              <!-- forward backward arrow ends-->
+            </ion-list-header>
+            <div style="height: 450px;
+            overflow-x: scroll;">
+            <ion-row (click)="skipmaleSingerCrew()" class="rowStyle-skip">
+              <span style="margin-left: 19px;
+              margin-top: 3px;
+              font-family: fantasy;">Skip</span>
+            </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+            <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('maleSinger')" class="txtClass" placeholder="Filter By Experience(Male Singer)" [(ngModel)]="queryText_maleSinger"></ion-input>
+          </ion-row>
+           <ion-item *ngFor="let item of q7" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+           (ionBlur)="radioBlur()">
+           <ion-avatar style="margin-left: 0px;">
+             <img src={{item.image}} >
+           </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+           <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+           <ion-chip>
+            <!-- <ion-label color="dark">Tags</ion-label>-->
+             
+               <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+             </ion-chip>
+           <!--  crewpage popup implemention starts-->
+           <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+            <ion-button style="color:black !important;margin-left: 0px;">
+              <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+            </ion-button>            
+          </ion-buttons> 
+          <div class="overlay" style="height: 615px;" *ngIf="popup">
+            <div class="popup" style="height: 526px;width: 339px;">                    
+                <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                <span  style="color:black !important;">
+                  <b>{{popupActorName}}</b>
+                   has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+                   <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+                 <span  style="color:black !important;">
+                  {{popupActorSkills}}
+                 </span><br><br>
+                 <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+                 <span>
+                  <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+                  </iframe>
+                 </span>
+              </div>
+        </div>
+          <!-- crewpage popup implemention ends-->
+           <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+         </ion-item>
+          </div>
+
+          </ion-radio-group>
+        </ion-col>
+
+      </ion-row>
+    </span>
+    <!--Singer Male ends-->
+    <!--Singer FeMale starts-->
+    <span *ngIf="showActress=='femaleSinger'">
+       
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12">
+       
+          <ion-radio-group allow-empty-selection="false" name="radio-group" (ionChange)="radioGroupChange($event,'4')"
+            #radioGroup>
+            <ion-list-header>
+              <img style='background:#b69a9e;height: 160px;
+              margin-left: 76px;
+              margin-top: 14px;
+              width: 120px;' class="img-thumb" src="../../../assets/icons/female-singer.jpg"/>
+              <!-- forward & backward arrow starts-->
+              <ion-fab *ngIf="showActress=='femaleSinger'" vertical="bottom" horizontal="end" style="margin-right: -9px;">
+                <ion-fab-button [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" color="dark"> 
+                  <ion-icon  name="arrow-forward-circle" (click)="checkFemaleSingerSelected('music')"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>    
+              <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='femaleSinger'" vertical="bottom" horizontal="left">
+                <ion-fab-button color="medium">
+                  <ion-icon name="arrow-back-circle"  (click)="showActress='maleSinger'"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>             
+              <!-- forward & backward arrow ends-->
+            </ion-list-header>
+            <div style="height: 450px;
+            overflow-x: scroll;">
+            <ion-row (click)="skipfemaleSingerCrew()" class="rowStyle-skip">
+              <span style="margin-left: 19px;
+              margin-top: 3px;
+              font-family: fantasy;">Skip</span>
+            </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+            <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('femaleSinger')" class="txtClass" placeholder="Filter By Experience(Female Singer)" [(ngModel)]="queryText_femaleSinger"></ion-input>
+          </ion-row>
+           <ion-item *ngFor="let item of q8" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+           (ionBlur)="radioBlur()">
+           <ion-avatar style="margin-left: 0px;">
+             <img src={{item.image}} >
+           </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+           <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+           <ion-chip>
+            <!-- <ion-label color="dark">Tags</ion-label>-->
+             
+               <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+             </ion-chip>
+           <!--  crewpage popup implemention starts-->
+           <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+            <ion-button style="color:black !important;margin-left: 0px;">
+              <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+            </ion-button>            
+          </ion-buttons> 
+          <div class="overlay" style="height: 615px;" *ngIf="popup">
+            <div class="popup" style="height: 526px;width: 339px;">                    
+                <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                <span  style="color:black !important;">
+                  <b>{{popupActorName}}</b>
+                   has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+                   <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+                 <span  style="color:black !important;">
+                  {{popupActorSkills}}
+                 </span><br><br>
+                 <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+                 <span>
+                  <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+                  </iframe>
+                 </span>
+              </div>
+        </div>
+          <!-- crewpage popup implemention ends-->
+           <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+         </ion-item>
+          </div>
+
+          </ion-radio-group>
+        </ion-col>
+
+      </ion-row>
+    </span>
+    <!--Singer FeMale ends-->
+    <span *ngIf="showActress=='music'">
+      
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12">
+           
+          <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'5')"
+            #radioGroup>
+            <ion-list-header>
+              <img class="img-thumb-music" src="../../../assets/icons/music-director.jpg"/>
+              <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }"  *ngIf="showActress=='music'" vertical="bottom" horizontal="left">
+                <ion-fab-button color="medium">
+                  <ion-icon name="arrow-back-circle"  (click)="showActress='femaleSinger'"></ion-icon>
+                </ion-fab-button>
+              </ion-fab> 
+              <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='music'" vertical="bottom" horizontal="end">
+                <ion-fab-button [disabled]="isMapped"  color="dark">
+                  <ion-button [disabled]="isMapped"  style="color:white !important"  name="save" (click)="mapActors()">Save</ion-button>
+                </ion-fab-button>
+              </ion-fab>
+            </ion-list-header>
+            <div style="height: 450px;
+            overflow-x: scroll;">
+               <ion-row class="rowStyle">
+                <ion-icon name="search" color="dark"></ion-icon>
+              <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('music')" class="txtClass" placeholder="Filter By Experience(Music Director)" [(ngModel)]="queryText_musicDirector"></ion-input>
+            </ion-row>
+             <ion-item *ngFor="let item of q5" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+              (ionBlur)="radioBlur()">
+              <ion-avatar style="margin-left: 0px;">
+                <img src={{item.image}}>
+              </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+              <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+              <ion-chip>
+                <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+                
+                  <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+                </ion-chip>
+              <!--  crewpage popup implemention starts-->
+           <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+            <ion-button style="color:black !important;margin-left: 0px;">
+              <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+            </ion-button>            
+          </ion-buttons> 
+          <div class="overlay" style="height: 599px;" *ngIf="popup">
+            <div class="popup" style="height: 526px;width: 339px;">                    
+                <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                <span  style="color:black !important;">
+                  <b>{{popupActorName}}</b>
+                   has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+                   <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+                 <span  style="color:black !important;">
+                  {{popupActorSkills}}
+                 </span><br><br>
+                 <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+                 <span>
+                  <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+                  </iframe>
+                 </span>
+              </div>
+        </div>
+          <!-- crewpage popup implemention ends-->
+              <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+            </ion-item>
+            </div>
+
+
+          </ion-radio-group>
+        </ion-col>
+
+      </ion-row>
+    </span>
+    <!--DOP starts-->
+    <span *ngIf="showActress=='dop'">
+      
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12">
+       
+          <ion-radio-group allow-empty-selection="false" name="radio-group" (ionChange)="radioGroupChange($event,'6')"
+            #radioGroup>
+            <ion-row class="rowStyle_support">Cinematography</ion-row>
+            <ion-list-header>
+             <!--<img style='background:#b69a9e;height: 160px;
+              margin-left: 89px;
+              margin-top: 14px;
+              width: 120px;' class="img-thumb" src="../../../assets/icons/dop.jpg"/>--> 
+              <!-- forward & backward arrow starts-->
+              <ion-fab *ngIf="showActress=='dop'" vertical="bottom" horizontal="end" style="margin-right: -9px;">
+                <ion-fab-button style="height:34px;width:38px" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" color="medium"> 
+                  <ion-icon  name="arrow-forward-circle" (click)="checkDOPSelected('editor')"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>            
+              <!-- forward & backward arrow ends-->
+            </ion-list-header>
+            <div style="height: 450px;
+            overflow-x: scroll;">
+            <ion-row (click)="skipDOPCrew()" class="rowStyle-skip">
+              <span style="margin-left: 19px;
+              margin-top: 3px;
+              font-family: fantasy;">Skip</span>
+            </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+            <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('DOP')" class="txtClass" placeholder="Filter By Name" [(ngModel)]="queryText_dop"></ion-input>
+            <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsExperience('DOP')" class="txtClass" placeholder="Filter By Experience" [(ngModel)]="queryText_dopExp"></ion-input>
+          </ion-row>
+           <ion-item *ngFor="let item of q9" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+           (ionBlur)="radioBlur()">
+           <ion-avatar style="margin-left: 0px;">
+             <img src={{item.image}} >
+           </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+           <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+           <ion-chip>
+            <!-- <ion-label color="dark">Tags</ion-label>-->
+             
+               <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+             </ion-chip>
+           <!--  crewpage popup implemention starts-->
+           <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+            <ion-button style="color:black !important;margin-left: 0px;">
+              <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+            </ion-button>            
+          </ion-buttons> 
+          <div class="overlay" style="height: 615px;" *ngIf="popup">
+            <div class="popup" style="height: 526px;width: 339px;">                    
+                <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                <span  style="color:black !important;">
+                  <b>{{popupActorName}}</b>
+                   has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+                   <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+                 <span  style="color:black !important;">
+                  {{popupActorSkills}}
+                 </span><br><br>
+                 <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+                 <span>
+                  <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+                  </iframe>
+                 </span>
+              </div>
+        </div>
+          <!-- crewpage popup implemention ends-->
+           <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+         </ion-item>
+          </div>
+
+          </ion-radio-group>
+        </ion-col>
+
+      </ion-row>
+    </span>
+    <!--DOP ends-->
+
+    <!--editor starts-->
+    <span *ngIf="showActress=='editor'">
+      
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12">
+           
+          <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'7')"
+            #radioGroup>
+            <ion-row class="rowStyle_technician_sml">Editors</ion-row>
+            <ion-list-header>
+             <!--<img style='background: #b69a9e;
+              height: 221px;
+              margin-left: 18px;
+              margin-top: -40px;
+              width: 268px;' class="img-thumb-music" src="../../../assets/icons/editor.jpg"/>--> 
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='editor'" vertical="bottom" horizontal="end " style="margin-right: -9px;">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-forward-circle"  (click)="checkEditorSelected('assistantDirector')"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>  
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }"  *ngIf="showActress=='editor'" vertical="bottom" horizontal="left">
+                <ion-fab-button  style="height:34px;width:38px" color="medium">
+                  <ion-icon name="arrow-back-circle"  (click)="showActress='dop'"></ion-icon>
+                </ion-fab-button>
+              </ion-fab> 
+              
+            </ion-list-header>
+            <div style="height: 450px;
+            overflow-x: scroll;">
+            <ion-row (click)="skipEditorCrew()" class="rowStyle-skip">
+              <span style="margin-left: 19px;
+              margin-top: 3px;
+              font-family: fantasy;">Skip</span>
+            </ion-row>
+               <ion-row class="rowStyle">
+                <ion-icon name="search" color="dark"></ion-icon>
+              <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('ETR')" class="txtClass" placeholder="Filter By Name" [(ngModel)]="queryText_etr"></ion-input>
+              <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsExperience('ETR')" class="txtClass" placeholder="Filter By Experience" [(ngModel)]="queryText_etrExp"></ion-input>
+            </ion-row>
+             <ion-item *ngFor="let item of q10" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+              (ionBlur)="radioBlur()">
+              <ion-avatar style="margin-left: 0px;">
+                <img src={{item.image}}>
+              </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+              <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+              <ion-chip>
+                <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+                
+                  <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+                </ion-chip>
+              <!--  crewpage popup implemention starts-->
+           <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+            <ion-button style="color:black !important;margin-left: 0px;">
+              <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+            </ion-button>            
+          </ion-buttons> 
+          <div class="overlay" style="height: 599px;" *ngIf="popup">
+            <div class="popup" style="height: 526px;width: 339px;">                    
+                <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                <span  style="color:black !important;">
+                  <b>{{popupActorName}}</b>
+                   has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+                   <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+                 <span  style="color:black !important;">
+                  {{popupActorSkills}}
+                 </span><br><br>
+                 <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+                 <span>
+                  <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+                  </iframe>
+                 </span>
+              </div>
+        </div>
+          <!-- crewpage popup implemention ends-->
+              <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+            </ion-item>
+            </div>
+
+
+          </ion-radio-group>
+        </ion-col>
+
+      </ion-row>
+    </span>
+    <!--editor ends-->
+
+<!--Assistant Director starts-->
+<span *ngIf="showActress=='assistantDirector'">
+      
+  <ion-row class="ion-align-items-center">
+    <ion-col size="12">
+       
+      <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'8')"
+        #radioGroup>
+        <ion-row class="rowStyle_support">Assistant Directors</ion-row>
+        <ion-list-header>
+          <!--<img style='background: #b69a9e;
+          height: 221px;
+          margin-left: 18px;
+          margin-top: -40px;
+          width: 268px;' class="img-thumb-music" src="../../../assets/icons/editor.jpg"/> -->
+           <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='assistantDirector'" vertical="bottom" horizontal="end " style="margin-right: -9px;">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-forward-circle"  (click)="checkAssistantDirectorSelected('scriptWriter')"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>  
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='assistantDirector'" vertical="bottom" horizontal="right">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-back-circle"  (click)="showActress='editor'"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+        </ion-list-header>
+        <div style="height: 450px;
+        overflow-x: scroll;">
+        <ion-row (click)="skipAssitantDirectorCrew()" class="rowStyle-skip">
+          <span style="margin-left: 19px;
+          margin-top: 3px;
+          font-family: fantasy;">Skip</span>
+        </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('AD')" class="txtClass" placeholder="Filter By Name" [(ngModel)]="queryText_assitantdirector"></ion-input>
+          <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsExperience('AD')" class="txtClass" placeholder="Filter By Experience" [(ngModel)]="queryText_assitantdirectorExp"></ion-input>
+        </ion-row>
+         <ion-item *ngFor="let item of q11" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+          (ionBlur)="radioBlur()">
+          <ion-avatar style="margin-left: 0px;">
+            <img src={{item.image}}>
+          </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+          <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+          <ion-chip>
+            <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+            
+              <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+            </ion-chip>
+          <!--  crewpage popup implemention starts-->
+       <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+        <ion-button style="color:black !important;margin-left: 0px;">
+          <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>            
+      </ion-buttons> 
+      <div class="overlay" style="height: 599px;" *ngIf="popup">
+        <div class="popup" style="height: 526px;width: 339px;">                    
+            <a class="close" (click)="actorModalClosepopup()">&times;</a>
+            <span  style="color:black !important;">
+              <b>{{popupActorName}}</b>
+               has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+               <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+             <span  style="color:black !important;">
+              {{popupActorSkills}}
+             </span><br><br>
+             <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+             <span>
+              <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+              </iframe>
+             </span>
+          </div>
+    </div>
+      <!-- crewpage popup implemention ends-->
+          <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+        </ion-item>
+        </div>
+
+
+      </ion-radio-group>
+    </ion-col>
+
+  </ion-row>
+</span>
+<!--Assistant Director ends-->
+
+<!--Script writer starts-->
+<span *ngIf="showActress=='scriptWriter'">
+      
+  <ion-row class="ion-align-items-center">
+    <ion-col size="12">
+       
+      <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'9')"
+        #radioGroup>
+        <ion-row class="rowStyle_technician_sml">Script Writer</ion-row>
+        <ion-list-header>
+         <!-- <img style='background: #b69a9e;
+          height: 221px;
+          margin-left: 18px;
+          margin-top: -40px;
+          width: 268px;' class="img-thumb-music" src="../../../assets/icons/editor.jpg"/>-->
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='scriptWriter'" vertical="bottom" horizontal="end " style="margin-right: -9px;">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-forward-circle"  (click)="checkScriptwriterSelected('supportingMaleActor')"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='scriptWriter'" vertical="bottom" horizontal="right">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-back-circle"  (click)="showActress='assistantDirector'"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>   
+        </ion-list-header>
+        <div style="height: 450px;
+        overflow-x: scroll;">
+        <ion-row (click)="skipScriptWriterCrew()" class="rowStyle-skip">
+          <span style="margin-left: 19px;
+          margin-top: 3px;
+          font-family: fantasy;">Skip</span>
+        </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('SW')" class="txtClass" placeholder="Filter By Name" [(ngModel)]="queryText_scriptwriter"></ion-input>
+          <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsExperience('SW')" class="txtClass" placeholder="Filter By Experience" [(ngModel)]="queryText_scriptwriterEXP"></ion-input>
+        </ion-row>
+         <ion-item *ngFor="let item of q12" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+          (ionBlur)="radioBlur()">
+          <ion-avatar style="margin-left: 0px;">
+            <img src={{item.image}}>
+          </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+          <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+          <ion-chip>
+            <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+            
+              <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+            </ion-chip>
+          <!--  crewpage popup implemention starts-->
+       <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+        <ion-button style="color:black !important;margin-left: 0px;">
+          <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>            
+      </ion-buttons> 
+      <div class="overlay" style="height: 599px;" *ngIf="popup">
+        <div class="popup" style="height: 526px;width: 339px;">                    
+            <a class="close" (click)="actorModalClosepopup()">&times;</a>
+            <span  style="color:black !important;">
+              <b>{{popupActorName}}</b>
+               has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+               <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+             <span  style="color:black !important;">
+              {{popupActorSkills}}
+             </span><br><br>
+             <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+             <span>
+              <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+              </iframe>
+             </span>
+          </div>
+    </div>
+      <!-- crewpage popup implemention ends-->
+          <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+        </ion-item>
+        </div>
+
+
+      </ion-radio-group>
+    </ion-col>
+
+  </ion-row>
+</span>
+<!--Script writer ends-->
+
+<!--Supporting MaleActor starts-->
+<span *ngIf="showActress=='supportingMaleActor'">
+      
+  <ion-row class="ion-align-items-center">
+    <ion-col size="12">
+       
+      <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'10')"
+        #radioGroup>
+        <ion-row class="rowStyle_support">Supporting Male Actor</ion-row>
+        <ion-list-header>
+         <!-- <img style='background: #b69a9e;
+          height: 221px;
+          margin-left: 18px;
+          margin-top: -40px;
+          width: 268px;' class="img-thumb-music" src="../../../assets/icons/editor.jpg"/>-->
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='supportingMaleActor'" vertical="bottom" horizontal="end " style="margin-right: -9px;">
+            <ion-fab-button  style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-forward-circle"  (click)="checkSupportMaleActorSelected('supportingFemaleActor')"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='supportingMaleActor'" vertical="bottom" horizontal="right">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-back-circle"  (click)="showActress='scriptWriter'"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+        </ion-list-header>
+        <div style="height: 450px;
+        overflow-x: scroll;">        
+        <ion-row (click)="skipSupportingMaleActor()" class="rowStyle-skip">
+          <span style="margin-left: 19px;
+          margin-top: 3px;
+          font-family: fantasy;">Skip</span>
+        </ion-row>        
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+            
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('supportingMaleActor')" class="txtClass" placeholder="Filter By Name" [(ngModel)]="queryText_supportingMaleActor"></ion-input>
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsAge('supportingMaleActor')" class="txtClass" placeholder="Filter By Age" [(ngModel)]="queryText_supportingMaleActorAge"></ion-input>
+        </ion-row>
+         <ion-item *ngFor="let item of q13" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+          (ionBlur)="radioBlur()">
+          <ion-avatar style="margin-left: 0px;">
+            <img src={{item.image}}>
+          </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+          <ion-label style="color:black !important">Age:{{item.age}} </ion-label>
+          <ion-chip>
+            <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+            
+              <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+            </ion-chip>
+          <!--  crewpage popup implemention starts-->
+       <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+        <ion-button style="color:black !important;margin-left: 0px;">
+          <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>            
+      </ion-buttons> 
+      <div class="overlay" style="height: 599px;" *ngIf="popup">
+        <div class="popup" style="height: 526px;width: 339px;">                    
+            <a class="close" (click)="actorModalClosepopup()">&times;</a>
+            <span  style="color:black !important;">
+              <b>{{popupActorName}}</b>
+               has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+               <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+             <span  style="color:black !important;">
+              {{popupActorSkills}}
+             </span><br><br>
+             <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+             <span>
+              <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+              </iframe>
+             </span>
+          </div>
+    </div>
+      <!-- crewpage popup implemention ends-->
+          <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+        </ion-item>
+        </div>
+
+
+      </ion-radio-group>
+    </ion-col>
+
+  </ion-row>
+</span>
+<!--Supporting MaleActor ends-->
+
+<!--Supporting FemaleActor starts-->
+<span *ngIf="showActress=='supportingFemaleActor'">
+      
+  <ion-row class="ion-align-items-center">
+    <ion-col size="12">
+       
+      <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'11')"
+        #radioGroup>
+        <ion-row class="rowStyle_support">Supporting Female Actor</ion-row>
+        <ion-list-header>
+         <!-- <img style='background: #b69a9e;
+          height: 221px;
+          margin-left: 18px;
+          margin-top: -40px;
+          width: 268px;' class="img-thumb-music" src="../../../assets/icons/editor.jpg"/>-->
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='supportingFemaleActor'" vertical="bottom" horizontal="end " style="margin-right: -9px;">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-forward-circle"  (click)="checkSupportFemaleActorSelected('dubbingMaleArtist')"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='supportingFemaleActor'" vertical="bottom" horizontal="right">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-back-circle"  (click)="showActress='supportingMaleActor'"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+        </ion-list-header>
+        <div style="height: 450px;
+        overflow-x: scroll;">
+        <ion-row (click)="skipSupportingFemaleActor()" class="rowStyle-skip">
+          <span style="margin-left: 19px;
+          margin-top: 3px;
+          font-family: fantasy;">Skip</span>
+        </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('supportingFemaleActor')" class="txtClass" placeholder="Filter By Name" [(ngModel)]="queryText_supportingFemaleActor"></ion-input>
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsAge('supportingFemaleActor')" class="txtClass" placeholder="Filter By Age" [(ngModel)]="queryText_supportingFemaleActorAge"></ion-input>
+        </ion-row>
+         <ion-item *ngFor="let item of q17" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+          (ionBlur)="radioBlur()">
+          <ion-avatar style="margin-left: 0px;">
+            <img src={{item.image}}>
+          </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+          <ion-label style="color:black !important">Age:{{item.age}} </ion-label>
+          <ion-chip>
+            <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+            
+              <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+            </ion-chip>
+          <!--  crewpage popup implemention starts-->
+       <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+        <ion-button style="color:black !important;margin-left: 0px;">
+          <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>            
+      </ion-buttons> 
+      <div class="overlay" style="height: 599px;" *ngIf="popup">
+        <div class="popup" style="height: 526px;width: 339px;">                    
+            <a class="close" (click)="actorModalClosepopup()">&times;</a>
+            <span  style="color:black !important;">
+              <b>{{popupActorName}}</b>
+               has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+               <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+             <span  style="color:black !important;">
+              {{popupActorSkills}}
+             </span><br><br>
+             <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+             <span>
+              <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+              </iframe>
+             </span>
+          </div>
+    </div>
+      <!-- crewpage popup implemention ends-->
+          <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+        </ion-item>
+        </div>
+
+
+      </ion-radio-group>
+    </ion-col>
+
+  </ion-row>
+</span>
+<!--Supporting FemaleActor ends-->
+
+<!--Dubbing Artist Male starts-->
+<span *ngIf="showActress=='dubbingMaleArtist'">
+      
+  <ion-row class="ion-align-items-center">
+    <ion-col size="12">
+       
+      <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'15')"
+        #radioGroup>
+        <ion-row class="rowStyle_support">Dubbing Male Artist</ion-row>
+        <ion-list-header>
+          <!--<img style='background: #b69a9e;
+          height: 221px;
+          margin-left: 18px;
+          margin-top: -40px;
+          width: 268px;' class="img-thumb-music" src="../../../assets/icons/editor.jpg"/> -->
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='dubbingMaleArtist'" vertical="bottom" horizontal="end " style="margin-right: -9px;">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-forward-circle"  (click)="checkDubbingArtistMaleSelected('dubbingFemaleArtist')"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='dubbingMaleArtist'" vertical="bottom" horizontal="right">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-back-circle"  (click)="showActress='supportingFemaleActor'"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+        </ion-list-header>
+        <div style="height: 450px;
+        overflow-x: scroll;">
+        <ion-row (click)="skipDubbingMaleArtist()" class="rowStyle-skip">
+          <span style="margin-left: 19px;
+          margin-top: 3px;
+          font-family: fantasy;">Skip</span>
+        </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('DUB_M')" class="txtClass" placeholder="Filter By Name" [(ngModel)]="queryText_dubbingMale"></ion-input>
+          <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsExperience('DUB_M')" class="txtClass" placeholder="Filter By Experience" [(ngModel)]="queryText_dubbingMaleExp"></ion-input>
+        </ion-row>
+         <ion-item *ngFor="let item of q18" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+          (ionBlur)="radioBlur()">
+          <ion-avatar style="margin-left: 0px;">
+            <img src={{item.image}}>
+          </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+          <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+          <ion-chip>
+            <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+            
+              <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+            </ion-chip>
+          <!--  crewpage popup implemention starts-->
+       <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+        <ion-button style="color:black !important;margin-left: 0px;">
+          <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>            
+      </ion-buttons> 
+      <div class="overlay" style="height: 599px;" *ngIf="popup">
+        <div class="popup" style="height: 526px;width: 339px;">                    
+            <a class="close" (click)="actorModalClosepopup()">&times;</a>
+            <span  style="color:black !important;">
+              <b>{{popupActorName}}</b>
+               has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+               <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+             <span  style="color:black !important;">
+              {{popupActorSkills}}
+             </span><br><br>
+             <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+             <span>
+              <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+              </iframe>
+             </span>
+          </div>
+    </div>
+      <!-- crewpage popup implemention ends-->
+          <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+        </ion-item>
+        </div>
+
+
+      </ion-radio-group>
+    </ion-col>
+
+  </ion-row>
+</span>
+<!--Dubbing Artist Male ends-->
+
+<!--Dubbing Artist Female starts-->
+<span *ngIf="showActress=='dubbingFemaleArtist'">
+      
+  <ion-row class="ion-align-items-center">
+    <ion-col size="12">
+       
+      <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'16')"
+        #radioGroup>
+        <ion-row class="rowStyle_support">Dubbing Female Artist</ion-row>
+        <ion-list-header>
+          <!--<img style='background: #b69a9e;
+          height: 221px;
+          margin-left: 18px;
+          margin-top: -40px;
+          width: 268px;' class="img-thumb-music" src="../../../assets/icons/editor.jpg"/> -->
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='dubbingFemaleArtist'" vertical="bottom" horizontal="end " style="margin-right: -9px;">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-forward-circle"  (click)="checkDubbingArtistFemaleSelected('choreographer')"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='dubbingFemaleArtist'" vertical="bottom" horizontal="right">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-back-circle"  (click)="showActress='dubbingMaleArtist'"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+        </ion-list-header>
+        <div style="height: 450px;
+        overflow-x: scroll;">
+        <ion-row (click)="skipDubbingFemaleArtist()" class="rowStyle-skip">
+          <span style="margin-left: 19px;
+          margin-top: 3px;
+          font-family: fantasy;">Skip</span>
+        </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('DUB_F')" class="txtClass" placeholder="Filter By Name`" [(ngModel)]="queryText_supportingFemaleActor"></ion-input>
+          <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsExperience('DUB_F')" class="txtClass" placeholder="Filter By Experience" [(ngModel)]="queryText_dubbingFemaleExp"></ion-input>
+        </ion-row>
+         <ion-item *ngFor="let item of q19" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+          (ionBlur)="radioBlur()">
+          <ion-avatar style="margin-left: 0px;">
+            <img src={{item.image}}>
+          </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+          <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+          <ion-chip>
+            <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+            
+              <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+            </ion-chip>
+          <!--  crewpage popup implemention starts-->
+       <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+        <ion-button style="color:black !important;margin-left: 0px;">
+          <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>            
+      </ion-buttons> 
+      <div class="overlay" style="height: 599px;" *ngIf="popup">
+        <div class="popup" style="height: 526px;width: 339px;">                    
+            <a class="close" (click)="actorModalClosepopup()">&times;</a>
+            <span  style="color:black !important;">
+              <b>{{popupActorName}}</b>
+               has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+               <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+             <span  style="color:black !important;">
+              {{popupActorSkills}}
+             </span><br><br>
+             <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+             <span>
+              <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+              </iframe>
+             </span>
+          </div>
+    </div>
+      <!-- crewpage popup implemention ends-->
+          <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+        </ion-item>
+        </div>
+
+
+      </ion-radio-group>
+    </ion-col>
+
+  </ion-row>
+</span>
+<!--Dubbing Artist Female ends-->
+
+
+
+<!--Choreographer starts-->
+<span *ngIf="showActress=='choreographer'">
+      
+  <ion-row class="ion-align-items-center">
+    <ion-col size="12">
+       
+      <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'12')"
+        #radioGroup>
+        <ion-row class="rowStyle_technician_sml">Choreographers</ion-row>
+        <ion-list-header>
+         <!-- <img style='background: #b69a9e;
+          height: 221px;
+          margin-left: 18px;
+          margin-top: -40px;
+          width: 268px;' class="img-thumb-music" src="../../../assets/icons/editor.jpg"/>-->
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='choreographer'" vertical="bottom" horizontal="end " style="margin-right: -9px;">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-forward-circle"  (click)="checkChoreoprapherSelected('STUD')"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='choreographer'" vertical="bottom" horizontal="right">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-back-circle"  (click)="showActress='supportingFemaleActor'"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+        </ion-list-header>
+        <div style="height: 450px;
+        overflow-x: scroll;">
+        <ion-row (click)="skipChoreographer()" class="rowStyle-skip">
+          <span style="margin-left: 19px;
+          margin-top: 3px;
+          font-family: fantasy;">Skip</span>
+        </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('CHORGR')" class="txtClass" placeholder="Filter By Name" [(ngModel)]="queryText_choreographer"></ion-input>
+          <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsExperience('CHORGR')" class="txtClass" placeholder="Filter By Experience" [(ngModel)]="queryText_choreographerExp"></ion-input>
+        </ion-row>
+         <ion-item *ngFor="let item of q14" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+          (ionBlur)="radioBlur()">
+          <ion-avatar style="margin-left: 0px;">
+            <img src={{item.image}}>
+          </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+          <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+          <ion-chip>
+            <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+            
+              <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+            </ion-chip>
+          <!--  crewpage popup implemention starts-->
+       <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+        <ion-button style="color:black !important;margin-left: 0px;">
+          <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>            
+      </ion-buttons> 
+      <div class="overlay" style="height: 599px;" *ngIf="popup">
+        <div class="popup" style="height: 526px;width: 339px;">                    
+            <a class="close" (click)="actorModalClosepopup()">&times;</a>
+            <span  style="color:black !important;">
+              <b>{{popupActorName}}</b>
+               has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+               <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+             <span  style="color:black !important;">
+              {{popupActorSkills}}
+             </span><br><br>
+             <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+             <span>
+              <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+              </iframe>
+             </span>
+          </div>
+    </div>
+      <!-- crewpage popup implemention ends-->
+          <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+        </ion-item>
+        </div>
+
+
+      </ion-radio-group>
+    </ion-col>
+
+  </ion-row>
+</span>
+<!--Choreographer ends-->
+<!--Studio starts-->
+<span *ngIf="showActress=='STUD'">
+      
+  <ion-row class="ion-align-items-center">
+    <ion-col size="12">
+       
+      <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'14')"
+        #radioGroup>
+        <ion-row class="rowStyle_technician_sml">Studios</ion-row>
+        <ion-list-header>
+         <!-- <img style='background: #b69a9e;
+          height: 221px;
+          margin-left: 18px;
+          margin-top: -40px;
+          width: 268px;' class="img-thumb-music" src="../../../assets/icons/editor.jpg"/>-->
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='STUD'" vertical="bottom" horizontal="end " style="margin-right: -9px;">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-forward-circle"  (click)="checkDubbingStudioSelected('EQMT')"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='STUD'" vertical="bottom" horizontal="right">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-back-circle"  (click)="showActress='choreographer'"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+        </ion-list-header>
+        <div style="height: 450px;
+        overflow-x: scroll;">
+        <ion-row (click)="skipStudioCrew()" class="rowStyle-skip">
+          <span style="margin-left: 19px;
+          margin-top: 3px;
+          font-family: fantasy;">Skip</span>
+        </ion-row>
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('STUD')" class="txtClass" placeholder="Filter By Name" [(ngModel)]="queryText_studio"></ion-input>
+          <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsExperience('STUD')" class="txtClass" placeholder="Filter By Experience" [(ngModel)]="queryText_studioExp"></ion-input>
+        </ion-row>
+         <ion-item *ngFor="let item of q16" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+          (ionBlur)="radioBlur()">
+          <ion-avatar style="margin-left: 0px;">
+            <img src={{item.image}}>
+          </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+          <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+          <ion-chip>
+            <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+              <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+            </ion-chip>
+          <!--  crewpage popup implemention starts-->
+       <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+        <ion-button style="color:black !important;margin-left: 0px;">
+          <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>            
+      </ion-buttons> 
+      <div class="overlay" style="height: 599px;" *ngIf="popup">
+        <div class="popup" style="height: 526px;width: 339px;">                    
+            <a class="close" (click)="actorModalClosepopup()">&times;</a>
+            <span  style="color:black !important;">
+              <b>{{popupActorName}}</b>
+               has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+               <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+             <span  style="color:black !important;">
+              {{popupActorSkills}}
+             </span><br><br>
+             <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+             <span>
+              <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+              </iframe>
+             </span>
+          </div>
+    </div>
+      <!-- crewpage popup implemention ends-->
+          <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+        </ion-item>
+        </div>
+
+
+      </ion-radio-group>
+    </ion-col>
+
+  </ion-row>
+</span>
+<!--Studio ends-->
+
+<!--Equipment starts-->
+<span *ngIf="showActress=='EQMT'">
+      
+  <ion-row class="ion-align-items-center">
+    <ion-col size="12">
+       
+      <ion-radio-group allow-empty-selection="true" name="radio-group" (ionChange)="radioGroupChange($event,'13')"
+        #radioGroup>
+        <ion-row class="rowStyle_support">Film Making Equipments</ion-row>
+        <ion-list-header>
+         <!-- <img style='background: #b69a9e;
+          height: 221px;
+          margin-left: 18px;
+          margin-top: -40px;
+          width: 268px;' class="img-thumb-music" src="../../../assets/icons/editor.jpg"/>-->
+          <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }"  *ngIf="showActress=='EQMT'" vertical="bottom" horizontal="left">
+            <ion-fab-button style="height:34px;width:38px" color="medium">
+              <ion-icon name="arrow-back-circle"  (click)="showActress='STUD'"></ion-icon>
+            </ion-fab-button>
+          </ion-fab> 
+        <ion-fab [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" *ngIf="showActress=='EQMT'" vertical="bottom" horizontal="end">
+          <ion-fab-button style="height:34px;width:38px" [disabled]="isMapped"  color="dark">
+            <ion-button [disabled]="isMapped"  style="color:white !important"  name="save" (click)="mapTechniciane()">Save</ion-button>
+          </ion-fab-button>
+        </ion-fab>          
+        </ion-list-header>
+        <div style="height: 450px;
+        overflow-x: scroll;">
+           <ion-row class="rowStyle">
+            <ion-icon name="search" color="dark"></ion-icon>
+          <ion-input type="text" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItems('EQMT')" class="txtClass" placeholder="Filter By Name" [(ngModel)]="queryText_choreographer"></ion-input>
+          <ion-input type="number" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" (ionChange)="setFilteredItemsExperience('EQMT')" class="txtClass" placeholder="Filter By Experience" [(ngModel)]="queryText_equipmentExp"></ion-input>
+        </ion-row>
+         <ion-item *ngFor="let item of q15" (ionFocus)="radioFocus()" (ionSelect)="radioSelect($event)"
+          (ionBlur)="radioBlur()">
+          <ion-avatar style="margin-left: 0px;">
+            <img src={{item.image}}>
+          </ion-avatar> &nbsp;<ion-label style="color:black !important">{{item.actorName}}</ion-label> &nbsp;
+          <ion-label style="color:black !important">Exp:{{item.experience}} </ion-label>
+          <ion-chip>
+            <!--<ion-label (click)="showActorDetails()" color="dark">Tags</ion-label> -->
+            
+              <ion-label style="color:black !important;height: 17px;">{{item.associatedStories.length}} Tags</ion-label>
+            </ion-chip>
+          <!--  crewpage popup implemention starts-->
+       <ion-buttons style="color:black !important;margin-left: -15px;" (click)="actorModalpopup(item)" slot="end">
+        <ion-button style="color:black !important;margin-left: 0px;">
+          <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>            
+      </ion-buttons> 
+      <div class="overlay" style="height: 599px;" *ngIf="popup">
+        <div class="popup" style="height: 526px;width: 339px;">                    
+            <a class="close" (click)="actorModalClosepopup()">&times;</a>
+            <span  style="color:black !important;">
+              <b>{{popupActorName}}</b>
+               has mapped <b>{{mappedCount}} time(s) </b> for multiple stories by the audience so far</span><br><br>
+               <span  style="color:black !important;"><b>About {{popupActorName}} :</b></span>
+             <span  style="color:black !important;">
+              {{popupActorSkills}}
+             </span><br><br>
+             <span  style="color:black !important;"><b>{{popupActorName}}'s Profile Video :</b></span>
+             <span>
+              <iframe width="100%" height="50%" [src]="safeURL" frameborder="1" allowfullscreen>
+              </iframe>
+             </span>
+          </div>
+    </div>
+      <!-- crewpage popup implemention ends-->
+          <ion-radio style="margin-right: 5px;" [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio>
+        </ion-item>
+        </div>
+
+
+      </ion-radio-group>
+    </ion-col>
+
+  </ion-row>
+</span>
+<!--Equipment ends-->
+</ion-grid>  
+
+</ion-content>

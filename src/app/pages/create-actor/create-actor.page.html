@@ -1,0 +1,213 @@
+<ion-header class="custom-header">
+
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="defaultHref"></ion-back-button>
+    </ion-buttons>
+    <ion-title style="font-size:16px">
+      <ion-icon color="danger" name="people"></ion-icon> &nbsp; {{pageHeader}}
+    </ion-title>
+
+
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="create-actor">
+  <div class="about-info">
+
+    <div *ngIf="!isFromAbout" class="ion-text-center">
+      <img style='width: 195px;' *ngIf="isImagefinalized" class="sml-cls-cropped-img" src='{{finalizedImageUrl}}'>
+      <img *ngIf="!isImageCropperShown" class="sml-cls-img-defaul-icon" src='../../assets/icons/viewers.png'>
+    <div *ngIf="isImageCropperShown && !isImagefinalized">
+      <image-cropper class="sml-cls-cropped-img" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+        [aspectRatio]="4 / 4" [resizeToWidth]="225" format="png" (imageCropped)="imageCropped($event)"
+        (imageLoaded)="imageLoaded($event)" (cropperReady)="cropperReady($event)" (loadImageFailed)="loadImageFailed()">
+      </image-cropper>
+    </div>
+  </div>
+  
+    <br>
+
+ 
+    <div *ngIf="isFromAbout" class="ion-text-center">
+      <img style='width: 195px;' *ngIf="showPreview"   class="sml-cls-cropped-img" src='{{finalizedImageUrl}}'>
+      <div *ngIf="isImageCropperShown && !isImagefinalized">
+        <image-cropper class="sml-cls-cropped-img" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+          [aspectRatio]="4 / 4" [resizeToWidth]="225" format="png" (imageCropped)="imageCropped($event)"
+          (imageLoaded)="imageLoaded($event)" (cropperReady)="cropperReady($event)" (loadImageFailed)="loadImageFailed()">
+        </image-cropper>
+      </div> 
+    </div>
+    <input id="uploadBtn" style="display: none" #hiddenfileinput type="file" class="upload"
+      (change)="fileChangeEvent($event)" />
+    <ion-button *ngIf="!isImagefinalized"
+      style="margin-left: 80px;margin-top: -42px;" color="danger" (click)="hiddenfileinput.click()"
+      class="ion-color md button button-solid ion-activatable ion-focusable hydrated ion-color-dark">
+      <ion-icon name="cloud-upload" slot="start"></ion-icon>  Upload Display Image 
+    </ion-button>
+     
+      <br>
+      <ion-button  *ngIf="this.userData.userType !=='V' && this.userData.userType !=='P'"
+      style="margin-left:108px;margin-top: 8px;color: #004e95;"   (click)="showModal()"
+      class="ion-color md button button-solid ion-activatable ion-focusable hydrated ion-color-default">
+      <ion-icon name="arrow-forward-circle" slot="start"></ion-icon> Upload More       
+    </ion-button>
+    <div *ngIf="isMultipleImgLoaded" class="field-text" position="floating">
+      {{this.imageArray.length}} file(s) uploaded.
+    </div>
+     
+    <h3 class="ion-padding-top ion-padding-start">Details</h3>
+
+    <ion-list lines="none">
+      <ion-item>
+        <ion-label class="field-text" position="floating">User name</ion-label>
+        <ion-input class="ion-cust-text" [(ngModel)]="name" #ref autofocus="true" disabled="true"> </ion-input>
+        <ion-icon name="create" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <ion-label class="field-text" position="floating">Display name</ion-label>
+        <ion-input class="ion-cust-text" [(ngModel)]="displayName" #ref autofocus="true" > </ion-input>
+        <ion-icon name="create" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <ion-label style="margin-left: 53px;color:black !important">Gender</ion-label>
+        <ion-select style="color:black !important" placeholder="Select Gender" [(ngModel)]="gender" value="select"
+          interface="action-sheet">
+          <ion-select-option value="f">Female</ion-select-option>
+          <ion-select-option value="m">Male</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <!--<ion-item>
+        <ion-label class="field-text" position="floating">Gender</ion-label>
+        <ion-list>
+          <ion-item>
+            <ion-label class="field-text">Male</ion-label>
+            <ion-toggle  [(ngModel)]="gender"></ion-toggle>
+            <ion-label class="field-text" style="width: 83px;">Female</ion-label>
+          </ion-item>
+ 
+        </ion-list>
+        <ion-icon name="men" slot="start"></ion-icon>
+      </ion-item> -->
+      <ion-item>
+        <ion-label class="field-text" position="floating">Contact Number</ion-label>
+        <ion-input type="tel" maxlength="10" class="ion-cust-text" [(ngModel)]="mobile"
+          (keypress)="numberOnlyValidation($event)" disabled="true"></ion-input>
+        <ion-icon name="keypad" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item *ngIf="userType !== 'STUD' && userType !== 'EQMT'">
+        <ion-label  class="field-text" position="floating">Age</ion-label>
+        <ion-input type="tel" maxlength="3" class="ion-cust-text" [(ngModel)]="age"
+          (keypress)="numberOnlyValidation($event)"></ion-input>
+        <ion-icon name="keypad" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item *ngIf="userType !== 'V'">
+        <ion-label class="field-text" position="floating">No of Year Experience</ion-label>
+        <ion-input type="tel" maxlength="3" class="ion-cust-text" [(ngModel)]="experience"
+          (keypress)="numberOnlyValidation($event)" ></ion-input>
+        <ion-icon name="keypad" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item *ngIf="experience == 0">
+        <input  id="uploadBtn" style="display: none" #hiddenfileinput type="file" class="upload"
+        (change)="fileChangeEventForVideoAudio($event)" />
+      <ion-button 
+        style="margin-left:40px;margin-top: 6px" color="danger" (click)="hiddenfileinput.click()"
+        class="ion-color md button button-solid ion-activatable ion-focusable hydrated ion-color-dark">
+        <ion-icon name="cloud-upload" slot="start"></ion-icon> Upload Video/Audio
+      </ion-button><ion-label *ngIf="uploadedFileName !== '' ">{{uploadedFileName}}</ion-label>
+      </ion-item>
+      <ion-item *ngIf="(userType !== 'V')">
+        <ion-label class="field-text" position="floating">About yourself(Max 50 words)</ion-label>
+        <ion-textarea class="ion-cust-text" maxlength="450" rows="4" cols="26" [(ngModel)]="skills"></ion-textarea>
+        <ion-icon name="ribbon" slot="start"></ion-icon>
+      </ion-item>
+      <!--profile completion fields start-->
+      <ion-item *ngIf="isFromAbout && userType !== 'V' &&  userType !== 'P'">
+        <ion-label class="field-text" position="floating">Paid Option</ion-label>
+        <ion-select style="color:black !important" placeholder="Select Paid Option" [(ngModel)]="paidOption" value="select"
+        interface="action-sheet">
+        <ion-select-option value="free">Free</ion-select-option>
+        <ion-select-option value="paid">Paid</ion-select-option>
+      </ion-select>
+        <ion-icon name="ribbon" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item *ngIf="(this.gender == 'm' || this.gender == 'f' || this.gender == 'sa_m' ||  this.gender == 'sa_f' ) && isFromAbout && requredUserTypes.includes(userType)">
+        <ion-label class="field-text" position="floating">Color Option</ion-label>
+        <ion-select style="color:black !important" placeholder="Select Color" [(ngModel)]="color" value="select"
+        interface="action-sheet">
+        <ion-select-option value="darkBrown">Dark Brown</ion-select-option>
+        <ion-select-option value="brown">Brown</ion-select-option>
+        <ion-select-option value="wheatishBronwn">Wheatish brown</ion-select-option>
+        <ion-select-option value="medium">Medium</ion-select-option>
+        <ion-select-option value="brown">Fair</ion-select-option>
+        <ion-select-option value="veryFair">Very Fair</ion-select-option>
+      </ion-select>
+        <ion-icon name="ribbon" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item *ngIf="isFromAbout">
+        <ion-label class="field-text" position="floating">Language</ion-label>
+        <ion-select style="color:black !important" placeholder="Select Primary Language" [(ngModel)]="language" value="select"
+        interface="action-sheet">
+        <ion-select-option value="english">English</ion-select-option>
+        <ion-select-option value="tamil">Tamil</ion-select-option>
+        <ion-select-option value="Hindi">Hindi</ion-select-option>
+        <ion-select-option value="kannada">Kannada</ion-select-option>
+        <ion-select-option value="malayalam">Malayalam</ion-select-option>
+        <ion-select-option value="telugu">Telugu</ion-select-option>
+        <ion-select-option value="bengali">Bengali</ion-select-option>
+        <ion-select-option value="urudu">Urudu</ion-select-option>
+        <ion-select-option value="punjabi">Punjabi</ion-select-option>
+        <ion-select-option value="other">Others</ion-select-option>
+      </ion-select>
+        <ion-icon name="ribbon" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item *ngIf="(this.gender == 'm' || this.gender == 'f' || this.gender == 'sa_m' ||  this.gender == 'sa_f' ) && isFromAbout && requredUserTypes.includes(userType)">
+        <ion-label class="field-text" position="floating">Weight</ion-label>
+        <ion-input type="tel" maxlength="3" class="ion-cust-text" [(ngModel)]="weight"
+          (keypress)="numberOnlyValidation($event)" ></ion-input>
+        <ion-icon name="keypad" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item *ngIf="(this.gender == 'm' || this.gender == 'f' || this.gender == 'sa_m' ||  this.gender == 'sa_f' ) && isFromAbout && requredUserTypes.includes(userType)">
+        <ion-label class="field-text" position="floating">Height(Feet)</ion-label>
+        <ion-input type="tel" maxlength="5" class="ion-cust-text" [(ngModel)]="height"
+          (keypress)="numberOnlyValidation($event)" ></ion-input>
+        <ion-icon name="keypad" slot="start"></ion-icon>
+      </ion-item>
+   
+      <!--profile comletion fields end -->
+      <ion-list lines="none" *ngIf="experience > 0">
+        <form [formGroup]="myForm">
+          <ion-item *ngFor="let control of myForm.controls | keyvalue">
+            <ion-input class="ion-cust-text"  required type="text" [formControlName]="control.key" placeHolder="Paste youtube link here..."></ion-input>
+            <ion-icon (click)="removeControl(control)" name="close-circle"></ion-icon>
+          </ion-item>
+        </form>
+      </ion-list>
+      <ion-button *ngIf="experience > 0" expand="full" style="background: #004e95;" (click)="addControl()">Add More...</ion-button>
+     <!--<ion-item *ngIf="experience > 0">
+        <ion-label *ngIf="isYoutubeRequired && userType !== 'V'" class="field-text" position="floating">Video
+          Reference(YouTube link)</ion-label>
+        <ion-input *ngIf="isYoutubeRequired && userType !== 'V'" class="ion-cust-text" [(ngModel)]="profiles">
+        </ion-input>
+        <ion-icon *ngIf="isYoutubeRequired && userType !== 'V'" name="videocam" slot="start"></ion-icon>
+      </ion-item> --> 
+
+
+    </ion-list>
+    <ion-item-divider style="margin-top: 42px;">
+
+      <ion-fab style="margin-top: -183px;" horizontal="end">
+        <ion-fab-button color="dark">
+          <ion-button name="send" (click)="createActor()" [disabled]="disableButton">Save</ion-button>
+        </ion-fab-button>
+      </ion-fab>
+
+
+
+    </ion-item-divider>
+
+  </div>
+
+</ion-content>

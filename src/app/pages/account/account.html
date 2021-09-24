@@ -1,0 +1,598 @@
+<ion-header class="toolbar_class" translucent="true">
+  <ion-toolbar style="color:white">
+
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    
+    <ion-title *ngIf="!showSearchbar"  style="margin-left: -14px;"><img class="logo-cls" src="../../../assets/icons/artist-red.png"></ion-title>
+    <ion-searchbar *ngIf="showSearchbar" [(ngModel)]="queryText" (ionChange)="setFilteredItems()"
+      (ionCancel)="showSearchbar = false"  style="color: white;" placeholder="Search your favourties"></ion-searchbar>    
+      <ion-list class="schdule-list" *ngIf="isItemAvailable">
+        <ion-item style="color: white;" *ngFor="let item of items">
+          <img (click)="navigateToDetalil(item)" class="search-logo" src={{item.image}} />
+          <span (click)="navigateToDetalil(item)">{{ item.actorName }}</span></ion-item>
+      </ion-list>
+      <ion-buttons slot="end">
+        <ion-button *ngIf="!ios && !showSearchbar" (click)="showSearchbar = true">
+          <ion-icon slot="icon-only" name="search"></ion-icon>
+        </ion-button>
+        <ion-button (click)="goBack()">
+          <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-segment (ionChange)="changeCategory($event)" [(ngModel)]="segment" class="seg-class" >
+    <ion-slides style="width: 358px;" [options]="slideOptsOne">
+      <ion-slide>
+          <ion-segment-button value="actor">
+            <ion-icon src="../../../assets/icons/theater.svg"></ion-icon>
+            <ion-label>Actors</ion-label>
+          </ion-segment-button>
+          </ion-slide>
+          <ion-slide>
+          <ion-segment-button value="actress">
+            <ion-icon src="../../../assets/icons/fun.svg"></ion-icon>
+            <ion-label>Actress</ion-label>
+          </ion-segment-button>
+          </ion-slide>
+          <ion-slide>
+          <ion-segment-button value="musicdirector">
+            <ion-icon name="musical-notes"></ion-icon>
+            <ion-label>Music</ion-label>
+          </ion-segment-button>
+          </ion-slide>
+          <ion-slide>
+          <ion-segment-button value="malesinger">
+            <ion-icon name="musical-note-outline"></ion-icon>
+            <ion-label>Singer(M)</ion-label>
+          </ion-segment-button>
+          </ion-slide>
+          <ion-slide>
+          <ion-segment-button style="margin-right:-6px" value="femalesinger">
+            <ion-icon name="musical-note-outline"></ion-icon>
+            <ion-label>Singer(F)</ion-label>
+          </ion-segment-button>
+          </ion-slide>
+       </ion-slides>   
+  </ion-segment>
+  <ion-grid *ngIf="generType=='actor' " fixed>
+    <ion-row>
+      <ng-container *ngIf="isLoaded; else elseTemplate">
+        <ion-col size="12" size-md="6">
+          <ion-card *ngFor="let actor of maleActor">
+
+            <ion-label>
+              <h2 class="title-cls">
+                <ion-avatar class="md hydrated"><img class="actor-image-cls"  src={{actor.image}}></ion-avatar> <p class="actor-name">{{actor.actorName}} <small>&nbsp; created  <ion-icon name="hourglass"></ion-icon> &nbsp;{{ago(actor.createdOn)}} ago</small></p>
+              </h2>
+            </ion-label>
+            <div class="container" *ngIf="this.actor.mediaFile =='' || this.actor.mediaFile == undefined">
+              <ion-slides  style="height: 200px;" pager="true" [options]="slideOpts" #slideWithNav
+                (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+                <ng-container *ngIf="isLoaded; else elseTemplate">
+                  <ion-slide *ngFor="let eachUrl of actor.thumnail">
+                    <ion-icon style="height: 198px;background: #0c0c0c;width: 20px;" *ngIf="actor.thumnail.length > 1" name="chevron-back-outline" class="btnPrev" (click)="prev()"></ion-icon>
+                    <!--<button style="margin-left: 0px;" type="submit" float-left ion-button  color="primary" class="btnPrev" (click)="prev()">Prev</button> -->
+                    <iframe  width="100%" height="100%" [src]="eachUrl" frameborder="0" allowfullscreen>
+                    </iframe>   
+                    <ion-icon style="height: 198px;background: #0c0c0c;width: 20px;" *ngIf="actor.thumnail.length > 1" name="chevron-forward-outline" class="btnNext" (click)="next()"></ion-icon>                
+                  <!--<button type="submit" float-right ion-button color="primary" class="btnNext" (click)="next()">Next</button> -->
+                  </ion-slide>
+                  
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ion-slide style="background-image: linear-gradient(black, rgb(78, 77, 77));"  *ngFor="let post of dummyData">
+                    
+                    <div class="content">
+                      <p>
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                      </p>
+                    </div>
+                  </ion-slide>
+                </ng-template>
+               
+              </ion-slides>
+            </div>
+           <!-- <iframe  *ngIf="actor.mediaFile =='' || actor.mediaFile == undefined || actor.mediaFile == null" width="100%" height="60%" [src]=actor.thumnail frameborder="0" allowfullscreen>
+            </iframe>-->
+            <div *ngIf="actor.mediaFile !=='' && actor.mediaFile !== undefined && actor.mediaFile !== null" class="ion-text-center">
+              <video style="width: 100%;height: 200px;"  src = "{{actor.mediaFile}}#t=0.1" controls >
+              </video>                 
+            </div>
+            <ion-row class="bottom-bar">
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: 3px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-icon name="bar-chart"></ion-icon> {{actor.storyCount }} Tag(s) Done.
+                </p>
+              </ion-col>
+              <ion-col (click)="showPopup(actor)" class="comment-section">
+                <ion-chip class="chip-css ion-text-start md ion-activatable hydrated">
+                  <ion-icon name="ribbon" ></ion-icon> &nbsp; &nbsp;<b>Click Me</b>
+                </ion-chip>
+              </ion-col>
+              <!--<div class="overlay" *ngIf="popup">
+                <div class="popup">                    
+                    <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                    <div class="content">
+                      {{popupActorSkills}}
+                    </div>
+                </div>
+            </div> -->
+              <ion-col class="comment-section">
+                <ion-chip  class="ion-text-end" class="chip-cls" button>
+                  <ion-icon  src="../../../assets/icons/whatsapp.svg"></ion-icon> 
+                  <ion-label   (click)="showdialer(actor,duplicateClickCount)" style="color:white" >{{showStatus(actor)}}</ion-label>
+                </ion-chip>
+              </ion-col>
+            </ion-row>
+
+          </ion-card>
+        </ion-col>
+      </ng-container>
+      <!-- skeleton loading -->
+      <ng-template #elseTemplate>
+        <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+          <ion-card>
+            <ion-avatar slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            <ion-item-divider style="border: none;">
+              <ion-label>
+                <h2>
+                  <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+                </h2>
+                <p>
+                  <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item-divider>
+          </ion-card>
+        </ion-col>
+      </ng-template>
+      <!-- end skeleton loading -->
+
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="generType=='actress'" fixed>
+    <ion-row>
+      <ng-container *ngIf="isLoaded; else elseTemplate">
+        <ion-col size="12" size-md="6">
+          <ion-card *ngFor="let actor of femaleActor">
+
+            <ion-label>
+              <h2 class="title-cls">
+                <ion-avatar class="md hydrated"><img class="actor-image-cls"  src={{actor.image}}></ion-avatar> <p class="actor-name">{{actor.actorName}} <small style="font-size: 70%;">&nbsp; created  <ion-icon name="hourglass"></ion-icon> &nbsp;{{ago(actor.createdOn)}} ago</small></p>
+              </h2>
+            </ion-label>
+            <!--<iframe *ngIf="actor.mediaFile =='' || actor.mediaFile == undefined || actor.mediaFile == null" width="100%" height="42%"   [src]=actor.thumnail frameborder="0"
+              allowfullscreen>
+            </iframe>  -->
+            <div class="container" *ngIf="this.actor.mediaFile =='' || this.actor.mediaFile == undefined">
+              <ion-slides  style="height: 200px;" pager="true" [options]="slideOpts" #slideWithNav
+                (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+                <ng-container *ngIf="isLoaded; else elseTemplate">
+                  <ion-slide *ngFor="let eachUrl of actor.thumnail">
+                    <ion-icon style="height: 198px;background: #0c0c0c;width: 20px;" *ngIf="actor.thumnail.length > 1" name="chevron-back-outline" class="btnPrev" (click)="prev()"></ion-icon>
+                    <iframe  width="100%" height="100%" [src]="eachUrl" frameborder="0" allowfullscreen>
+                    </iframe>
+                    <ion-icon style="height: 198px;background: #0c0c0c;width: 20px;" *ngIf="actor.thumnail.length > 1" name="chevron-forward-outline" class="btnNext" (click)="next()"></ion-icon>
+                  </ion-slide>
+                  <button type="submit" float-left ion-button  color="primary" class="btnPrev" (click)="prev()">Prev</button>
+                <button type="submit" float-right ion-button color="primary" class="btnNext" (click)="next()">Next</button>
+   
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ion-slide style="background-image: linear-gradient(black, rgb(78, 77, 77));"  *ngFor="let post of dummyData">
+                    
+                    <div class="content">
+                      <p>
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                      </p>
+                    </div>
+                  </ion-slide>
+                </ng-template>
+               
+              </ion-slides>
+            </div>
+            <div *ngIf="actor.mediaFile !=='' && actor.mediaFile !== undefined && actor.mediaFile !== null" class="ion-text-center">
+              <video style="width: 100%;height: 200px;"   src = "{{actor.mediaFile}}#t=0.1" controls >
+              </video>                 
+            </div>
+             <ion-row class="bottom-bar">
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: 3px;
+                font-size: 13px;
+                margin-top: 10px;">   
+                  <ion-icon name="bar-chart"></ion-icon> {{actor.storyCount }} Tag(s) Done
+                </p>
+              </ion-col>
+
+              <ion-col (click)="showPopup(actor)" class="comment-section">
+                <ion-chip class="chip-css ion-text-start md ion-activatable hydrated">
+                  <ion-icon name="ribbon"></ion-icon>&nbsp;<b>Click Me</b>
+                </ion-chip>
+
+              </ion-col>
+              <ion-col class="comment-section">
+                <ion-chip class="ion-text-end" class="chip-cls" button>
+                  
+                  <ion-icon src="../../../assets/icons/whatsapp.svg"></ion-icon>
+ 
+                  <ion-label  (click)="showdialer(actor,duplicateClickCount)" style="color:white" >{{showStatus(actor)}}</ion-label>
+                  
+                </ion-chip>
+              </ion-col>
+             <!--<div class="overlay" *ngIf="popup">
+                <div class="popup">
+                    <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                    <div class="content">
+                      {{popupActorSkills}}
+                    </div>
+                </div>
+                </div>--> 
+            </ion-row>
+
+          </ion-card>
+        </ion-col>
+      </ng-container>
+      <!-- skeleton loading -->
+      <ng-template #elseTemplate>
+        <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+          <ion-card>
+            <ion-avatar slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            <ion-item-divider style="border: none;">
+              <ion-label>
+                <h2>
+                  <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+                </h2>
+                <p>
+                  <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item-divider>
+          </ion-card>
+        </ion-col>
+      </ng-template>
+      <!-- end skeleton loading -->
+
+    </ion-row>
+  </ion-grid> 
+  <!-- MusicDirector Grid -->
+  <ion-grid *ngIf="generType=='musicdirector'" fixed>
+    <ion-row>
+      <ng-container *ngIf="isLoaded; else elseTemplate">
+        <ion-col size="12" size-md="6">
+          <ion-card *ngFor="let actor of musicDirector">
+
+            <ion-label>
+              <h2 class="title-cls">
+                <ion-avatar class="md hydrated"><img class="actor-image-cls"  src={{actor.image}}></ion-avatar> <p class="actor-name">{{actor.actorName}} <small style="font-size: 70%;">&nbsp; created  <ion-icon name="hourglass"></ion-icon> &nbsp;{{ago(actor.createdOn)}} ago</small></p>
+              </h2>
+            </ion-label>
+            <!--<iframe *ngIf="actor.mediaFile =='' || actor.mediaFile == undefined || actor.mediaFile == null" width="100%" height="42%"   [src]=actor.thumnail frameborder="0"
+              allowfullscreen>
+            </iframe> -->
+            <div class="container" *ngIf="this.actor.mediaFile =='' || this.actor.mediaFile == undefined">
+              <ion-slides  style="height: 200px;" pager="true" [options]="slideOpts" #slideWithNav
+                (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+                <ng-container *ngIf="isLoaded; else elseTemplate">
+                  <ion-slide *ngFor="let eachUrl of actor.thumnail">
+                    <ion-icon style="height: 198px;background: #0c0c0c;width: 20px;" *ngIf="actor.thumnail.length > 1" name="chevron-back-outline" class="btnPrev" (click)="prev()"></ion-icon>
+                    <iframe  width="100%" height="100%" [src]="eachUrl" frameborder="0" allowfullscreen>
+                    </iframe>
+                    <ion-icon style="height: 198px;background: #0c0c0c;width: 20px;" *ngIf="actor.thumnail.length > 1" name="chevron-forward-outline" class="btnNext" (click)="next()"></ion-icon>
+                  </ion-slide>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ion-slide style="background-image: linear-gradient(black, rgb(78, 77, 77));"  *ngFor="let post of dummyData">
+                    
+                    <div class="content">
+                      <p>
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                      </p>
+                    </div>
+                  </ion-slide>
+                </ng-template>
+               
+              </ion-slides>
+            </div>
+
+            <div *ngIf="actor.mediaFile !=='' && actor.mediaFile !== undefined && actor.mediaFile !== null" class="ion-text-center">
+              <video style="width: 100%;height: 200px;"   src = "{{actor.mediaFile}}#t=0.1" controls >
+              </video>                 
+            </div>
+
+
+
+            <ion-row class="bottom-bar">
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: 3px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-icon name="bar-chart"></ion-icon> {{actor.storyCount }} Tag(s) Done
+                </p>
+              </ion-col>
+
+              <ion-col (click)="showPopup(actor)" class="comment-section">
+                <ion-chip class="chip-css ion-text-start md ion-activatable hydrated">
+                  <ion-icon name="ribbon"></ion-icon> &nbsp;<b>Click Me</b>
+                </ion-chip>
+
+              </ion-col>
+              <ion-col class="comment-section">
+                <ion-chip class="ion-text-end" class="chip-cls" button>
+                  
+                  <ion-icon src="../../../assets/icons/whatsapp.svg"></ion-icon>
+ 
+                  <ion-label (click)="showdialer(actor,duplicateClickCount)" style="color:white" >{{showStatus(actor)}}</ion-label>
+                  
+                </ion-chip>
+              </ion-col>
+              <!-- <div class="overlay" *ngIf="popup">
+                <div class="popup">
+                    <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                    <div class="content">
+                      {{popupActorSkills}}
+                    </div>
+                </div>
+                </div> -->
+            </ion-row>
+
+          </ion-card>
+        </ion-col>
+      </ng-container>
+      <!-- skeleton loading -->
+      <ng-template #elseTemplate>
+        <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+          <ion-card>
+            <ion-avatar slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            <ion-item-divider style="border: none;">
+              <ion-label>
+                <h2>
+                  <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+                </h2>
+                <p>
+                  <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item-divider>
+          </ion-card>
+        </ion-col>
+      </ng-template>
+      <!-- end skeleton loading -->
+    </ion-row>
+  </ion-grid> 
+      <!-- Male singer Grid -->
+  <ion-grid *ngIf="generType=='malesinger'" fixed>
+    <ion-row>
+      <ng-container *ngIf="isLoaded; else elseTemplate">
+        <ion-col size="12" size-md="6">
+          <ion-card *ngFor="let actor of malesinger">
+
+            <ion-label>
+              <h2 class="title-cls">
+                <ion-avatar class="md hydrated"><img class="actor-image-cls"  src={{actor.image}}></ion-avatar> <p class="actor-name">{{actor.actorName}} <small style="font-size: 70%;">&nbsp; created  <ion-icon name="hourglass"></ion-icon> &nbsp;{{ago(actor.createdOn)}} ago</small></p>
+              </h2>
+            </ion-label>
+            <!--<iframe *ngIf="actor.mediaFile =='' || actor.mediaFile == undefined || actor.mediaFile == null" width="100%" height="42%"   [src]=actor.thumnail frameborder="0"
+              allowfullscreen>
+            </iframe> -->
+            <div class="container" *ngIf="this.actor.mediaFile =='' || this.actor.mediaFile == undefined">
+              <ion-slides  style="height: 200px;" pager="true" [options]="slideOpts" #slideWithNav
+                (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+                <ng-container *ngIf="isLoaded; else elseTemplate">
+                  <ion-slide *ngFor="let eachUrl of actor.thumnail">
+                    <ion-icon style="height: 198px;background: #0c0c0c;width: 20px;" *ngIf="actor.thumnail.length > 1" name="chevron-back-outline" class="btnPrev" (click)="prev()"></ion-icon>
+                    <iframe  width="100%" height="100%" [src]="eachUrl" frameborder="0" allowfullscreen>
+                    </iframe>
+                    <ion-icon style="height: 198px;background: #0c0c0c;width: 20px;" *ngIf="actor.thumnail.length > 1" name="chevron-forward-outline" class="btnNext" (click)="next()"></ion-icon>
+                  </ion-slide>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ion-slide style="background-image: linear-gradient(black, rgb(78, 77, 77));"  *ngFor="let post of dummyData">
+                    
+                    <div class="content">
+                      <p>
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                      </p>
+                    </div>
+                  </ion-slide>
+                </ng-template>
+               
+              </ion-slides>
+            </div>
+            <div *ngIf="actor.mediaFile !=='' && actor.mediaFile !== undefined && actor.mediaFile !== null" class="ion-text-center">
+              <video style="width: 100%;height: 200px;"   src = "{{actor.mediaFile}}#t=0.1" controls >
+              </video>                 
+            </div>
+            
+
+
+
+            <ion-row class="bottom-bar">
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: 3px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-icon name="bar-chart"></ion-icon> {{actor.storyCount }} Tag(s) Done
+                </p>
+              </ion-col>
+
+              <ion-col (click)="showPopup(actor)" class="comment-section">
+                <ion-chip class="chip-css ion-text-start md ion-activatable hydrated">
+                  <ion-icon name="ribbon"></ion-icon> &nbsp;<b>Click Me</b>
+                </ion-chip>
+
+              </ion-col>
+              <ion-col class="comment-section">
+                <ion-chip class="ion-text-end" class="chip-cls" button>
+                  
+                  <ion-icon src="../../../assets/icons/whatsapp.svg"></ion-icon>
+ 
+                  <ion-label (click)="showdialer(actor,duplicateClickCount)" style="color:white" >{{showStatus(actor)}}</ion-label>
+                  
+                </ion-chip>
+              </ion-col>
+            <!-- <div class="overlay" *ngIf="popup">
+                <div class="popup">
+                    <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                    <div class="content">
+                      {{popupActorSkills}}
+                    </div>
+                </div>
+                </div> -->  
+            </ion-row>
+
+          </ion-card>
+        </ion-col>
+      </ng-container>
+      <!-- skeleton loading -->
+      <ng-template #elseTemplate>
+        <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+          <ion-card>
+            <ion-avatar slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            <ion-item-divider style="border: none;">
+              <ion-label>
+                <h2>
+                  <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+                </h2>
+                <p>
+                  <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item-divider>
+          </ion-card>
+        </ion-col>
+      </ng-template>
+      <!-- end skeleton loading -->
+    </ion-row>
+  </ion-grid> 
+      <!-- Female Singer Grid -->
+  <ion-grid *ngIf="generType=='femalesinger'" fixed>
+    <ion-row>
+      <ng-container *ngIf="isLoaded; else elseTemplate">
+        <ion-col size="12" size-md="6">
+          <ion-card *ngFor="let actor of femalesinger">
+
+            <ion-label>
+              <h2 class="title-cls">
+                <ion-avatar class="md hydrated"><img class="actor-image-cls"  src={{actor.image}}></ion-avatar> <p class="actor-name">{{actor.actorName}} <small style="font-size: 70%;">&nbsp; created  <ion-icon name="hourglass"></ion-icon> &nbsp;{{ago(actor.createdOn)}} ago</small></p>
+              </h2>
+            </ion-label>
+           <!-- <iframe *ngIf="actor.mediaFile =='' || actor.mediaFile == undefined || actor.mediaFile == null" width="100%" height="42%"   [src]=actor.thumnail frameborder="0"
+              allowfullscreen>
+            </iframe> -->
+            <div class="container" *ngIf="this.actor.mediaFile =='' || this.actor.mediaFile == undefined">
+              <ion-slides  style="height: 200px;" pager="true" [options]="slideOpts" #slideWithNav
+                (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+                <ng-container *ngIf="isLoaded; else elseTemplate">
+                  <ion-slide *ngFor="let eachUrl of actor.thumnail">
+                    <ion-icon style="height: 198px;background: #0c0c0c;width: 20px;" *ngIf="actor.thumnail.length > 1" name="chevron-back-outline" class="btnPrev" (click)="prev()"></ion-icon>
+                    <iframe  width="100%" height="100%" [src]="eachUrl" frameborder="0" allowfullscreen>
+                    </iframe>
+                    <ion-icon style="height: 198px;background: #0c0c0c;width: 20px;" *ngIf="actor.thumnail.length > 1" name="chevron-forward-outline" class="btnNext" (click)="next()"></ion-icon>
+                  </ion-slide>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <ion-slide style="background-image: linear-gradient(black, rgb(78, 77, 77));"  *ngFor="let post of dummyData">
+                    
+                    <div class="content">
+                      <p>
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                      </p>
+                    </div>
+                  </ion-slide>
+                </ng-template>
+               
+              </ion-slides>
+            </div>
+
+            <div *ngIf="actor.mediaFile !=='' && actor.mediaFile !== undefined && actor.mediaFile !== null" class="ion-text-center">
+              <video style="width: 100%;height: 200px;"   src = "{{actor.mediaFile}}#t=0.1" controls >
+              </video>                 
+            </div>
+
+
+
+            <ion-row class="bottom-bar">
+              <ion-col class="comment-section">
+                <p style="    color: #383a3e;
+                margin-left: 3px;
+                font-size: 13px;
+                margin-top: 10px;">
+                  <ion-icon name="bar-chart"></ion-icon> {{actor.storyCount }} Tag(s) Done
+                </p>
+              </ion-col>
+
+              <ion-col (click)="showPopup(actor)" class="comment-section">
+                <ion-chip class="chip-css ion-text-start md ion-activatable hydrated">
+                  <ion-icon name="ribbon"></ion-icon> &nbsp;<b>Click Me</b>
+                </ion-chip>
+
+              </ion-col>
+              <ion-col class="comment-section">
+                <ion-chip class="ion-text-end" class="chip-cls" button>
+                  
+                  <ion-icon src="../../../assets/icons/whatsapp.svg"></ion-icon>
+ 
+                  <ion-label (click)="showdialer(actor,duplicateClickCount)" style="color:white" >{{showStatus(actor)}}</ion-label>
+                  
+                </ion-chip>
+              </ion-col>
+            <!--  <div class="overlay" *ngIf="popup">
+                <div class="popup">
+                    <a class="close" (click)="actorModalClosepopup()">&times;</a>
+                    <div class="content">
+                      {{popupActorSkills}}
+                    </div>
+                </div>
+                </div> -->
+            </ion-row>
+
+          </ion-card>
+        </ion-col>
+      </ng-container>
+      <!-- skeleton loading -->
+      <ng-template #elseTemplate>
+        <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+          <ion-card>
+            <ion-avatar slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            <ion-item-divider style="border: none;">
+              <ion-label>
+                <h2>
+                  <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+                </h2>
+                <p>
+                  <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item-divider>
+          </ion-card>
+        </ion-col>
+      </ng-template>
+      <!-- end skeleton loading -->
+
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>

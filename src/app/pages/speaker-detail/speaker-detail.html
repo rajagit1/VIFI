@@ -1,0 +1,441 @@
+<ion-content class="speaker-detail" *ngIf="showPost">
+  <ion-header class="ion-no-border">
+    <ion-toolbar class="custom-toolbar">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref={{defaultHref}}></ion-back-button>
+      </ion-buttons>
+      <ion-buttons *ngIf="speaker" slot="end">
+        <ion-button (click)="openContact(speaker)">
+          <ion-icon slot="icon-only" ios="call-outline" md="call-sharp"></ion-icon>
+        </ion-button>
+        <ion-button (click)="openSpeakerShare(speaker)">
+          <ion-icon slot="icon-only" ios="share-outline" md="share-sharp"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title   style="margin-left: -30px;">
+        <ion-label text-wrap style="font-size: 16px">
+        Title: {{postData.title}} 
+        </ion-label>
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <img class="speaker-background" src="{{postData.image}}">
+  <div class="tag" style="width:318px;margin-top: -172px;">
+    <span  style="background-color:black;font-weight: bold;margin-left: -60px;"><b>
+        <ion-icon></ion-icon>Reg No:{{postData.storyRegNumber}}/{{postData.uploadedOn}}
+      </b></span>
+  </div>
+  <div class="thumbnail" *ngIf="!postData.shooting && postData.storyStatus=='pendingWithDirector'">
+    <div class="tag" style="width:264px">
+      <span class="blink" style="background-color:black;font-weight: bold;"><b>
+          <ion-icon name="ellipse" ></ion-icon>Approval pending with Director
+        </b></span>
+    </div>
+  </div>
+  <div class="thumbnail" *ngIf="postData.shooting">
+    <div class="tag" style="width:264px">
+      <span class="blink" style="background-color:black;font-weight: bold;margin-left: -97px;"><b>
+          <ion-icon name="ellipse" ></ion-icon>Shooting in progress
+        </b></span>
+    </div>
+    
+    <!--<div (click)="showTicketNumber(postData)" class="tag" >
+      <span  style="background-color:black;font-weight: bold;margin-right:-120px"><b>
+          <ion-label  name="ellipse" ></ion-label>Book ticket
+        </b></span>
+    </div> -->
+  </div>
+  <!-- <div class="title-cls"><ion-icon name="videocam" role="img" class="md hydrated" aria-label="documents" style="
+    padding-right: 10px;"></ion-icon>{{postData.title}} <div class="user-cls">@ {{postData.uploadedBy}}</div></div> -->
+  <ion-item-divider style="border: none;
+  margin-left: -6px;
+  background: black;
+  color: white;
+  font-weight: bold;">
+    <ion-chip *ngIf="!this.confData.isDirectorLabelClicked" class="ion-text-end" class="chip-cls" >
+      <ion-label *ngIf="!this.confData.isDirectorLabelClicked"  (click)="goToDetails(postData.uploadedBy)" style="color:white;width: 110px">{{postData.uploadedBy}}</ion-label>
+    </ion-chip>
+    <span class="margin-cls">
+      <ion-icon name="golf"></ion-icon> {{postData.views}} Views
+    </span>
+    <span class="margin-cls">
+      <ion-icon name="heart"></ion-icon>{{postData.likes.length}} Likes
+    </span>    
+    <ion-icon *ngIf="heartClass=='heart-cls-red'" 
+      class='heart-cls-red animate__animated animate__tada' name="heart"></ion-icon>
+      <ion-icon *ngIf="heartClass=='heart-cls-white'" (click)="changeClass(postData)"
+      class='heart-cls-white animate__animated animate__tada' name="heart"></ion-icon>
+      <!-- //Disliked functionality temporarily commented & whenever required we can uncomment the below-->
+      <!--<ion-icon *ngIf="heartClass=='heart-cls-white'" (click)="changeClass(postData)"
+      class='heart-cls-white animate__animated animate__tada' name="heart"></ion-icon> -->
+    <ion-icon class="icon-view" name="time-outline"></ion-icon><span style="font-size: 12px;margin-right: 5px;">
+      {{ago(postData.uploadedOn)}} ago</span>
+
+
+  </ion-item-divider>
+ 
+  <ion-item-divider class="animate_animated animate__fadeIn ionDiv" sticky style="margin-top: 1px;">
+    <ion-label class="tiles-header">
+      <ion-icon style="font-size: 21px;" name="clipboard"></ion-icon> &nbsp; Synopsis
+    </ion-label> &nbsp; &nbsp; &nbsp;
+    <ion-chip  class="ion-text-end" class="subscribe-chip-cls" >
+      <ion-label *ngIf='!isSubscribed'   (click)="isSubscribeDone(postData,'newSubscription')" style="color:white;width: 110px">Subscribe
+        &nbsp;<ion-icon name="heart"></ion-icon>&nbsp;{{subsctionCount}}
+      </ion-label>
+      <ion-label *ngIf='isSubscribed' style="color:white;width: 110px">Subscribed
+        &nbsp;<ion-icon  name="heart"></ion-icon>&nbsp;{{subsctionCount}}
+      </ion-label>
+    </ion-chip>
+    <ion-label *ngIf='isEditRequired'    style='margin-left:160px' class="tiles-header">
+      <ion-icon (click)='editSynopsis(postData)'  style="font-size: 21px;" name="clipboard" ></ion-icon> &nbsp;Edit
+       </ion-label> 
+       <ion-label *ngIf='isSaveRequired' style='margin-left:160px' class="tiles-header">
+           <ion-icon  (click)='updateSynopsis(postData)'   style="font-size: 21px;" name="save" ></ion-icon> &nbsp;Save
+       </ion-label>
+    <!-- <ion-buttons slot="end">
+      <ion-button *ngIf="!showfull" (click)="showfull=true" color="info" class="more-icon">
+        <ion-icon slot="icon-only" name="chevron-down-circle-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="showfull" (click)="showfull=false" color="info" class="more-icon">
+        <ion-icon slot="icon-only" name="chevron-up-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+  </ion-item-divider>
+  <!-- <span *ngIf="!showfull" class="synopsis-cls">{{postData.synopsis.substring(0,15)}}...</span> -->
+ <p  #synopsisPara contentEditable=false class="text-info"
+  *ngIf="showfull"   class="synopsis-cls">{{postData.synopsis}}</p>
+  
+  
+  <div *ngIf="isMapped  && !userExist">
+    <ion-label class="tiles-header">
+      <ion-icon style="font-size: 21px;" name="clipboard"></ion-icon> &nbsp;Your Mapped Cast Setup 
+    </ion-label>
+    <ng-container *ngIf="isLoaded; else elseTemplate">
+      <ion-item-divider style="margin-left: 0px;
+      border: none;
+      margin-bottom: 11px;
+      margin-top: 14px;">
+      <div *ngIf="actor_img !==''" style="text-align: center" class="item">
+        <img  class="actor-cls" src="{{actor_img}}">
+       <span class="caption">
+          <ion-label class="storyDetail-actor-cls">{{actorName}}</ion-label>
+        </span>
+      </div>
+        &nbsp;
+        <div *ngIf="actress_img !==''" style="text-align: center" class="item">
+          <img style="margin-left: 10%;" class="actor-cls" src="{{actress_img}}">
+          <span  class="caption">
+            <ion-label style="margin-left: 15%;" class="storyDetail-actor-cls">{{actressName}}</ion-label>
+          </span>
+          </div>
+          
+        <div *ngIf="maleSingerImg !==''" style="text-align: center" class="item">
+          <img style="margin-left: 15%;" class="actor-cls" src="{{maleSingerImg}}">
+          <span  class="caption">
+            <ion-label style="margin-left: 15%;" class="storyDetail-actor-cls">{{maleSingerName}}</ion-label>
+          </span>
+          </div>
+          <div *ngIf="femaleSingerImg !==''" style="text-align: center" class="item">
+            <img style="margin-left: 15%;" class="actor-cls" src="{{femaleSingerImg}}">
+            <span  class="caption">
+              <ion-label style="margin-left: 15%;" class="storyDetail-actor-cls">{{femaleSingerName}}</ion-label>
+            </span>
+            </div>
+        <div *ngIf="music_dir_img !==''" style="text-align: center" class="item">
+        <img style="margin-left: 19%;" class="actor-cls" src="{{music_dir_img}}">
+        <span  class="caption">
+          <ion-label style="margin-left: 12%;" class="storyDetail-actor-cls">{{musicdirectorName}}</ion-label>
+        </span> 
+        </div>
+      </ion-item-divider>
+
+    </ng-container>
+    <ng-template #elseTemplate>
+      <ion-col size="12" size-md="12" *ngFor="let post of dummyData">
+        <ion-card>
+          <ion-avatar slot="start">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-avatar>
+          <ion-item-divider style="border: none;">
+            <ion-label>
+              <h2>
+                <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+              </h2>
+              <span>
+                <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+              </span>
+            </ion-label>
+          </ion-item-divider>
+        </ion-card>
+      </ion-col>
+    </ng-template>
+
+
+
+  </div>
+  <div style="height:38px" *ngIf="!isMapped  && !userExist && postData.shooting==false">
+    <ion-label class="tiles-header">
+      <ion-icon style="font-size: 21px;" name="clipboard"></ion-icon> &nbsp; Cast Setup Status
+    </ion-label>
+   <!-- <div style="margin-top: 4px;
+    font-size: 13px;
+    color:white;" class="ion-text-center">    
+      <ion-icon name="information-circle" ng-reflect-name="information-circle" role="img" class="md hydrated"
+        aria-label="information circle"></ion-icon>No Actor/Actress/Music Directors mapped.Please select your favourite crew!.
+    </div>-->
+  </div>
+  
+  <ion-label *ngIf="userExist && hasActor && postData.shooting==false" class="tiles-header">
+    <ion-icon style="font-size: 21px;margin-left: 18px;" name="person"></ion-icon> &nbsp; Cast Setup Status
+  </ion-label>
+   <!--  <ion-button style="font-weight: bold;margin-left:16px;"   *ngIf="userExist && hasActor && postData.shooting==false" color="danger" expand="outline" 
+    fill="clear">   
+     <ion-icon name="information-circle" ng-reflect-name="information-circle" role="img" class="md hydrated"
+        aria-label="information circle"></ion-icon>You have done crews setup.Thanks
+    </ion-button> -->
+    <ion-button *ngIf="userExist && hasActor && postData.shooting==false" expand="full" style='width: 360px;height:22px'  (click)="openModal(post)" color="danger">
+      <ion-icon name="build-sharp"></ion-icon> &nbsp; Click to View Mapped Cast Details
+    </ion-button>  
+  <div style="height:38px" *ngIf="postData.shooting==true">
+    <div style="
+    font-size: 13px;
+    color:#ffe004f2;" class="ion-text-center">
+      <ion-icon name="information-circle" ng-reflect-name="information-circle" role="img" class="md hydrated"
+        aria-label="information circle"></ion-icon>Story become shooting mode.Director will decide suitable crew based on your previous crew mapping!.
+    </div>
+  </div>
+  <ion-button style="font-weight: bold;margin-left: 16%;margin-top: 28px;"   *ngIf="!isMapped && !userExist && postData.shooting==false" color="danger" expand="outline" (click)="addActor(postData)"
+    fill="clear">
+    <ion-icon name="person-add"></ion-icon>&nbsp;&nbsp;&nbsp;Click to Add Cast Setup
+  </ion-button>
+  <br>
+  <br>
+  <span *ngIf="userType!='V'">
+    <ion-item-divider sticky class="ionDiv" style="margin-top: -5px;">
+      <ion-label class="tiles-header">
+        <ion-icon name="card"></ion-icon> &nbsp; {{postData.fundType==1?'Single Funding':'Crowd Funding'}}
+      </ion-label>
+      <ion-icon *ngIf="postData.storyStatus=='waitingForFund'" style="font-size: 21px;" class="more-icon"
+        src="../../../assets/icons/rupee-indian.svg"></ion-icon>
+      <p *ngIf="postData.storyStatus=='waitingForFund'" style="font-weight: bold;
+    color: white;padding-top: 14px;">{{postData.budget | currency:'Rs.'}}</p>   
+
+    </ion-item-divider>
+    <span class="synopsis-cls" *ngIf="fundType==1 || fundType==2">
+      <ion-item-divider *ngIf="showprice && postData.storyStatus =='waitingForFund'" style="border:none;padding-right: 27px;">
+      
+        <ion-row class="rowStyle">
+          <ion-icon slot="start" color="danger" name="wallet"></ion-icon>
+          <ion-input type="number" class="txtClass" placeholder="Budget" [(ngModel)]="budget"></ion-input>
+        </ion-row>
+        <!-- <ion-button style="font-size: 21px;" class="animate__animated animate__flipInX" *ngIf="showprice"
+          color="danger" expand="block" (click)="updatePrice()" fill="clear">
+          <ion-icon slot="end" src='../../../assets/icons/save.svg'></ion-icon>
+        </ion-button> -->
+        <ion-fab-button style="margin-left: 10px;" class="animate__animated animate__flipInX" color="danger">
+          <ion-icon name="save" (click)="updatePrice()"></ion-icon>
+        </ion-fab-button>
+      </ion-item-divider>
+
+      <ion-button *ngIf="postData.storyStatus=='pendingWithDirector' " style="font-size: 18px;
+      margin-left: 22%;
+      margin-top: 10%;"  color="danger" expand="outline" fill="clear">
+        <ion-icon name="cash"></ion-icon> &nbsp; {{postData.budget | currency:'INR':'symbol-narrow':'4.2-2'}}
+        <br>        
+      </ion-button>
+      <ion-button *ngIf="postData.storyStatus=='pendingWithDirector'" style="font-size: 11px;
+      margin-left: 1%;
+      margin-top: 1%;"  color="yellow" expand="outline" fill="clear">
+       Funding Completed.Approval pending with Director
+        <br>        
+      </ion-button>
+      <br>
+      
+      <ion-label style="color:white" *ngIf="fundType==1 && postData.shooting==true" >  
+        Director words:<span  style="background-color: #e60321; text-align: right;">
+          "Thanks for all your support to become this story success & We will intimate once  this film is ready for release"
+          <!-- meanwhile you can book your ticket by clicking on our movie poster in "Trending" page"-->
+        </span><br>
+        Director Mail id :  {{postData.uploadedBy}}@gmail.com <br>    
+        Status : Total Fund Received
+      </ion-label>
+      <ion-label style="color:white" *ngIf="fundType==2 && postData.shooting==true" >  
+        Director words:<span  style="background-color: #e60321; text-align: right;">
+          "Thanks for all your support to become this story success and We will intimate once  this film is ready for release.Soon you will get update here"
+      </span><br>
+        Director Mail id :  {{postData.uploadedBy}}@gmail.com <br>    
+        <ion-icon name="bulb-outline" ></ion-icon>Total Fund Received:{{totalFund | currency:'INR':'Rs. ':'4.2-2'}}
+      </ion-label>
+      <ion-label *ngIf="fundType==2 && postData.storyStatus=='waitingForFund' " class="fundclass blink">
+        <ion-icon name="bulb-outline"></ion-icon >&nbsp; Fund received {{totalFund | currency:'Rs.':'symbol-narrow':'4.2-2'}}
+      </ion-label>
+     <!-- <ion-progress-bar *ngIf="fundType==2 && !postData.shooting && postData.storyStatus=='waitingForFund'" [value]="p_bar_value1" color="danger" class="progress-cls animate__animated animate__fadeIn"></ion-progress-bar>
+       
+      <ion-label *ngIf="fundType==2 && !postData.shooting && postData.storyStatus=='waitingForFund'" style="color:white;margin-left: 23%;">
+        <ion-icon name="information-circle-outline"></ion-icon> &nbsp;Overall funding percentage {{roundoff}}%
+        <br>
+      </ion-label>-->
+      
+      <ion-button #ref *ngIf="(fundType==2 || fundType==1) &&  postData.storyStatus=='waitingForFund'" color="danger"
+        expand="outline" style="margin-left: 15%;" (click)="showPriceField()" fill="clear">
+        <ion-icon name="pie-chart"></ion-icon> &nbsp; Click to add your fund
+      </ion-button> 
+          
+      <br><br>
+      <!--Director can see the funded(producer) phonenumber starts-->
+      <ion-item-divider *ngIf="fundType==2 &&  postData.uploadedBy == this.userData.userName" class="animate_animated animate__fadeIn ionDiv" sticky
+        style="margin-top: 7px;">
+        <ion-label class="tiles-header">
+          <ion-icon style="font-size: 21px;" name="wallet"></ion-icon> &nbsp; Funded By({{postData.fundedBy.length}})
+        </ion-label>
+      </ion-item-divider>
+      <ion-item-divider *ngIf="fundType==1 && postData.storyStatus=='pendingWithDirector' && postData.uploadedBy == this.userData.userName" class="animate_animated animate__fadeIn ionDiv" sticky
+        style="margin-top: 7px;">
+        <ion-label class="tiles-header">
+          <ion-icon style="font-size: 21px;" name="wallet"></ion-icon> &nbsp; Funded By({{postData.fundedBy.length}})
+        </ion-label>
+      </ion-item-divider>
+      <ion-item-divider *ngIf="fundType==1 && postData.storyStatus=='shootingmode' && postData.uploadedBy == this.userData.userName" class="animate_animated animate__fadeIn ionDiv" sticky
+      style="margin-top: 7px;">
+      <ion-label class="tiles-header">
+        <ion-icon style="font-size: 21px;" name="wallet"></ion-icon> &nbsp; Funded By
+      </ion-label>
+    </ion-item-divider>
+      <br>
+      <span *ngIf="fundType==2 && postData.uploadedBy == this.userData.userName">
+        <ion-chip *ngFor="let budget of postData.fundedBy" class="ion-text-end" class="chip-cls" button>
+          <ion-icon src="../../../assets/icons/whatsapp.svg"></ion-icon>
+          <ion-label (click)="callNow(budget)" style="color:white">{{budget.split('_')[0].substring(0, 5)}}</ion-label>
+
+        </ion-chip>
+      </span>
+      <span *ngIf="fundType==1 && postData.storyStatus=='pendingWithDirector' && postData.uploadedBy == this.userData.userName">
+        <ion-chip *ngFor="let budget of postData.fundedBy" class="ion-text-end" class="chip-cls" button>
+          <ion-icon src="../../../assets/icons/whatsapp.svg"></ion-icon>
+          <ion-label (click)="callNow(budget)" style="color:white">{{budget.split('_')[0].substring(0, 5)}}</ion-label>
+
+        </ion-chip>
+      </span>
+      <span *ngIf="fundType==1 && postData.storyStatus=='shootingmode' && postData.uploadedBy == this.userData.userName">
+        <ion-chip *ngFor="let budget of postData.fundedBy" class="ion-text-end" class="chip-cls" button>
+          <ion-icon src="../../../assets/icons/whatsapp.svg"></ion-icon>
+          <ion-label (click)="callNow(budget)" style="color:white">{{budget.split('_')[0].substring(0, 5)}}</ion-label>
+
+        </ion-chip>
+      </span>
+      <!--Director can see the funded(producer) phonenumber ends-->
+      <!--Public can see the funded(producer) details except phone number starts-->
+      <ion-item-divider *ngIf="fundType==2 &&  postData.uploadedBy !== this.userData.userName" class="animate_animated animate__fadeIn ionDiv" sticky
+        style="margin-top: 7px;">
+        <ion-label class="tiles-header">
+          <ion-icon style="font-size: 21px;" name="wallet"></ion-icon> &nbsp; Funded By ({{postData.fundedBy.length}})
+        </ion-label>
+      </ion-item-divider>
+      <ion-item-divider *ngIf="fundType==1 && postData.storyStatus=='pendingWithDirector' && postData.uploadedBy !== this.userData.userName" class="animate_animated animate__fadeIn ionDiv" sticky
+        style="margin-top: 7px;">
+        <ion-label class="tiles-header">
+          <ion-icon style="font-size: 21px;" name="wallet"></ion-icon> &nbsp; Funded By ({{postData.fundedBy.length}})
+        </ion-label>
+      </ion-item-divider>
+      <ion-item-divider *ngIf="fundType==1 && postData.storyStatus=='shootingmode' && postData.uploadedBy !== this.userData.userName" class="animate_animated animate__fadeIn ionDiv" sticky
+        style="margin-top: 7px;">
+        <ion-label class="tiles-header">
+          <ion-icon style="font-size: 21px;" name="wallet"></ion-icon> &nbsp; Funded By 
+        </ion-label>
+      </ion-item-divider>
+      <br>
+      <span style="color:white" *ngIf="fundType==2 && postData.uploadedBy !== this.userData.userName">
+        <div scrollY="true" class="container" style="margin-left:30px;overflow:scroll;height: 139px;">
+          <table class="fundedBy">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>CONTRIBUTORS</th>
+                <th>AMOUNT(Rs)</th>
+              </tr>
+            </thead>
+              <tr *ngFor = "let row of postData.fundedBy;index as i">
+                <td style="color:white !important">
+                  {{i+1}}
+                  </td>
+                <td style="color:white !important">
+                  {{row.split('_')[0]}}
+                </td>
+                <td style="color:white !important">                 
+                  {{row.split('_')[1]}}
+                </td>
+              </tr>
+              </table>
+      </div>
+       <!-- <ion-chip *ngFor="let budget of postData.fundedBy" class="ion-text-end" class="chip-cls" >
+          Rs.{{budget.split('_')[1]}} by &nbsp;
+          <ion-label style="color:white">{{budget.split('_')[0]}}</ion-label>
+
+        </ion-chip>-->
+      </span>
+      <span *ngIf="fundType==1 && postData.storyStatus=='pendingWithDirector' && postData.uploadedBy !== this.userData.userName">
+        <div  class="container" scrollY="true" style="margin-left: 30px;" >
+          <table class="fundedBy">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>CONTRIBUTORS</th>
+                <th>AMOUNT(Rs)</th>
+              </tr>
+            </thead>
+              <tr *ngFor = "let row of postData.fundedBy;index as i">
+                <td style="color:white !important">
+                  {{i+1}}
+                  </td>
+                <td style="color:white !important">
+                  {{row.split('_')[0]}}
+                </td>
+                <td style="color:white !important">                 
+                  {{row.split('_')[1]}}
+                </td>
+              </tr>
+              </table>
+      </div>
+        <!--<ion-chip *ngFor="let budget of postData.fundedBy" class="ion-text-end" class="chip-cls" >
+          Rs.{{budget.split('_')[1]}} by &nbsp;
+          <ion-label style="color:white">{{budget.split('_')[0]}}</ion-label>
+
+        </ion-chip>-->
+      </span>
+      <span *ngIf="fundType==1 && postData.storyStatus=='shootingmode' && postData.uploadedBy !== this.userData.userName">
+        <div class="container"  scrollY="true" style="margin-left: 30px;">
+          <table class="fundedBy">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>CONTRIBUTORS</th>
+                <th>AMOUNT(Rs)</th>
+              </tr>
+            </thead>
+              <tr *ngFor = "let row of postData.fundedBy;index as i">
+                <td style="color:white !important">
+                  {{i+1}}
+                  </td>
+                <td style="color:white !important">
+                  {{row.split('_')[0]}}
+                </td>
+                <td style="color:white !important">                 
+                  {{row.split('_')[1]}}
+                </td>
+              </tr>
+              </table>
+      </div>
+        <!-- <ion-chip *ngFor="let budget of postData.fundedBy" class="ion-text-end" class="chip-cls" >
+          Rs.{{budget.split('_')[1]}} by &nbsp;
+          <ion-label style="color:white">{{budget.split('_')[0]}}</ion-label>
+
+        </ion-chip> -->
+      </span>
+      <!--Public can see the funded(producer) details except phone number ends-->
+
+    </span>
+
+
+  </span>
+</ion-content>

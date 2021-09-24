@@ -1,0 +1,172 @@
+<ion-header class="toolbar_class" translucent="true">
+  <ion-toolbar style="color:white">    
+    <ion-buttons  slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title style="margin-left: -14px;"><ion-icon style="height: 29px;
+      width: 43px;" name="notifications"></ion-icon>Notification(s)</ion-title> 
+    
+    <ion-buttons (click)="applyFilters()" slot="end">
+      <ion-button >
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>        
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+ 
+
+<ion-content style="height: 584px"> 
+  <div scrollY="true"  style="height: 584px"> 
+  <ion-list style="background: white !important;" [lines]="ios ? 'inset' : 'full'">   
+    <!--VIFI Team Notification starts--> 
+    <!--Team notification Text is not require since having Team message & Team video seprately-->
+   <!--<ion-item-divider  style="background:  white !important;border-bottom:none" sticky>
+      <ion-label *ngIf="isUpdatedOnFlag !==true"  class="tiles-header">
+        <ion-icon name="volume-high"></ion-icon> &nbsp; VIFI Team Notification(s)
+      </ion-label> 
+      <ion-label *ngIf="isUpdatedOnFlag !==true" class="fundclass">
+        <ion-icon name="bulb-outline"></ion-icon>&nbsp;
+      </ion-label>       
+      <br> 
+      <ion-label *ngIf="!isVifiNotifyWaitOver && isUpdatedOnFlag !==true" class="pleasewait-cls">  
+        <br><span _ngcontent-kfk-c3="" class="text-cls" style="font-size: 16px;margin-top:-15px;">&nbsp;&nbsp;&nbsp; Please wait... </span>
+      </ion-label> 
+    </ion-item-divider> -->
+     <ion-item  *ngFor="let vifiNotify of vifiNotificationList" >          
+      
+        <ion-label *ngIf="vifiNotificationList.length>0" style='margin-left: 2px;' class="ion-text-wrap">
+          <span *ngIf="vifiNotify['vifi-notify-msg'] !== '' && vifiNotify['video-link'] == ''"  style="color:black !important;">
+            <b>VIFI Team Messsage :</b><br>
+          </span>
+          <span *ngIf="vifiNotify['vifi-notify-msg'] == '' && vifiNotify['video-link'] !== ''"  style="color:black !important;">
+            <b>VIFI Team Messsage :</b><br>
+          </span>
+          <span *ngIf="vifiNotify['vifi-notify-msg'] !== '' && vifiNotify['video-link'] !== ''"  style="color:black !important;">
+            <b>VIFI Team Messsage :</b><br>
+          </span>
+          <span *ngIf="vifiNotify['vifi-notify-msg'] !== ''"  style="color:black !important;">
+            <!-- Delete option temporarliy disabled & available for admin-->
+              <ion-icon *ngIf="userData.isVifi == true && vifiNotify['vifi-notify-msg'] !== '' && vifiNotify['video-link'] !== ''"  style="margin-left: 135px;height: 18px;width: 43px;margin-top: -4px;" (click)="deleteVifiNotify(vifiNotify['id'])"  slot="icon-only" name="close-circle"></ion-icon>            
+              <ion-icon *ngIf="userData.isVifi == true &&  vifiNotify['vifi-notify-msg'] !== '' && vifiNotify['video-link'] == ''" style="margin-left: 135px;height: 18px;width: 43px;margin-top: -4px;" (click)="deleteVifiNotify(vifiNotify['id'])" slot="icon-only" name="close-circle"></ion-icon>
+              <ion-icon *ngIf="userData.isVifi == true &&  vifiNotify['vifi-notify-msg'] == '' && vifiNotify['video-link'] !== ''" style="margin-left: 135px;height: 18px;width: 43px;margin-top: -4px;" (click)="deleteVifiNotify(vifiNotify['id'])"  slot="icon-only" name="close-circle"></ion-icon>
+                 
+          </span>
+          <span *ngIf="vifiNotify['vifi-notify-msg'] !== ''" class="text-cls"> &nbsp;{{vifiNotify['vifi-notify-msg']}}</span> <br>
+          
+          <span *ngIf="vifiNotify['video-link'] !== ''" style="color:black !important;">
+             <!-- Delete option temporarliy disabled & available for admin-->
+                <ion-icon *ngIf="userData.isVifi == true &&  vifiNotify['vifi-notify-msg'] !== '' && vifiNotify['video-link'] == ''" style="margin-left: 162px;height: 18px;width: 43px;margin-top: -4px;" (click)="deleteVifiNotify(vifiNotify['id'])" slot="icon-only" name="close-circle"></ion-icon>
+                 <ion-icon *ngIf="userData.isVifi == true && vifiNotify['vifi-notify-msg'] == '' && vifiNotify['video-link'] !== ''" style="margin-left: 162px;height: 18px;width: 43px;margin-top: -4px;" (click)="deleteVifiNotify(vifiNotify['id'])"  slot="icon-only" name="close-circle"></ion-icon>
+                      
+          </span>
+          <span *ngIf="vifiNotify['video-link'] !== ''"> 
+           <iframe width="100%" height="60%" [src]='vifiNotify.safeUrl' frameborder="1" allowfullscreen>
+           </iframe>
+          </span>
+          &nbsp;<span *ngIf="(vifiNotify['vifi-notify-msg'] !=='' || vifiNotify['video-link'] !== '')  && isUpdatedOnFlag == true" style="font-size: 10px;color:black"> {{ago(vifiNotify['uploadedOn'])}} ago</span>
+        
+        </ion-label>
+      </ion-item>      
+
+   
+    
+
+    <!--VIFI Team Notification ends-->
+    <ion-item-divider *ngIf="(this.userDetailsData !== undefined) ?this.userDetailsData[0].userType == 'D':'' " style="background:  white !important;border-bottom:none" sticky>
+      <ion-label *ngIf="notify.length>0" class="tiles-header">
+        <ion-icon  name="volume-high"></ion-icon> &nbsp; Story status & Likes
+      </ion-label>       
+      <br> 
+      <!--<ion-label *ngIf="!isWaitOver && notify.length>0" class="pleasewait-cls">  
+        <br><span _ngcontent-kfk-c3="" class="text-cls" style="font-size: 16px;margin-top:-15px;">&nbsp;&nbsp;&nbsp; Please wait... </span>
+      </ion-label>        -->
+
+    </ion-item-divider>
+   
+    <ion-item  *ngFor="let track of notify" >
+      <ion-icon *ngIf="ios" slot="start" [name]="track.icon" color="medium"></ion-icon>
+      <ion-label  class="ion-text-wrap"><ion-icon name="chatbubbles-outline" style="color:black"></ion-icon><span class="text-cls"> 
+        &nbsp;{{track.msg}}</span>   
+        &nbsp;<span style="font-size: 10px;color:black"> {{ago(track.updateOn)}} ago</span></ion-label>
+    </ion-item>
+    <ion-item-divider  *ngIf="(this.userDetailsData !== undefined) ?this.userDetailsData[0].userType == 'A' :''" style="background:  white !important;border-bottom:none" sticky>
+      <ion-label *ngIf="pendingStatus !== undefined && pendingStatus.length > 0" class="tiles-header">
+        <ion-icon name="volume-high"></ion-icon>&nbsp;Mobile Number Requests  
+      </ion-label>
+     <!-- <ion-label *ngIf="!isWaitOver" class="pleasewait-cls">  
+        <br><span _ngcontent-kfk-c3="" class="text-cls" style="font-size: 16px;margin-top:-15px;">&nbsp;&nbsp;&nbsp; Please wait... </span>
+      </ion-label> -->     
+    </ion-item-divider>
+    <!--Director Receives this messsage Once Actor/Actress/Music Director Approves Request Header starts-->
+    <ion-item-divider *ngIf="(this.userDetailsData !== undefined) ?this.userDetailsData[0].userType == 'D' :'' " style="background:  white !important;border-bottom:none" sticky>
+      <!-- <ion-spinner *ngIf="pendingStatus == undefined && pendingStatus.length > 0 "></ion-spinner> -->
+      <ion-label *ngIf="approvedOrRejectedStatus!==undefined && approvedOrRejectedStatus.length>0" class="tiles-header">
+        <ion-icon name="volume-high"></ion-icon>&nbsp;Mobile Number Request Status
+      </ion-label>
+      
+      <!--<ion-label *ngIf="!isMobNumberReqWaitOver && approvedOrRejectedStatus.length>0" class="pleasewait-mobReq-cls">  
+        <br><span _ngcontent-kfk-c3="" class="text-cls" style="font-size: 16px;margin-top:-15px;">&nbsp;&nbsp;&nbsp; Please wait... </span>
+      </ion-label> -->
+    </ion-item-divider>
+    <!--Director Receives this messsage Once Actor/Actress/Music Director Approves Request Header  ends-->
+    <!--<ion-label style='font-size: 15px;color: black;margin-left: 34px;' *ngIf="!isMobNumberReqWaitOver && notify.length == 0 && vifiNotificationList == 0 && (pendingStatus == undefined || pendingStatus.length ==0) && isWaitOver && inWhichBlock =='whatsAppNotify'"> 
+      &nbsp;<span style="font-size: 15px;margin-left: 20px;color:black">No Record2 found</span>
+    </ion-label>
+    <ion-label style='font-size: 15px;color: black;margin-left: 34px;' *ngIf="notify.length == 0 && vifiNotificationList == 0 && (pendingStatus == undefined || pendingStatus.length ==0) && isWaitOver && inWhichBlock == 'statusLikes' "> 
+      &nbsp;<span style="font-size: 15px;color:black;margin-left: 20px;">No Record1 found</span>
+    </ion-label> -->
+      <ion-item-sliding  *ngFor="let request of pendingStatus" #slidingItem>       
+       
+        <ion-item *ngIf="!this.confData.isNotificationLabelClicked" (click)="goToDetail(request.requestedUserEmail)"> 
+          <ion-label class="ion-text-wrap"><ion-icon name="checkmark-done-circle" style="color:black"></ion-icon><span class="text-cls" style="font-size: 19px;"> 
+
+            &nbsp;</span>  &nbsp; <span class="text-cls">Swipe left to Approve/Reject <br>  
+            &nbsp;</span> <span style="font-size: 10px;color:black;margin-left: 1%;">Request came {{ago(request.updateOn)}} ago | </span>
+            <span style="font-size: 10px;color:black;margin-left:1%;">Click to see <b>'{{request.requestedUserEmail}}'</b> profile before Approve</span>
+        </ion-label>
+          </ion-item>
+        <ion-item-options>
+          <ion-item-option style="background:-webkit-linear-gradient(150deg, #013A6B 35%, #004E95 35%);" (click)="approve(request)">
+            <ion-icon name="checkmark"></ion-icon>
+          </ion-item-option>
+          &nbsp;
+          <ion-item-option style="background: -webkit-linear-gradient(150deg, #eb445a 35%, #cf3c4f 35%);" (click)="reject(request)">
+            <ion-icon name="close"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      <!--Director Receives this messsage Once Actor/Actress/Music Director Approves Request Loop starts-->
+      <ion-item-sliding  *ngFor="let request of approvedOrRejectedStatus" #slidingItem>       
+       
+        <ion-item *ngIf="!this.confData.isNotificationLabelClicked && ((this.userDetailsData !== undefined) ?this.userDetailsData[0].userType == 'D' :'')" > 
+          <ion-label class="ion-text-wrap"><ion-icon  name="checkmark-done-circle" [ngStyle]="{'color':request.status == 'A' ? 'green' : 'red' }" ></ion-icon><span class="text-cls" style="font-size: 19px;"> 
+
+            &nbsp;</span>  
+              <span style="font-size: 12px;color:black;margin-left: 1%;margin-top:0px" *ngIf="request.status == 'A'" ><b>{{request.actorName}} </b><b style="color:green !important;">Accepted</b> your mobile number request.
+              <br>Go to artist details to see the contact | Notification came {{ago(request.updateOn)}} ago
+              </span>
+              <span style="font-size: 12px;color:black;margin-left: 1%;margin-top:0px" *ngIf="request.status == 'R'" ><b>{{request.actorName}} </b> <b style="color:red !important;">Rejected</b> your mobile number request.
+                <br>Notification came {{ago(request.updateOn)}} ago
+              </span>  
+            <!--<br><span style="font-size: 10px;color:black;margin-left: 1%;" *ngIf="request.status == 'A'" style="font-size: 10px;color:rgb(71, 63, 63);margin-left:1%;">Go to artist page to see the contact |</span> -->
+          
+           <!-- <span style="font-size: 10px;color:black;margin-left: 1%;">Request came {{ago(request.updateOn)}} ago</span>-->
+        </ion-label>
+          </ion-item>
+        <ion-item-options *ngIf="((this.userDetailsData !== undefined) ?this.userDetailsData[0].userType == 'A' :'')">
+          <ion-item-option style="background:-webkit-linear-gradient(150deg, #013A6B 35%, #004E95 35%);" (click)="approve(request)">
+            <ion-icon name="checkmark"></ion-icon>
+          </ion-item-option>
+          &nbsp;
+          <ion-item-option style="background: -webkit-linear-gradient(150deg, #eb445a 35%, #cf3c4f 35%);" (click)="reject(request)">
+            <ion-icon name="close"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      <!--Director Receives this messsage Once Actor/Actress/Music Director Approves Request Loop starts-->
+  </ion-list>
+</div>
+</ion-content>
+ 

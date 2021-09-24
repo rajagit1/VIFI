@@ -1,0 +1,348 @@
+.custom-header{
+--ion-background-color: -webkit-linear-gradient(150deg, #013A6B 35%, #004E95 35%);
+color: white !important;
+}
+.custom-toolbar{
+color: white;
+}
+.q1, .q2, .q3, .q4 {
+    border: 4px solid #fff;
+}
+ion-list{
+  height: 77px;
+}
+ 
+.matrix {
+  padding: 11px;
+  margin-top: -11px;
+    ion-col {
+        --ion-grid-column-padding: 0px;
+        height: 167px;
+        box-shadow: 0px -1px 6px 2px grey;
+    }
+ 
+    .list {
+        padding: 0px;
+        height: 100%;
+    }
+ 
+    ion-item {
+        margin-bottom: 2px;
+    }
+}
+ 
+.q-header {
+    background-color: var(--ion-color-light);
+    height: 20px;
+    text-align: center;
+}
+.more-icon{
+    margin-inline-start: auto;
+    color: #4c8dff;
+  }
+  .img-css
+  {
+    height: -webkit-fill-available;
+    width: -webkit-fill-available;
+  }
+.style4{
+    width:193px;
+  }
+  .more-icon{
+    margin-inline-start: auto;
+    color: #4c8dff;
+  }
+  
+  .tiles-header{
+  
+    color: #262626;
+    font-weight: 100;
+    font-size: 17px;
+    font-kerning: none;
+    margin:auto;
+  }
+  .chip {
+    display: inline-block;
+    padding: 0 25px;
+    height: 50px;
+    font-size: 16px;
+    line-height: 50px;
+    border-radius: 25px;
+    background-color: #f1f1f1;
+  }
+  
+  .chip img {
+    float: left;
+    margin: 0 10px 0 -25px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+  }
+  .image-cls{
+    width: 50px;
+    height: 43px;
+    border-radius: 38%;
+    padding-left: 1px;
+    margin-top: 3px;
+    box-shadow: 1px 1px 12px grey;
+  }
+  .img-thumb-music{
+    height: 175px;
+    margin-left: 3%;
+    border-radius: 21%;
+    margin-top: 10px;
+    margin-bottom: 13px;
+  }
+  .img-thumb{
+    height: 175px;
+    margin-left: 20%;
+    border-radius: 21%;
+    box-shadow: 5px 15px 71px 8px grey;
+    margin-top: 10px;
+    margin-bottom: 13px;
+  }
+  .divider_2{
+    background-image: url("../../../assets/icons/hand-drawn-2.jfif");
+     
+    height: 167px;
+    background-position-y: 15%;
+    // box-shadow: 3px 4px 6px 3px grey;
+    /* background-repeat: no-repeat; */
+    background-position-x: 39%;
+    /* background-repeat: no-repeat; */
+    background-size: auto;
+  }
+  
+  
+  .actor-image{
+    font-size: 69px;
+    border: 3px solid #f5f6f9;
+    margin-top: 1px;
+    border-radius: 44px;
+    box-shadow: -5px -20px 10px 10px rgba(0, 0, 0, 0.12);
+  }
+  ion-toolbar ion-button,
+ion-toolbar ion-back-button,
+ion-toolbar ion-menu-button {
+  --color: white;
+}
+  .scroll-card-3{
+    height: 27vh;
+    width: 83vh;
+    box-shadow: -1px -2px 9px 3px grey;
+  }
+  .icon-cls{
+    font-size: 38px;
+    margin-left: 0px;
+    margin-right: -14px;
+    margin-top:6px;
+  
+  }
+  .logo-cls{
+    width: 181px;
+    margin-left: -3px;
+    height: 49px;
+  }
+  
+  .toolbar_class{
+     
+    --ion-background-color:#222428;
+    border: none !important;
+    box-shadow: 3px 6px 5px 0px grey;
+  }
+  .avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+   box-shadow: 4px 1px 7px 0px grey;
+  }
+  .badge-cls{
+    margin-top: 1px;
+    padding-left: 5px;
+    margin-bottom: -2px;
+  }
+  div.item {
+  vertical-align: top;
+  display: inline-block;
+  text-align: center;
+  width: 77px;
+  }
+  .avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  .caption {
+    display: block;
+    font-size: 14px;
+    color: #262626;
+    white-space: pre;
+  }
+  .chip-css{
+    margin-left: 20px;
+    margin-bottom: 13px;
+  }
+  ion-slide{
+    width:-webkit-fill-available !important;
+    margin-top: 10px;
+  }
+  .scroll-card-4{
+    border-radius: 69px;
+    width: 60px;
+    box-shadow: 0px 2px 8px 1px grey;
+    height: 53px;
+  }
+.delete-area {
+    border: 2px dashed var(--ion-color-medium);
+    margin: 10px;
+    height: 100px;
+    ion-icon {
+       font-size: 64px;
+    }
+}
+.txtClass{
+  font-size: 15px;
+  font-weight: bold;
+}
+.rowStyle-skip{
+  margin-left: 124px;
+  height: 30px;
+   width: 69px;
+  background-color: #6370ff;
+   // padding-left: 37px;
+    border-radius: 6px;
+    margin-top: 1px;
+    border: 1px solid #002bff;
+    box-shadow: inset 5px -1px 20px 12px #6370ff;
+    margin-bottom: 10px;
+}
+.rowStyle_support {
+  margin-left: 70px;
+  font-family: fantasy;
+    //background: #6370ff;
+    //width: 121px;
+    /* margin-right: -7px; */
+    margin-top: 0px;
+    margin-bottom: 3px;
+    //border: 1px solid #d7d8da;
+    font-style: oblique;
+    /* font-family: emoji; */
+    height: 25px;
+    border-radius: 7px;
+}
+.rowStyle_technician_sml {
+    margin-left: 131px;
+    font-family: fantasy;
+    position: absolute;
+    z-index: 1;
+    margin-top: 0px;
+    margin-bottom: 3px;
+    font-style: oblique;
+    height: 25px;
+    border-radius: 7px;
+}
+.rowStyle {
+  background-color: #f5f6f9;
+  padding-left: 10px;
+  border-radius: 30px;
+  margin-top: 15px;
+  border: 1px solid #d7d8da;
+  box-shadow: inset 5px -1px 20px 12px #f5f6f9;
+  margin-bottom: 10px;
+
+  ion-icon {
+      margin-top: 9px;
+      margin-right: 10px;
+  }
+}
+.inputext-cls{
+  color:black !important;
+  }
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
+
+
+//actor skills popup
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+visibility: visible;
+  opacity: 1;
+}
+
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+  position: absolute;
+  top: -13px;
+  right: 3px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+  cursor: pointer;
+}
+.popup .content {
+  color:black !important;
+  max-height: 30%;
+  overflow: auto;
+}
+.search-logo{
+  border-radius: 50%;
+    width: 48px;
+    padding-right: 10px;
+    height: 39px;
+}
+
+@media screen and (max-width: 700px){
+
+  .popup{
+    width: 70%;
+  }
+}

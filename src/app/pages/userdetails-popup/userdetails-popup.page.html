@@ -1,0 +1,64 @@
+<ion-header class="toolbar_class" translucent="true">
+  <ion-toolbar style="color:white">
+    <ion-buttons style="margin-left: -34px;" slot="start">
+      <ion-label style="font-size: 22px;margin-left: 50px;">
+        <h2 class="ion-text-center title-cls title-cls">
+          <ion-icon style="margin-left:-42px" name="people" style="font-size: 22px"></ion-icon>
+          <ion-label text-wrap style="font-size: 16px">People Who visited</ion-label>
+        </h2>
+      </ion-label>
+    </ion-buttons>
+    <ion-buttons (click)="dismiss()" slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-grid > 
+  
+      <span >
+         
+        <ion-row class="ion-align-items-center">
+          <ion-col size="12">
+         
+            <ion-radio-group allow-empty-selection="false" name="radio-group" 
+              #radioGroup>
+              <div style="height: 582px;
+              overflow-x: scroll;margin-left: -16px;padding: 0px;margin-right: -13px;margin-top: -9px;">
+            
+             <ion-item *ngFor="let eachVisitor of this.actorData.visitors" >
+             <ion-avatar>
+               <img src="{{eachVisitor.split('***@@@shirdi&&&saibaba@@@^^^!!!')[3]}}" >
+             </ion-avatar> &nbsp;<ion-label style="color:black !important">{{eachVisitor.split('***@@@shirdi&&&saibaba@@@^^^!!!')[1]}}</ion-label> &nbsp;
+             
+              <!-- <ion-label color="dark">Stories</ion-label>-->
+               
+                 <ion-label style="color:black !important;margin-right: 20px;">{{eachVisitor.split('***@@@shirdi&&&saibaba@@@^^^!!!')[4]}}</ion-label>
+            
+
+             <ion-buttons style="color:black !important;margin-left: -15px;" slot="end">
+              <!-- <ion-button style="color:black !important;margin-left: 0px;">
+                <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+              </ion-button>      -->       
+            </ion-buttons> 
+            <ion-buttons style="color:black !important;margin-left: -15px;" (click)="showActorDetailsPopup(eachVisitor.split('***@@@shirdi&&&saibaba@@@^^^!!!')[2])" slot="end">
+              <ion-button style="color:black !important;margin-left: 0px;">
+                <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+              </ion-button>            
+            </ion-buttons> 
+
+            <!-- <ion-radio [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio> -->
+           </ion-item>
+            </div>
+  
+            </ion-radio-group>
+          </ion-col>
+  
+        </ion-row>
+      </span>
+
+      </ion-grid>
+      </ion-content>

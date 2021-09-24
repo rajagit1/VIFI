@@ -1,0 +1,78 @@
+<ion-header class="toolbar_class" translucent="true">
+  <ion-toolbar style="color:white">
+    <ion-buttons style="margin-left: -34px;" slot="start">
+      <ion-label style="font-size: 22px;margin-left: 50px;">
+        <h2 class="ion-text-center title-cls title-cls">
+          <ion-icon style="margin-left:-42px" name="filter" style="font-size: 22px"></ion-icon>
+          <ion-label text-wrap style="font-size: 16px">Advertisement Management</ion-label>
+        </h2>
+      </ion-label>
+    </ion-buttons>
+    <ion-buttons  slot="end">      
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+     </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<!-- Ad Management section starts-->
+<ion-row  class="ion-align-items-center">
+  <ion-col >
+    <ion-select style="color:black !important" placeholder="Screen" [(ngModel)]="screenName" value="select"
+        (ionChange)="screenChange($event)" interface="action-sheet">
+        <ion-select-option value="">Screen Name</ion-select-option>
+        <ion-select-option value="dailyActivities">Daily Activities</ion-select-option>
+        <ion-select-option value="trending">Trending</ion-select-option>
+        <ion-select-option value="profile">Profile</ion-select-option>
+    </ion-select>
+  </ion-col>
+  <ion-col >
+    <ion-select style="color:black !important" placeholder="isBanner"  value="select"
+        (ionChange)="isBannerRequiredChange($event)" interface="action-sheet">
+        <ion-select-option value="">IsBannerRequired</ion-select-option>
+        <ion-select-option value="yes">Yes</ion-select-option>
+        <ion-select-option value="no">No</ion-select-option>
+    </ion-select>
+  </ion-col>
+  <ion-col >
+    <ion-select style="color:black !important" placeholder="isInterstitial" value="select"
+        (ionChange)="isInterstitialRequiredChange($event)" interface="action-sheet">
+        <ion-select-option value="">IsInterstitialRequired</ion-select-option>
+        <ion-select-option value="yes">Yes</ion-select-option>
+        <ion-select-option value="no">No</ion-select-option>
+    </ion-select>
+  </ion-col>
+  <ion-col >
+    <ion-select style="color:black !important" placeholder="isReward"  value="select"
+        (ionChange)="isRewardVideoRequiredChange($event)" interface="action-sheet">
+        <ion-select-option value="">IsRewardRequired</ion-select-option>
+        <ion-select-option value="yes">Yes</ion-select-option>
+        <ion-select-option value="no">No</ion-select-option>
+    </ion-select>
+  </ion-col>
+  <ion-button (click) ='updateAdManagement()'  expand="full" color="danger">
+    <ion-icon ></ion-icon> &nbsp; Update Ad
+  </ion-button>
+</ion-row>
+<!-- Ad Management section ends-->
+<ion-row  class="ion-align-items-center">
+  <ion-col >
+    <ion-select style="color:black !important" placeholder="Ad-Type" [(ngModel)]="typeofAd" value="select"
+        (ionChange)="screenChange($event)" interface="action-sheet">
+        <ion-select-option value="">Select</ion-select-option>
+        <ion-select-option value="rewardVideo">Reward Video</ion-select-option>
+        <ion-select-option value="interstitial">Interstitial</ion-select-option>
+        <ion-select-option value="banner">Banner</ion-select-option>
+    </ion-select>
+  </ion-col>
+  <ion-col >
+    <ion-input style="width: 136px;" type="text"  placeholder="Unit ID" [(ngModel)]="unitId"></ion-input>
+  </ion-col> 
+  
+  <ion-button (click) ='updateAdUnit()'   color="danger">
+     Update Unit
+  </ion-button>
+</ion-row>
+</ion-content>

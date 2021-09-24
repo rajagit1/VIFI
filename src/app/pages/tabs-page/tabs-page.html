@@ -1,0 +1,51 @@
+<ion-tabs>
+
+  <ion-tab-bar slot="bottom" style="height: 75px;
+  --ion-background-color: black;
+  box-shadow: -7px 1px 9px 5px rgba(0, 0, 0, 0.5);
+  z-index: 50;">
+  <ion-tab-button style="font-size: 11px;" tab="daily-activities">
+    <ion-icon name="megaphone-outline"></ion-icon>
+    <ion-label>Activities</ion-label>
+  </ion-tab-button>
+    <ion-tab-button style="font-size: 11px;margin-left: -6px !important;" tab="schedule">
+      <ion-icon name="flame"></ion-icon>
+      <ion-label>Trending</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button style="font-size: 11px;" tab="speakers">
+      <ion-icon name="folder-open"></ion-icon>
+      <ion-label>Category</ion-label>
+    </ion-tab-button>
+    <ion-tab-button *ngIf="(userData.userType !==undefined && userData.userType !== '' && userData.userType =='D') || (role !=='' && role !==null && role =='D')" style="font-size: 11px; width:56px" tab="create-post">
+      
+        <ion-fab-button tab="create-post" color="danger">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+        <span class="post" style="
+        white-space: pre;
+        color:white;
+        font-size: 10px;
+        padding: 2px;
+        width: 56px !important;
+    ">Post</span>
+        <ion-fab-list side="top">
+          <ion-fab-button color="vimeo" (click)="openSocial('Vimeo', fab)">
+            <ion-icon name="logo-vimeo"></ion-icon>
+          </ion-fab-button>
+          </ion-fab-list>
+    </ion-tab-button>
+
+    <ion-tab-button  style="font-size: 11px;margin-right: -7px;" tab="map">
+      <ion-icon name="heart"></ion-icon>
+      <ion-label>Favorites</ion-label>
+    </ion-tab-button>
+ 
+
+    <ion-tab-button  style="font-size: 11px;margin-right: 2px;" tab="about">
+      <ion-icon name="information-circle"></ion-icon>
+      <ion-label>Profile</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+
+</ion-tabs>

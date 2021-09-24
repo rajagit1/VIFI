@@ -1,0 +1,99 @@
+<ion-header [translucent]="true">
+  <!-- <ion-toolbar color="default" class="custom-toolbar"> 
+    
+    <img class="banner-class" src="../../../assets/icons/trans.png"
+    
+    
+    ><img>
+    <p class="logoclass">ViFi - Viability Film</p>
+    <p class="subLogo">An app for continous filming</p>
+    <ion-buttons collapse="true" slot="end">
+      <ion-button (click)="openNewContactModal()">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>  
+  </ion-toolbar> -->
+</ion-header>
+
+
+
+
+<!-- <ion-segment (ionChange)="segmentChanged($event)" [(ngModel)]="mode" class="seg-class2">
+  <ion-segment-button value="signIn">
+    <ion-icon name="people-circle-outline"></ion-icon>
+    <ion-label>Sign In</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="signUp">
+    <ion-icon name="person-add-outline"></ion-icon>
+    <ion-label>Sign Up</ion-label>
+  </ion-segment-button>
+</ion-segment> -->
+<ion-grid class="loginpage-css " *ngIf="isLogin">
+  <img src="../../../assets/icons/Black And Red.png" class="logo-sign image_trans animate__animated animate__fadeInUp" width="200px" height="200px">
+  <ion-row class="rowStyle">
+    <ion-icon name="mail" color="danger"></ion-icon>
+
+    <ion-input type="email" class="txtClass" placeholder="Email Address" [(ngModel)]="email"></ion-input>
+  </ion-row>
+
+  <ion-row class="rowStyle">
+    <ion-icon name="key" color="danger"></ion-icon>
+    <ion-input type="{{type}}" class="txtClass" placeholder="Password" [(ngModel)]="password"></ion-input>
+    <!--Eye visibility starts--> 
+    <button *ngIf="!showPass" style='height: 36px;border-radius: 5px;background: #3d3b3b;margin-right: 16px;' ion-button clear color="dark" type="button" item-right (click)="showPassword()"> 
+        <ion-icon name="eye" style="font-size:25px;color:#d30404;"></ion-icon>
+    </button>
+    <button *ngIf="showPass" style='height: 36px;border-radius: 5px;background: #3d3b3b;margin-right: 16px;' ion-button clear color="dark" type="button" item-right (click)="showPassword()"> 
+        <ion-icon name="eye-off" style="font-size:25px;color:#d30404;"></ion-icon>
+    </button>
+    <!--Eye visibility ends--> 
+  </ion-row>
+
+  <ion-row>
+    <span class="forgot-class">
+      <ion-icon name="lock-open-outline"></ion-icon>
+      <a style="color: #e8e9ee;" [routerLink]="['/forgot-password']">Forgot Password??</a>
+    </span>
+  </ion-row> 
+
+  <ion-row style="margin-top: 10px;">
+    <ion-button expand="full" class="shadow-red" color="danger" shape="round" (click)="login()"><ion-icon name="lock-open"></ion-icon> Login</ion-button>
+  </ion-row>
+
+  <ion-row style="margin-top: 10px;">
+    <ion-button expand="full" class="shadow-red" color="danger" shape="round" (click)="isLogin=false"><ion-icon name="person-add"></ion-icon> Sign Up</ion-button>
+  </ion-row>
+
+</ion-grid>
+<ion-grid class="loginpage-css" *ngIf="!isLogin">
+
+  <img src="../../../assets/icons/Black And Red.png"  class="logo-sign image_trans animate__animated animate__fadeInUp" width="200px" height="200px">
+  <ion-row class="rowStyle">
+    <ion-icon name="mail" color="danger"></ion-icon>
+    <ion-input type="email" class="txtClass" placeholder="Email Adddress" [(ngModel)]="email_s"></ion-input>
+  </ion-row>
+  <ion-row class="rowStyle">
+    <ion-icon name="keypad" color="danger"></ion-icon>
+    <ion-input type="tel" class="txtClass" placeholder="Mobile" [(ngModel)]="mobile_s" maxlength="10"
+      (keypress)="numberOnlyValidation($event)"></ion-input>
+  </ion-row>
+  <ion-row class="rowStyle">
+    <ion-icon name="key" color="danger"></ion-icon>
+    <ion-input type="password" class="txtClass" placeholder="Password" [(ngModel)]="password_s"></ion-input>
+  </ion-row>
+
+  <ion-row style="margin-top: 10px;">
+    <ion-button expand="full" class="shadow-red" color="danger" shape="round" (click)="signUp()"><ion-icon name="person-add"></ion-icon> Sign Up</ion-button>
+  </ion-row>
+  <ion-row >
+    <ion-button expand="full" class="shadow-red" color="danger" shape="round" (click)="isLogin=true"><ion-icon name="arrow-back-circle"></ion-icon> Back</ion-button>
+  </ion-row>
+
+
+</ion-grid>
+
+<ion-footer>
+  <ion-toolbar style="height: 25px;">
+    <ion-title class="ion-text-center footer-cls">ViFi @ 2021</ion-title>
+  </ion-toolbar>
+</ion-footer>

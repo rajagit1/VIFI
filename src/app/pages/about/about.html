@@ -1,0 +1,107 @@
+<ion-content fullscreen="true" slot="fixed">  
+  <div class="card">
+    <div id="container" class="header"
+      style="background-image: url(../../../assets/icons/bannergold.jfif);background-size: 362px 206px;">
+     <div > <img id="gradient" class="express-img" src="../../../assets/icons/express-yourself.jpg" id="img2" />      
+      </div>
+      <ion-toolbar style="color:white">
+        <ion-chip style='margin-left: 145px;' class="ion-text-end" class="chip-cls" button>
+          Help
+          <ion-icon style='color:white;margin-left: 8px;' name="call-outline"></ion-icon>
+          <ion-label (click)="callNow(9965717531)" style="color:white">+91 9965717531</ion-label>
+        </ion-chip>       
+      </ion-toolbar>
+      <ion-row>
+        <div *ngIf="userData.userName !=='' && userData.userName !==undefined" >
+            <img class="sml-cls-cropped-img" src="{{actor_img}}" alt="">
+            <ion-spinner *ngIf="!actor_img"></ion-spinner>
+            <div *ngIf="this.userData.isCertified == true">        
+                <img style="height: 46px;width: 57px;margin-left: 109px;margin-top: -32px;border-radius: 7px;" src="../../../assets/icons/certified.jpg" alt="">     
+               
+              </div>
+           </div>
+      </ion-row>
+      <ion-row *ngIf="this.userData.profilecompletionPercentage !== 100 && this.userData.userType !=='D' && this.userData.userType !=='P' && this.userData.userType !=='V'">               
+        <ion-progress-bar (click)="navigatetoProfile()"  [value]="this.userData.profilecompletionPercentage" color="danger" class="progress-cls animate__animated animate__fadeIn">
+          </ion-progress-bar>&nbsp;<ion-label style="color:white"> {{this.userData.profilecompletionPercentage * 100}}% Done.</ion-label>
+        </ion-row>        
+      <ion-row>
+        <div class="user-meta ion-text-center">
+          <h3 style="width: 380px !important; word-wrap: break-word !important;color: white !important;margin-top:0px !important" class="playername">{{displayName}}</h3>
+         <!-- <h5 class="country">{{email}}</h5> -->
+        </div>
+      </ion-row>
+        <!--<div class="user-meta ion-text-center">
+          <h3 class="playername">{{displayName}}</h3>
+          <h5 class="country">{{email}}</h5>
+        </div>  -->  
+    </div>
+    <div class="card-body">
+      
+      <ion-list style="margin-top: 25px;" class="custom-list">
+
+        <ion-item (click)="navigationPostedStoriesPage()" *ngIf="(userData.userType == 'D')" class="animate__animated animate__flipInX" button>
+          <ion-icon slot="start" src="../../../assets/icons/survey.svg"></ion-icon>
+          <ion-chip slot="end">
+            <ion-label>{{postsFilterd.length}}</ion-label>
+          </ion-chip>
+          <ion-label style="font-size: 15px">
+            Posted Stories
+          </ion-label>
+        </ion-item>
+        <ion-item *ngIf="(userData.userType !== 'D' && userData.userType !== 'P' && userData.userType !== 'V')" (click)="showDetail()"  class="animate__animated animate__flipInX" button>
+          <ion-icon slot="start" src="../../../assets/icons/profile.svg"></ion-icon>          
+          <ion-label style="font-size: 15px">
+           Profile & Mapped Stories
+          </ion-label>
+        </ion-item>
+        <ion-item *ngIf="(userData.userType == 'D' || userData.userType == 'P' || userData.userType == 'V')" (click)="showDetail()"  class="animate__animated animate__flipInX" button>
+          <ion-icon slot="start" src="../../../assets/icons/profile.svg"></ion-icon>          
+          <ion-label style="font-size: 15px">
+            Profile 
+          </ion-label>
+        </ion-item>
+        <ion-item (click)="navigationMapTechniciansPage()" *ngIf="(userData.userType == 'D')" class="animate__animated animate__flipInX" button>
+          <ion-icon slot="start" src="../../../assets/icons/user-tag.svg"></ion-icon>          
+          <ion-label style="font-size: 15px">
+            Tag/View Technicians
+          </ion-label>
+        </ion-item>
+        <ion-item (click)="navigationFavourtiesPage()" class="animate__animated animate__flipInX"  button>
+          <ion-icon slot="start" src="../../../assets/icons/favorite.svg"></ion-icon>
+          <ion-chip slot="end">
+            <ion-label>{{storiescount}}</ion-label>
+          </ion-chip>
+          <ion-label style="font-size: 15px">
+            Fav Stories
+          </ion-label>
+        </ion-item>
+
+
+      </ion-list>
+       <!-- VIFI Team post notify  starts-->
+      <ion-button style="height: 20px;" *ngIf='userData.isVifi == true' expand="full" (click)="goToVifiNotification()" color="danger">
+        <ion-icon ></ion-icon> &nbsp; Post Notification
+      </ion-button>
+      <ion-button style="height: 20px;" *ngIf='userData.isVifi == true' expand="full" (click)="goToAdMgmt()" color="danger">
+        <ion-icon ></ion-icon> &nbsp; Ad Management
+      </ion-button>
+      <ion-button style="height: 20px;" *ngIf='userData.isVifi == true' expand="full" color="danger">
+        <ion-icon ></ion-icon> &nbsp; Total Users Count : {{totalUsersCount}}
+      </ion-button>
+      <ion-button expand="full" (click)="navigatetoProfile()" color="danger">
+        <ion-icon name="build-sharp"></ion-icon> &nbsp; Update Profile
+      </ion-button> 
+      <!-- VIFI Team post notify  ends-->
+      <ion-button expand="full" (click)="logout()" color="danger">
+        <ion-icon name="log-out"></ion-icon> &nbsp; Logout
+      </ion-button>     
+      
+     
+      
+      
+
+
+    </div>
+  </div>
+</ion-content>

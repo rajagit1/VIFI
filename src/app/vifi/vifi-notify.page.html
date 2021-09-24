@@ -1,0 +1,93 @@
+ 
+<ion-header class="custom-header">
+
+  <ion-toolbar class="custom-toolbar">
+    <ion-title style="font-size:16px"> <ion-icon name="create"></ion-icon> &nbsp; Create Vifi Notification</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" style="font-size:24px">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+
+
+<ion-content class="create-post">
+  <ion-row>
+  <ion-col size="12">
+    <img style='width: 195px;margin-left: 83px;' *ngIf="isImagefinalized"  class="sml-cls-cropped-img" src="{{finalizedImageUrl}}">
+    <img *ngIf="!isImageCropped" class="slide-img" src="../../../assets/icons/story1.PNG">
+    <div *ngIf="isImageCropperShown && !isImagefinalized">
+      <image-cropper 
+        [imageChangedEvent]="imageChangedEvent"
+        [maintainAspectRatio]="true"
+        [aspectRatio]="4 / 4"
+        [resizeToWidth]="210"
+        format="png"
+        (imageCropped)="imageCropped($event)"
+        (imageLoaded)="imageLoaded($event)"
+        (cropperReady)="cropperReady($event)"          
+        (loadImageFailed)="loadImageFailed()"
+    ></image-cropper>
+  </div>
+    
+   </ion-col>
+
+ </ion-row>
+  <div class="about-info">
+
+    
+
+    <h3 class="ion-padding-top ion-padding-start">Details</h3>
+
+    <ion-list lines="none" style="margin-top:10%">
+      
+      <ion-item>
+        <ion-label class="field-text" position="floating">Notification Message</ion-label>
+        <ion-textarea class="ion-cust-text"  rows="4" cols="27" [(ngModel)]="vifinotifyDescription"></ion-textarea>
+        <ion-icon name="library" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <ion-label  class="field-text"  position="floating">Paste your YouTube link</ion-label>
+        <ion-input   class="ion-cust-text" [(ngModel)]="videoLink"></ion-input>
+        <ion-icon  name="videocam" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item style="margin-left: 58px;color: black !important;">Notify Option</ion-item>
+      <ion-item style="margin-top: -13px;" *ngIf="userType!='V'">  
+         <ion-label style="margin-right:-29px !important;color:black !important" >FullScreen</ion-label>
+        <ion-toggle  [(ngModel)]="isFullscreen"></ion-toggle>
+        <ion-label  style="color:black !important">BellIcon</ion-label>  
+        <ion-icon slot="start" src='../../../assets/icons/storyVisibility.svg'></ion-icon>    
+      </ion-item>
+    </ion-list>
+    <ion-item-divider style="margin-top: 42px;border: none;">
+
+      <ion-fab vertical="bottom" horizontal="end">
+        <ion-fab-button  color="dark">
+          <ion-icon  name="send" (click)="post()"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+      <!-- <input id="uploadBtn" style="display: none" #hiddenfileinput type="file" class="upload"
+        (change)="uploadFile($event.target.files)" /> -->
+        <input id="uploadBtn" style="display: none" #hiddenfileinput type="file" class="upload"
+        (change)="fileChangeEvent($event)" />
+        
+      
+        
+      <ion-fab vertical="bottom" horizontal="left">
+        <ion-fab-button color="medium">
+          <ion-icon name="document-attach" (click)="hiddenfileinput.click()"></ion-icon>
+          <p class="badge-cls" *ngIf="isUploaded">1</p>
+        </ion-fab-button>
+
+      </ion-fab>
+
+    </ion-item-divider>
+
+  </div>
+
+</ion-content>

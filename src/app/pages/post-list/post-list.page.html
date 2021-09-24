@@ -1,0 +1,54 @@
+<ion-header class="custom-header">
+
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref={{defaultHref}}></ion-back-button>
+    </ion-buttons>
+    <ion-title style="font-size:16px"> <ion-icon color="danger" name="duplicate"></ion-icon>Choose Story to Approve</ion-title>
+ </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content >
+  <ion-item style="font-size: 13px;
+       color: rgb(250, 249, 249);box-shadow: none;" *ngIf="!isApproveStoriesAvailable">        
+         No Story available for Approve
+  </ion-item>
+  
+  <ion-list class="list-class" #scheduleList>
+    <ion-label *ngIf="isApproveStoriesAvailable"  style="font-size: 12px;margin-top:15px;color:white;margin-left: 9px;" >
+      <ion-icon name="bulb-outline" ></ion-icon>&nbsp;Click the below Story & Swipe left to Approve/Reject       
+    <ion-icon _ngcontent-vqh-c3="" style="font-size: 12px;margin-top:15px;color:white;margin-left: 42px;" class="more-icon md hydrated" name="arrow-back-circle" role="img" aria-label="chevron backward circle outline"></ion-icon>
+     </ion-label>
+    <ion-item-group *ngFor="let group of groups"> 
+      
+      <ion-item-sliding style="margin-left: -12px !important;width: 384px !important;margin-top:-2px !important;"  *ngFor="let post of group.posts" #slidingItem>
+        <ion-item ><img src={{post.image}} class="avatar" />
+          <ion-label style="padding-left: 5px;">
+            {{post.title}}
+            <p>
+              <ion-chip class="ion-text-end" class="chip-cls" button>
+                <ion-icon style="color:white" name="person-circle"></ion-icon>
+                <ion-label style="color:white">{{post.uploadedBy}}</ion-label>
+              </ion-chip>
+              &mdash;
+              <ion-icon style="color: red;" name="thumbs-up"></ion-icon> {{post.likes.length }}
+              likes &nbsp; <ion-icon name="wallet"></ion-icon> {{returnKValue(post.budget)}}
+            </p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options>
+          <ion-item-option style="background:-webkit-linear-gradient(150deg, #013A6B 35%, #004E95 35%);" (click)="approve(post)">
+            <ion-icon name="checkmark"></ion-icon>
+          </ion-item-option>
+          &nbsp;
+          <ion-item-option *ngIf="post.fundType == 2" style="background: -webkit-linear-gradient(150deg, #eb445a 35%, #cf3c4f 35%);" (click)="reject(post)">
+            <ion-icon name="close"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-item-group>
+  </ion-list>
+
+</ion-content>

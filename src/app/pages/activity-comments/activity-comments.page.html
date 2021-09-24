@@ -1,0 +1,153 @@
+<ion-header class="toolbar_class" translucent="true">
+  <ion-toolbar style="color:white">
+    <ion-buttons slot="start">
+      <ion-label style="font-size: 22px;margin-left: 50px;">
+        <h2 class="ion-text-center title-cls title-cls">
+          <ion-label text-wrap style="font-size: 22px">{{commentsObj.uploaderName}} Post</ion-label>
+        </h2>
+      </ion-label>
+    </ion-buttons>
+    <ion-buttons (click)="dismiss()" slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen="true">
+  <ion-row>
+    <ion-col size="12">
+
+      <div style="color: white;
+          background: #635e5e;
+          margin-left: 1px;">
+        <img src="{{commentsObj.uploaderImg}}" class="avatar_activityUploader" />
+        <ion-text style="font-size: large;font-weight: bolder;"> {{commentsObj.uploaderName}} </ion-text>
+        <!--<span class="margin-cls">
+              <ion-icon  style="width: 24px;
+              height: 23px;" name="thumbs-up-outline"></ion-icon>{{commentsObj.likes.length}}
+            </span> -->
+        <span class="margin-cls">
+          <ion-icon style="width: 24px;
+              height: 23px;" name="thumbs-up-outline" (click)="isAlreadyLiked(commentsObj)"></ion-icon>
+          {{commentsObj.likes.length}}
+        </span>
+        <span class="margin-cls">
+          <ion-icon style="width: 24px;
+              height: 23px;" name="chatbox-outline" large></ion-icon>{{commentsObj.activityComment.length}}
+        </span>
+        <span class="margin-cls">
+          <ion-icon style="width: 24px;
+              height: 23px;" name="arrow-redo-outline"
+            (click)="presentActionSheet(commentsObj.userThought,commentsObj.mediaFile)"></ion-icon>
+        </span>
+        <!--<span class="margin-cls">
+              <ion-icon style="width: 24px;
+              height: 23px;"  name="chatbox-outline" (click)="showOrAddComments(commentsObj)"></ion-icon>{{commentsObj.activityComment.length}}
+            </span> 
+            <span class="margin-cls">
+              <ion-icon style="width: 24px;
+              height: 23px;"  name="arrow-redo-outline" (click)="presentActionSheet(commentsObj.userThought,commentsObj.mediaFile)"></ion-icon> 
+            </span>   -->
+      </div>
+      <div style="background: #ffffff;color:white;text-align: justify;">
+        <ion-text style="font-size: larger;min-height:100px;color:black" >
+          {{commentsObj.userThought}}</ion-text>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-grid>
+    <div class="ion-text-center"
+      *ngIf="commentsObj.mediaFile !== '' && commentsObj.mediaFile !== undefined && commentsObj.mediaFileType=='video'">
+
+      <video #video class="media-file" webkit-playsinline src="{{commentsObj.mediaFile}}" controls>
+      </video>
+    </div>
+
+    <div class="ion-text-center"
+      *ngIf="commentsObj.mediaFile !== '' && commentsObj.mediaFile !== undefined && commentsObj.mediaFileType=='audio'">
+      <audio class="media-file" src="{{commentsObj.mediaFile}}" controls>
+      </audio>
+
+    </div>
+
+    <div
+      *ngIf="commentsObj.mediaFile !== '' && commentsObj.mediaFile !== undefined && commentsObj.mediaFileType=='image'">
+      <img class="media-file" src="{{commentsObj.mediaFile}}" />
+
+    </div>
+
+  </ion-grid>
+  <ion-row>
+    <ion-col>
+      <ion-item-divider>
+        <ion-item style="margin-right: 2px;
+  margin-left: 1px;
+  width: 341px !important;">
+          <ion-textarea class="ion-cust-text" rows="2" cols="27" placeholder="Write your comments..."
+            [(ngModel)]="postComment"></ion-textarea>
+
+          <ion-fab style="height: 33px;
+  width: 33px;
+  margin-left: 49px;
+  margin-right: 15px;
+  margin-bottom: 16px;" vertical="bottom" horizontal="end">
+            <ion-fab-button [disabled]="isPosted" color="dark">
+              <ion-icon name="send" (click)="saveComments(commentsObj)"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+
+        </ion-item>
+
+      </ion-item-divider>
+
+    </ion-col>
+  </ion-row>
+  <div class="about-info">
+    <ion-col size="12" size-md="6">
+      <ion-card *ngFor="let eachComment of commentsObj.activityComment">
+
+        <ion-row (click)="showDetail(eachComment)" class="bottom-bar">
+          <ion-col class="comment-section">
+            <ion-avatar style="height: 40px;width: 40px;">
+              <img src="{{eachComment.split('***@@@shirdi&&&saibaba@@@^^^!!!')[2] }}"
+                 />
+            </ion-avatar>
+          </ion-col>
+          <ion-col style="margin-left: -200px;margin-right: 11px;margin-top: 11px;color:black !important"><b>
+              {{eachComment.split('***@@@shirdi&&&saibaba@@@^^^!!!')[1] }}</b>
+          </ion-col>
+        </ion-row>
+        <ion-row class="bottom-bar">
+          <ion-col style="color:black !important"> {{eachComment.split('***@@@shirdi&&&saibaba@@@^^^!!!')[0] }}
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ion-col>
+
+    <!-- skeleton loading -->
+    <ng-template #elseTemplate>
+      <ion-col size="12" size-md="6" *ngFor="let post of dummyData">
+        <ion-card>
+          <ion-avatar slot="start">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-avatar>
+          <ion-item-divider style="border: none;">
+            <ion-label>
+              <h2>
+                <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+              </h2>
+              <p>
+                <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item-divider>
+        </ion-card>
+      </ion-col>
+    </ng-template>
+    <!-- end skeleton loading -->
+
+  </div>
+</ion-content>
+<!--Comments section added ends-->

@@ -1,0 +1,178 @@
+ 
+ 
+    .ionContent{
+        --ion-background-color: white;
+}
+.logo{
+    font-size: 28vh;
+    margin-top: -1px;
+    margin-bottom: 1px;
+    margin-left: 20%;
+}
+.txtClass{
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+}
+.logoclass{
+    position: relative;
+    color: white;
+    left: 14%;
+    font-size: 23px;
+    font-weight: bold;
+}
+.subLogo{
+    position: relative;
+    color: #f4f5f8;
+    left: 14%;
+    font-size: 11px;
+    font-weight: bold;
+    top: -21px;
+}
+.forgotPassword{
+    position: relative;
+    color: #8790a8;
+    left: 14%;
+    font-size: 11px;
+    font-weight: bold;
+    top: -21px;
+}
+h1, h6 {
+    color: #383a3ed9;
+    
+}
+
+.appDesc{
+    
+     
+    font-size: 0.9rem;
+    color: #f4f5f8b0;
+    font-weight: bold;
+}
+.shadow-red{
+    box-shadow: 0px 14px 25px white;
+    border-radius: 14px;
+    margin-top: 10px;
+    width: 97%;
+    border: 1px solid #f5f6f9;
+    box-shadow: none;
+}
+.footer-cls{
+   
+    margin-top: -29px;
+    font-size: 11px;
+    padding: 4px;
+    background: black;
+    color: #d7d8da;
+    font-weight: bold;
+
+}
+.card-class{
+    margin-block-end: auto;
+}
+.signupLbl{
+    color: white;
+    font-size: 11px;
+    margin-left: 32px;
+}
+ 
+ 
+.banner-class{
+height: 200px;
+width: 252px;
+position: relative;
+left: 44px;
+}
+.forgotpassword-banner-class{
+    height: 280px;
+    width: 360px;
+    position: relative;
+    
+    }
+    .loginpage-css{
+        margin-top: -80px;
+        width: 100%;
+        background-image: url(../../../assets/icons/login-bg5.jpg);
+        background-size: cover;
+        background-position: 0px;
+        background-repeat: no-repeat;
+        margin-left: 1px;
+        
+        
+    }
+    .image_trans{
+        animation-duration: 3s; /* don't forget to set a duration! */
+    }
+.custom-toolbar{
+    height: 280px;
+    background-size: cover;
+    display: block;
+    border: none !important;
+    background: linear-gradient(to bottom, #3171e0, #65c7f7, #0052d4);
+    
+}
+.forgot-pwd-custom-toolbar{
+    color: white;
+    }
+    .custom-header{
+        --ion-background-color: -webkit-linear-gradient(150deg, #013A6B 35%, #004E95 35%);
+        color: white !important;
+        }
+.forgot-class{
+    margin-top: 10px;
+    margin-inline-start: auto
+}
+.item-header{
+    border-bottom: 3px solid #cf3c4fde;
+}
+ion-header{
+    z-index: 0 !important;
+  }
+  .logo-sign{
+    margin-left: 41%;
+    border: 3px solid #d7d8da;
+    border-radius: 84%;
+    box-shadow: 0px 1px 20px 11px #d7d8da75;
+    margin-top: 76px;
+  }
+.rowStyle {
+    background-color: #383a3e;
+    padding-left: 16px;
+    border-radius: 34px;
+    margin-top: 23px;
+    border: 1px solid #d7d8da;
+
+    ion-icon {
+        margin-top: 9px;
+        margin-right: 10px;
+    }
+}
+.class_used_to_set_icon_1 {
+    
+    background-image: url("../../../assets/icons/download.png") !important;
+     
+    background-repeat: no-repeat !important;
+    background-position: 10px 10px !important;
+     
+    padding-left: 70px !important;
+  }
+  .class_used_to_set_icon_2 {
+    
+    background-image: url("../../../assets/icons/prodcuer.PNG") !important;
+     
+    background-repeat: no-repeat !important;
+    background-position: 10px 10px !important;
+     
+    padding-left: 70px !important;
+  }
+  .class_used_to_set_icon_3 {
+    
+    background-image: url("../../../assets/icons/viewers.png") !important;
+     
+    background-repeat: no-repeat !important;
+    background-position: 10px 10px !important;
+     
+    padding-left: 70px !important;
+  }
+
+

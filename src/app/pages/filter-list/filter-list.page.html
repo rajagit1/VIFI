@@ -1,0 +1,126 @@
+<ion-header class="toolbar_class" translucent="true">
+  <ion-toolbar style="color:white">
+    <ion-buttons style="margin-left: -34px;" slot="start">
+      <ion-label style="font-size: 22px;margin-left: 50px;">
+        <h2 class="ion-text-center title-cls title-cls">
+          <ion-icon style="margin-left:-42px" name="filter" style="font-size: 22px"></ion-icon>
+          <ion-label text-wrap style="font-size: 16px">Filter Page</ion-label>
+        </h2>
+      </ion-label>
+    </ion-buttons>
+    <ion-buttons  slot="end">
+      <ion-button (click)="clear()">
+        <ion-icon slot="icon-only"  name="clear"></ion-icon>Clear
+      </ion-button>
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+     </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row class="ion-align-items-center">
+        <ion-col >
+      <ion-input type="text"  (ionChange)="setFilteredItemsName()" class="form-control" placeholder="UserName" [(ngModel)]="queryText_Name"></ion-input>
+      </ion-col>
+    <ion-col><ion-input type="number"  (ionChange)="setFilteredItemsAge()" class="form-control" placeholder="Age" [(ngModel)]="queryText_age"></ion-input>
+       </ion-col>
+    <ion-col><ion-input type="number"  (ionChange)="setFilteredItemsExperience()" class="form-control" placeholder="Experience" [(ngModel)]="queryText_experience"></ion-input>
+       </ion-col>   
+    <ion-col *ngIf="isActor"> <ion-input type="number"  (ionChange)="setFilteredItemsHeight()" class="form-control" placeholder="Height ex.5.7" [(ngModel)]="queryText_Height"></ion-input>
+       </ion-col>
+       <ion-col *ngIf="isActor"><ion-input type="number"  (ionChange)="setFilteredItemsWeight()" class="form-control" placeholder="Weight" [(ngModel)]="queryText_Weight"></ion-input>
+       </ion-col>
+       <ion-col *ngIf="isActor">
+        <ion-select style="color:black !important" placeholder="Color" [(ngModel)]="color" value="select"
+        (ionChange)="colorChange($event)" interface="action-sheet">
+        <ion-select-option value="">Color</ion-select-option>
+        <ion-select-option value="darkBrown">Dark Brown</ion-select-option>
+        <ion-select-option value="brown">Brown</ion-select-option>
+        <ion-select-option value="wheatishBronwn">Wheatish brown</ion-select-option>
+        <ion-select-option value="medium">Medium</ion-select-option>
+        <ion-select-option value="fair">Fair</ion-select-option>
+        <ion-select-option value="veryFair">Very Fair</ion-select-option>
+      </ion-select>
+      </ion-col>
+      <ion-col>
+        <ion-select style="color:black !important" placeholder="Paid-Option" [(ngModel)]="queryText_paidOption"
+        (ionChange)="paidOptionChange($event)" value="select"
+        interface="action-sheet">
+        <ion-select-option value="">Paid Option</ion-select-option>
+        <ion-select-option value="free">Free</ion-select-option>
+        <ion-select-option value="paid">Paid</ion-select-option>
+      </ion-select>
+      </ion-col>   
+      <ion-col>
+        <ion-select style="color:black !important"  placeholder="Language" value="select" [(ngModel)]="queryText_Language"
+        (ionChange)="languageChange($event)" interface="action-sheet">
+        <ion-select-option value="">Language</ion-select-option>
+        <ion-select-option value="english">English</ion-select-option>
+        <ion-select-option value="tamil">Tamil</ion-select-option>
+        <ion-select-option value="Hindi">Hindi</ion-select-option>
+        <ion-select-option value="kannada">Kannada</ion-select-option>
+        <ion-select-option value="malayalam">Malayalam</ion-select-option>
+        <ion-select-option value="telugu">Telugu</ion-select-option>
+        <ion-select-option value="bengali">Bengali</ion-select-option>
+        <ion-select-option value="urudu">Urudu</ion-select-option>
+        <ion-select-option value="punjabi">Punjabi</ion-select-option>
+        <ion-select-option value="other">Others</ion-select-option>
+      </ion-select>
+      </ion-col>
+      
+    <!--<ion-col>
+      <ion-input type="text"  (keyup)="setFilteredItemsLanguage()" class="form-control" placeholder="Language" [(ngModel)]="queryText_Language"></ion-input>
+    </ion-col> -->
+    <!--<ion-col><ion-input type="text"  (keyup)="setFilteredItemsColor()" class="form-control" placeholder="Color" [(ngModel)]="queryText_Color"></ion-input>
+    </ion-col> -->
+  </ion-row>  
+  <ion-grid > 
+  
+      <span >
+         
+        <ion-row class="ion-align-items-center">
+          <ion-col size="12">
+         
+            <ion-radio-group allow-empty-selection="false" name="radio-group" 
+              #radioGroup>
+              <div style="height: 582px;
+              overflow-x: scroll;margin-left: -16px;padding: 0px;margin-right: -13px;margin-top: -9px;">
+            
+             <ion-item *ngFor="let eachObj of q1" >
+             <ion-avatar *ngIf="!eachObj.noRec">
+               <img src="{{eachObj.image}}" >
+             </ion-avatar> &nbsp;
+             <ion-label *ngIf="!eachObj.noRec" style="color:black !important">{{eachObj.displayName}}</ion-label> &nbsp;
+             
+              <!-- <ion-label color="dark">Stories</ion-label>-->
+               
+                 <ion-label *ngIf="!eachObj.noRec" style="color:black !important;margin-right: -68px;">Age:{{eachObj.age}}</ion-label>
+                 <ion-label  *ngIf="!eachObj.noRec"style="color:black !important;margin-right: -35px;">Exp:{{eachObj.experience}}</ion-label>
+            
+
+             <ion-buttons *ngIf="!eachObj.noRec" style="color:black !important;margin-left: -15px;" slot="end">
+              <!-- <ion-button style="color:black !important;margin-left: 0px;">
+                <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+              </ion-button>      -->       
+            </ion-buttons> 
+            <ion-buttons *ngIf="!eachObj.noRec" style="color:black !important;margin-left: -15px;" (click)="showActorDetailsPopup(eachObj.actorName)" slot="end">
+              <ion-button style="color:black !important;margin-left: 0px;">
+                <ion-icon [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" style="color:black !important" slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+              </ion-button>            
+            </ion-buttons> 
+            <ion-label *ngIf="eachObj.noRec" style="color:black !important;margin-left: 75px;font-weight: bold;">No Records Found</ion-label> &nbsp;
+             
+            <!-- <ion-radio [ngStyle]="{'display':forWardisplay === 'none' ? 'none' : '' }" slot="start" name="{{item.actorName}}" value="{{item.id}}"></ion-radio> -->
+           </ion-item>
+            </div>
+  
+            </ion-radio-group>
+          </ion-col>
+  
+        </ion-row>
+      </span>
+
+      </ion-grid>
+      </ion-content>

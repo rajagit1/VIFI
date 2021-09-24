@@ -1,0 +1,69 @@
+ 
+<ion-header class="custom-header">
+
+  <ion-toolbar class="custom-toolbar">
+    <ion-title style="font-size:16px"> <ion-icon name="create"></ion-icon> &nbsp; {{pageHeader}}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" style="font-size:24px">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+
+
+<ion-content class="create-post">
+  <ion-row>
+    <ion-col size="12">
+      <div *ngIf='isVideoLoaded==true' class="ion-text-center">
+        <video style="width: 100%;height: 200px;"   src = "{{finalizedFileurl}}#t=0.1" controls >
+        </video>                 
+      </div>
+      <div *ngIf='isAudioLoaded==true' class="ion-text-center">
+        <audio style="width: 100%;height: 200px;background-image: url('../../../assets/icons/story1.PNG');"  bg src = "{{finalizedFileurl}}#t=0.1" controls>                           
+        </audio>                   
+    </div>
+      <div *ngIf='defaultBanner==true' class="ion-text-center">
+        <img style='width: 350px;'    class="sml-cls-cropped-img" src="../../../assets/icons/story1.PNG">                  
+      </div>
+      <img style='height: 250px;width: 329px;margin-left: 16px;' *ngIf="isImagefinalized" class="sml-cls-cropped-img" src='{{finalizedFileurl}}'>
+      
+    <div *ngIf="isImageCropperShown && !isImagefinalized">
+      <image-cropper class="sml-cls-cropped-img" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+        [aspectRatio]="3 / 4" [resizeToWidth]="225" format="png" (imageCropped)="imageCropped($event)"
+        (imageLoaded)="imageLoaded($event)" (cropperReady)="cropperReady($event)" (loadImageFailed)="loadImageFailed()">
+      </image-cropper>
+    </div>
+      <input id="uploadBtn" style="display: none" #hiddenfileinput type="file" class="upload"
+        (change)="fileChangeEvent($event)" />
+      <ion-button 
+        style="margin-left:40px;margin-top: 6px" color="danger" (click)="hiddenfileinput.click()"
+        class="ion-color md button button-solid ion-activatable ion-focusable hydrated ion-color-dark">
+        <ion-icon name="cloud-upload" slot="start"></ion-icon> Upload Video/Audio/Photo
+      </ion-button>
+</ion-col>
+</ion-row>
+ 
+  <div class="about-info">
+    <ion-list lines="none" style="margin-top:0px">     
+        <ion-item >
+          <ion-label class="field-text" position="floating">Write your thoughts</ion-label>
+          <ion-textarea class="ion-cust-text" rows="5" cols="26"  [(ngModel)]="userThought"></ion-textarea>          
+        </ion-item>
+        <input id="uploadBtn" style="display: none" #hiddenfileinput type="file" class="upload"
+      (change)="fileChangeEvent($event)" />
+      
+     </ion-list>
+    <ion-item-divider style="margin-top: -12px;border: none;">
+      <ion-button style="margin-right: 0px;
+      margin-left: 0px;
+      width: 338px;" type="submit" color="primary" (click)="saveActivity()">POST</ion-button>
+    </ion-item-divider>
+
+  </div> 
+
+</ion-content> 

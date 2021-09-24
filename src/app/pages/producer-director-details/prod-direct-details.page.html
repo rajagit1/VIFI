@@ -1,0 +1,87 @@
+ 
+<ion-header class="toolbar_class" translucent="true">
+  <ion-toolbar style="color:white">
+    <ion-buttons slot="start">
+      <ion-back-button (click)="logout()"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons  slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+ 
+    
+  </ion-toolbar>
+
+</ion-header>
+<ion-content>
+
+  <iframe width="100%" height="42%" [src]="safeURL" frameborder="0" allowfullscreen>
+  </iframe>
+  <ion-item-divider class="ass-movie" sticky>
+    <ion-label class="tiles-header ion-padding-start">
+      <ion-icon name="ribbon"></ion-icon> &nbsp; Posted Stories  &nbsp; <ion-icon name="ribbon"></ion-icon> 
+    </ion-label>
+   
+  </ion-item-divider>
+  <ion-item-divider>
+
+    <img class="actor-cls" src="{{actorData.image}}">
+    <span style="font-size: 18px;padding-left: 11px;color: #383a3e;"></span>
+    <p style="color: #0c0c0c;font-style: italic">"{{actorData.skills }}"<br>
+      <span *ngIf="postedStories.length == 0" style="margin-left: 14px;font-size: 18px;padding-left: 11px;color: #383a3e;">
+          <b>No stories posted so far </b>
+        </span>
+        <span *ngIf="postedStories.length !== 0" style="color: #383a3e;">
+          <b>Please find my list of films and likes,views provided by audience so far</b>
+         </span> 
+            
+  </ion-item-divider>
+  <ng-container *ngIf="isLoaded; else elseTemplate">
+    <ion-col size="12" size-md="12" *ngFor="let post of postedStories">
+      <ion-card>
+        
+        <ion-item-divider style="border: none;">
+          <ion-avatar slot="start">
+            <img src={{post.image}}>
+          </ion-avatar>
+          <ion-label>
+            <ion-label style="font-size: 21px;width: 500px;">
+              <ion-label>
+                <h2 style="color: #dd0e04;" class="title-cls"><ion-icon name="receipt"></ion-icon> &nbsp; {{post.title}}</h2>
+                <ion-item-divider  style="border: none;">
+                  <p style="color: #dd0e04;"><ion-icon name="thumbs-up"></ion-icon>  {{post.likes.length }} likes</p>
+               
+                  <p style="margin-left: 7%;color: #dd0e04;"><ion-icon name="people"></ion-icon> {{post.views}} Views</p> 
+
+                 
+
+                 
+                </ion-item-divider>
+                
+              </ion-label>
+            </ion-label>
+          </ion-label>
+        </ion-item-divider>
+      </ion-card>
+    </ion-col>
+  
+  </ng-container>
+  <ng-template #elseTemplate>
+    <ion-col size="12" size-md="12" *ngFor="let post of dummyData">
+      <ion-card>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-item-divider style="border: none;">
+          <ion-label>
+            <h2>
+              <ion-skeleton-text animated style="width: 100px;"></ion-skeleton-text>
+            </h2>
+            <span>
+              <ion-skeleton-text animated style="width: 180px;"></ion-skeleton-text>
+            </span>
+          </ion-label>
+        </ion-item-divider>
+      </ion-card>
+    </ion-col>
+  </ng-template>
+</ion-content>
