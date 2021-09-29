@@ -106,6 +106,14 @@ margin-left: 0px;"  >
             </div>
           </ion-card>
         </ion-col>
+
+        
+        <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+          <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+
+
       </ng-container>
       <!-- skeleton loading -->
       <ng-template #elseTemplate>

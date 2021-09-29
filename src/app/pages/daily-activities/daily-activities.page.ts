@@ -31,6 +31,8 @@ export class DailyActivitiesPage implements OnInit {
   // Gets a reference to the list element
   @ViewChild('scheduleList', { static: true }) scheduleList: IonList;
   @ViewChild('video',{ static: false }) myVideo: ElementRef;
+
+
   isplay=false;
   name = 'Angular';
 
@@ -191,7 +193,9 @@ export class DailyActivitiesPage implements OnInit {
   topDirectors:any[];
   notify: any=[];
   notify1: any=[];
-  
+  page_number = 1;
+  page_limit = 7;
+
   constructor(
     public popoverCtrl: PopoverController,public toastController: ToastController,
     public userData: UserData,public modalController: ModalController,
@@ -241,7 +245,7 @@ export class DailyActivitiesPage implements OnInit {
    
   }
   doRefresh(obj){
-    this.getActivities();
+    this.getActivities(false, "");
     setTimeout(() => {
        
       obj.target.complete();
@@ -275,7 +279,7 @@ export class DailyActivitiesPage implements OnInit {
       //this.presentToast('No Internet Connection:Please turn on your network connection!', 'toast-danger');
       return;
     }
-     this.getActivities();
+     this.getActivities(false, "");
         this.getNotificationCount(this.userData.userName);
      //Everybody can see the post but hen click on detail of story or crew need to login
     
@@ -573,7 +577,7 @@ export class DailyActivitiesPage implements OnInit {
   /***
     * getPosts
     */
-  async getActivities() {
+  async getActivities(isFirstLoad, event) {
     const loading = await this.loadingCtrl.create({
       message: 'Loading Activities...',
       duration: 2000
@@ -592,6 +596,13 @@ export class DailyActivitiesPage implements OnInit {
       this.activities = _.uniqBy(this.activities,'seqId');
       //this.activities = _.orderBy(this.activities, ['uploadedOn'], ['desc']);
       this.activities = _.orderBy(this.activities,[(obj) => new Date(obj.uploadedOn)],['desc']);
+      if (isFirstLoad){
+        console.log("page_number::",this.page_number);
+        console.log("inside is Firstload:::", event.target.complete());
+          event.target.complete();
+        this.page_number++;
+      }
+      
       loading.dismiss();
     });
 
@@ -868,6 +879,11 @@ export class DailyActivitiesPage implements OnInit {
       this.admobFree.rewardVideo.prepare().then(() => {       
       }).catch(e => console.log(e));
   } 
+
+  doInfinite(event) {
+    console.log("eventing.....",event)
+    this.getActivities(true, event);
+  }
 }
 
 
