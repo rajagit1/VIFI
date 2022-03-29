@@ -11,6 +11,7 @@ import { UserData } from '../../providers/user-data';
 import { ConferenceData } from '../../providers/conference-data';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as _ from "lodash";
+import { FCM } from '@ionic-native/fcm/ngx';
 @Component({
   selector: 'page-signup',
   templateUrl: 'signup.html',
@@ -25,8 +26,10 @@ export class SignupPage {
     private navController: NavController,
     private movieService: FireBaseService, private router: Router,
     public toastController: ToastController,
-    public userData: UserData, public loading: LoadingController
-    , public actionSheetController: ActionSheetController, public confData: ConferenceData,public ngFireAuth: AngularFireAuth) { }
+    public userData: UserData, public loading: LoadingController,
+    public actionSheetController: ActionSheetController,
+    public confData: ConferenceData,public ngFireAuth: AngularFireAuth,
+    private fcm: FCM) { }
   isLogin: boolean = true;
   mode: string = "signIn";
   email: string = "";
@@ -234,6 +237,12 @@ export class SignupPage {
         this.userData.isVifi=element['isVifi'];
         this.userData.isCertified=element['isCertified'];
         this.userData.userMob=element['mobile'];
+        this.fcm.getToken().then(token => {
+          console.log('firebase push notification token', token);
+          alert(token);
+          // Register your new token in your back-end if you want
+          // backend.registerToken(token);
+        });
         this.router.navigateByUrl('/app/tabs/daily-activities');
         validUser=true;
         return true;

@@ -12,6 +12,7 @@ import { Storage } from '@ionic/storage';
 import { UserData } from './providers/user-data';
 import { LottieSplashScreen } from '@ionic-native/lottie-splash-screen/ngx';
 import { Network } from '@ionic-native/network/ngx';
+import { FCM } from '@ionic-native/fcm/ngx';
 //import { Plugins } from '@capacitor/core';
 //const { App } = Plugins;
 @Component({
@@ -67,7 +68,8 @@ export class AppComponent implements OnInit {
     private userData: UserData,
     private swUpdate: SwUpdate,
     private toastCtrl: ToastController,
-    private network: Network
+    private network: Network,
+    private fcm: FCM
 
   ) {
     this.initializeApp();
@@ -165,6 +167,20 @@ export class AppComponent implements OnInit {
       setTimeout(() => {
         this.splashScreen.hide();
       }, 2500);
+      /***PUSH NOTIFICATION CODE STARTS HERE*/
+      this.fcm.onNotification().subscribe(data => {
+        if (data.wasTapped) {
+          console.log("Received in background");
+        } else {
+          console.log("Received in foreground");
+        };
+      });
+
+      this.fcm.onTokenRefresh().subscribe(token => {
+        // Register your new token in your back-end if you want
+        // backend.registerToken(token);
+      });
+      /***PUSH NOTIFICATION CODE ENDS HERE*/
     });
   
     this.platform.backButton.subscribeWithPriority(-1, () => {
@@ -208,5 +224,24 @@ export class AppComponent implements OnInit {
 
   openTutorial() {
 
+  }
+
+  /***PUSH NOTIFICATION FUNCTION*/
+  subscribeToTopic() {
+    this.fcm.subscribeToTopic('enappd');
+  }
+
+  /***PUSH NOTIFICATION FUNCTION*/
+  getToken() {
+    this.fcm.getToken().then(token => {
+      console.log('firebase push notification token', token);
+      // Register your new token in your back-end if you want
+      // backend.registerToken(token);
+    });
+  }
+
+  /***PUSH NOTIFICATION FUNCTION*/
+  unsubscribeFromTopic() {
+    this.fcm.unsubscribeFromTopic('enappd');
   }
 }

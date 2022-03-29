@@ -35,6 +35,7 @@
     "@ionic-native/admob-free": "^5.36.0",
     "@ionic-native/call-number": "^5.22.0-beta-1",
     "@ionic-native/core": "5.0.0-beta.15",
+    "@ionic-native/fcm": "^5.36.0",
     "@ionic-native/file": "^5.36.0",
     "@ionic-native/in-app-browser": "5.0.0-beta.15",
     "@ionic-native/local-notifications": "^5.29.0",
@@ -112,11 +113,14 @@
     "@types/node": "^12.12.26",
     "codelyzer": "^5.2.1",
     "cordova-admob-sdk": "^0.24.1",
-    "cordova-android": "^10.1.0",
+    "cordova-android": "^9.0.0",
     "cordova-plugin-admob-free": "^0.27.0",
+    "cordova-plugin-androidx": "^3.0.0",
+    "cordova-plugin-fcm-with-dependecy-updated": "^7.0.10",
     "cordova-plugin-x-socialsharing": "^6.0.3",
     "cordova-promise-polyfill": "0.0.2",
     "es6-promise-plugin": "^4.2.2",
+    "gradle": "^1.2.4",
     "jasmine-core": "^3.5.0",
     "jasmine-spec-reporter": "4.2.1",
     "karma": "4.4.1",
@@ -160,7 +164,14 @@
       },
       "cordova-plugin-admob-free": {
         "ADMOB_APP_ID": "ca-app-pub-7771494690888171~5401160716"
-      }
+      },
+      "cordova-plugin-fcm-with-dependecy-updated": {
+        "ANDROID_FCM_VERSION": "19.0.0",
+        "ANDROID_GRADLE_TOOLS_VERSION": "3.5.3",
+        "ANDROID_GOOGLE_SERVICES_VERSION": "4.3.3",
+        "ANDROID_DEFAULT_NOTIFICATION_ICON": "@mipmap/ic_launcher"
+      },
+      "cordova-plugin-androidx": {}
     }
   }
 }
