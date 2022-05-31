@@ -250,6 +250,7 @@ export class SpeakerDetailPage {
         this.postData['fundedBy'].push(this.username + '_' + this.budget);        
         this.postData['fundedBy'] = _.uniqBy(this.postData['fundedBy'],'fundedBy');
         this.firebaseService.updatePost(this.postData['id'], temPostDataSingleFund);
+        this.notificationOnReceivingFund(this.postData.uploadedBy);
         //loading.onWillDismiss();   
         loading.dismiss();     
         this.presentToast('Fund limit reached', 'toast-success');
@@ -311,6 +312,7 @@ export class SpeakerDetailPage {
         this.showprice = true;
         //this.postData['fundedBy'].push(this.username + '_' + this.budget);
         this.firebaseService.updatePost(this.postData['id'], temPostData);
+        this.notificationOnReceivingFund(this.postData.uploadedBy);
         //loading.onWillDismiss();
         loading.dismiss();
         if(totalCrowdFund !== 0){
@@ -335,6 +337,23 @@ export class SpeakerDetailPage {
     loading.dismiss();
     //this.presentToast('Fund Details Updated', 'toast-success');
 
+  }
+
+  notificationOnReceivingFund(recepient) {
+    this.firebaseService.filterDeviceInfoByUserName(recepient).then((deviceInfo: any) => {
+      if(deviceInfo.id) {
+        const notificationReqObj = {
+          'to':deviceInfo.deviceRegistrationToken,
+          'notification':{
+                'body':`You have received fund from ${this.userData.userName} !`,
+                'title':"VIFI"
+          }
+        }
+        this.firebaseService.sendNotificationToSingleDevice(notificationReqObj).subscribe(res => {
+          console.log('Like notification response ------->', res);
+        });
+      }
+    });
   }
   async showPopupForRemainigAmount(total) {
     const alert = await this.alertCtrl.create({

@@ -12,7 +12,8 @@ import { Storage } from '@ionic/storage';
 import { UserData } from './providers/user-data';
 import { LottieSplashScreen } from '@ionic-native/lottie-splash-screen/ngx';
 import { Network } from '@ionic-native/network/ngx';
-import { FCM } from '@ionic-native/fcm/ngx';
+import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
+//import { FCM } from '@ionic-native/fcm/ngx';
 //import { Plugins } from '@capacitor/core';
 //const { App } = Plugins;
 @Component({
@@ -176,6 +177,8 @@ export class AppComponent implements OnInit {
         };
       });
 
+      this.getToken();
+
       this.fcm.onTokenRefresh().subscribe(token => {
         // Register your new token in your back-end if you want
         // backend.registerToken(token);
@@ -235,6 +238,7 @@ export class AppComponent implements OnInit {
   getToken() {
     this.fcm.getToken().then(token => {
       console.log('firebase push notification token', token);
+      // alert(token);
       // Register your new token in your back-end if you want
       // backend.registerToken(token);
     });

@@ -1,62 +1,34 @@
 {
   "project_info": {
-    "project_number": "316933121215",
-    "project_id": "ionpush-d4cee",
-    "storage_bucket": "ionpush-d4cee.appspot.com"
+    "project_number": "74222281935",
+    "firebase_url": "https://app-quick-direct.firebaseio.com",
+    "project_id": "app-quick-direct",
+    "storage_bucket": "app-quick-direct.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:316933121215:android:c9cbe7e5a783da58c6520a",
-        "android_client_info": {
-          "package_name": "com.vifi.ionpush"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "316933121215-jt9sseljltj1n8jbvqidcer7k7mreumc.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBG6Si0IEuUaPrMoCQOFhWFH6qPpOo75mI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "316933121215-jt9sseljltj1n8jbvqidcer7k7mreumc.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:316933121215:android:e2eee698032fc983c6520a",
+        "mobilesdk_app_id": "1:74222281935:android:12c1cb26421bb2c65843ba",
         "android_client_info": {
           "package_name": "com.vifi_01"
         }
       },
       "oauth_client": [
         {
-          "client_id": "316933121215-jt9sseljltj1n8jbvqidcer7k7mreumc.apps.googleusercontent.com",
+          "client_id": "74222281935-pv1jp8vbgvde8a4jnf8ivgkkmtk00hbv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBG6Si0IEuUaPrMoCQOFhWFH6qPpOo75mI"
+          "current_key": "AIzaSyCxdrz2Fb4AbB_snJaXuwgED8NHLphvbPI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "316933121215-jt9sseljltj1n8jbvqidcer7k7mreumc.apps.googleusercontent.com",
+              "client_id": "74222281935-pv1jp8vbgvde8a4jnf8ivgkkmtk00hbv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

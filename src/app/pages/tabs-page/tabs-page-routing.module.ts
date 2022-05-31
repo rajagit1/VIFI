@@ -15,7 +15,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            component: SchedulePage,
+            loadChildren: () => import('../schedule/schedule.module').then(m => m.ScheduleModule)
           },
           {
             path: 'session/:sessionId',
@@ -28,7 +28,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            component: DailyActivitiesPage
+            loadChildren: () => import('../daily-activities/daily-activities.module').then(m => m.DailyActivitiesPageModule)
           },
           {
             path: 'session/:sessionId',

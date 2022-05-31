@@ -351,6 +351,20 @@ export class TechnicianDetailsPage implements OnInit {
                               
                                       this.mobNoRequested = true;
                                       this.presentToast('WhatApp Number Request has been sent', 'toast-success');
+                                      this.fireBaseService.filterDeviceInfoByUserName(reqObj.actorName).then((deviceInfo: any) => {
+                                        if(deviceInfo.id) {
+                                          const notificationReqObj = {
+                                            'to':deviceInfo.deviceRegistrationToken,
+                                            'notification':{
+                                                  'body':`${this.userData.userName} has requested to view your WhatsApp number!`,
+                                                  'title':"VIFI"
+                                            }
+                                          }
+                                          this.fireBaseService.sendNotificationToSingleDevice(notificationReqObj).subscribe(res => {
+                                            console.log('Like notification response ------->', res);
+                                          });
+                                        }
+                                      });
                                     }
                                   });
                                     

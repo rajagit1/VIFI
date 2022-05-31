@@ -154,7 +154,7 @@ export class MapPage {
     this.advStories= [];
     this.crimeStories= [];
     this.fireBaseService.readPosts().subscribe(data => {
-      data.map(e => {
+      data.map((e: any) => {
         let docData=e.payload.doc.data();
         docData['id']=e.payload.doc.id;
         if(docData['likes'] && docData['likes'].indexOf(this.username)>=0){

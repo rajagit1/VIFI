@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { AngularFireStorageModule, AngularFireStorage, AngularFireStorageReference, AngularFireUploadTask } from '@angular/fire/storage';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class FireBaseService {
 
   userList: AngularFireList<any>;
   userData;
- whatsAppNoRequestDetails :any =[];
+  whatsAppNoRequestDetails: any = [];
   user: AngularFireObject<any>;
   posts: AngularFireObject<any>;
   childEvents = new Subject();
@@ -29,58 +30,62 @@ export class FireBaseService {
   ref: AngularFireStorageReference;
   task: AngularFireUploadTask;
   actorData: any = {};
-  constructor(private db: AngularFireDatabase, private firestore: AngularFirestore,
-    private toastCtrl: ToastController, private afStorage: AngularFireStorage,public ngFireAuth: AngularFireAuth) {
+  constructor(
+    private db: AngularFireDatabase,
+    private firestore: AngularFirestore,
+    private toastCtrl: ToastController,
+    private afStorage: AngularFireStorage,
+    public ngFireAuth: AngularFireAuth,
+    private httpClient: HttpClient
+    ) {
 
 
 
   }
-  getwhatsAppNumber(userName){
-    return new Promise((resolve,reject) => {
+  getwhatsAppNumber(userName) {
+    return new Promise((resolve, reject) => {
       this.ngFireAuth.currentUser.then(user => {
-        this.firestore.collection("users").ref.where("userName","==",userName).limit(1).get().then(snap =>
-          {
-            if(snap.docs[0]) {
-              resolve(snap.docs[0].data())
-            }else{
-              reject({message: "User not found"})
-            }
-          }).catch((err) => {
-            reject(err);
-          })
+        this.firestore.collection("users").ref.where("userName", "==", userName).limit(1).get().then(snap => {
+          if (snap.docs[0]) {
+            resolve(snap.docs[0].data())
+          } else {
+            reject({ message: "User not found" })
+          }
+        }).catch((err) => {
+          reject(err);
+        })
       }).catch((err) => {
         reject(err);
       })
     })
   }
-  getCurrentUser(){
-    return new Promise((resolve,reject) => {
+  getCurrentUser() {
+    return new Promise((resolve, reject) => {
       this.ngFireAuth.currentUser.then(user => {
-        this.firestore.collection("users").ref.where("uid","==",user.uid).limit(1).get().then(snap =>
-          {
-            if(snap.docs[0]) {
-              resolve(snap.docs[0].data())
-            }else{
-              reject({message: "User not found"})
-            }
-          }).catch((err) => {
-            reject(err);
-          })
+        this.firestore.collection("users").ref.where("uid", "==", user.uid).limit(1).get().then(snap => {
+          if (snap.docs[0]) {
+            resolve(snap.docs[0].data())
+          } else {
+            reject({ message: "User not found" })
+          }
+        }).catch((err) => {
+          reject(err);
+        })
       }).catch((err) => {
         reject(err);
       })
     })
   }
-  signInFireAuth(email,password){
-     //preventDefault();
-      this.ngFireAuth.signInWithEmailAndPassword(email, password).then(()=>{
+  signInFireAuth(email, password) {
+    //preventDefault();
+    this.ngFireAuth.signInWithEmailAndPassword(email, password).then(() => {
       console.log('logged in:');
       //return user;
-     }).catch(error => {
-         console.log("signin error:::",error);
-         return error;
-     });
-    }
+    }).catch(error => {
+      console.log("signin error:::", error);
+      return error;
+    });
+  }
   registerUser(email, password) {
     return this.ngFireAuth.createUserWithEmailAndPassword(email, password);
   }
@@ -92,7 +97,7 @@ export class FireBaseService {
   createPost(record) {
     return this.firestore.collection('posts').add(record);
   }
-  readAdsUnit(){ 
+  readAdsUnit() {
     return this.firestore.collection('adsUnit').snapshotChanges();
   }
   createActorComment(record) {
@@ -104,22 +109,22 @@ export class FireBaseService {
   readNoify() {
     return this.firestore.collection('notify').snapshotChanges();
   }
-  readwhatsAppApproveNoify(){
+  readwhatsAppApproveNoify() {
     return this.firestore.collection('whatsapp').snapshotChanges();
   }
-  updateAdsUnit(recordID,record){ 
+  updateAdsUnit(recordID, record) {
     return this.firestore.doc('adsUnit/' + recordID).update(record);
   }
-  updateNoify(recordID,record){
+  updateNoify(recordID, record) {
     this.firestore.doc('notify/' + recordID).update(record);
   }
-  addOrupdateActivityComment(record){
+  addOrupdateActivityComment(record) {
     this.firestore.doc('activities/' + record.id).update(record);
   }
-  addLikesForActorProfile(record){
+  addLikesForActorProfile(record) {
     this.firestore.doc('actors/' + record.id).update(record);
   }
-  trackVisitors(id,record){
+  trackVisitors(id, record) {
     this.firestore.doc('actors/' + id).update(record);
   }
   deletePost(postId) {
@@ -128,10 +133,29 @@ export class FireBaseService {
   readPosts() {
     return this.firestore.collection('posts').snapshotChanges();
   }
-  readActivities(){
+  readActivities() {
     return this.firestore.collection('activities').snapshotChanges();
   }
+  readActivitiesWithPagination(lastVisible) {
+    /**const val = this.firestore.collection("activities",ref => ref.orderBy('uploadedOn').startAfter(lastVisible).limit(5));
+    return val.get().toPromise().then( lastVal => {
+        const conVal =  lastVal.docs[lastVal.docs.length - 1];
+        console.log("Raja val:::",conVal);
+        this.firestore.collection("activities",ref => ref.orderBy('uploadedOn').startAfter(conVal).limit(5));
+    }
+    ); */
+    if (lastVisible) {
+      return this.firestore.collection("activities", ref => ref.orderBy('uploadedOn', 'desc').limit(15).
+        startAfter(lastVisible)).get();
+    } else {
+      return this.firestore.collection("activities", ref => ref.orderBy('uploadedOn', 'desc').limit(15)
+      ).get();
+    }
 
+    //startAfter(lastVisible)).get();
+    //return this.firestore.collection("activities",ref => ref.orderBy('uploadedOn','desc').startAfter(lastVisible).limit(5)).get();
+    //return this.firestore.collection("activities",ref => ref.orderBy('uploadedOn','desc').limit(5)).get();
+  }
   updatePost(recordID, record) {
     this.firestore.doc('posts/' + recordID).update(record);
   }
@@ -147,162 +171,158 @@ export class FireBaseService {
   createUsers(record) {
     return this.firestore.collection('users').add(record);
   }
- 
-  whatsAppNoRequest(record){
+
+  whatsAppNoRequest(record) {
     return this.firestore.collection('whatsapp').add(record);
   }
-  readUsers(){
+  readUsers() {
 
     return this.firestore.collection('users').snapshotChanges();
   }
-  readSpecificUsers(docid){
+  readSpecificUsers(docid) {
 
     return this.firestore.collection('actors').doc(docid).snapshotChanges();
   }
- 
-  WhatappNoNotifyByDocId(docid){
+
+  WhatappNoNotifyByDocId(docid) {
     return this.firestore.collection('whatsapp', ref =>
-    ref.where('actorDocId', '==', docid).where('status', '==', 'P').orderBy('updateOn','desc')
+      ref.where('actorDocId', '==', docid).where('status', '==', 'P').orderBy('updateOn', 'desc')
     );
   }
-  getRequestDetails(userName){
-    
+  getRequestDetails(userName) {
+
     return this.firestore.collection('whatsapp', ref =>
-    ref.where('actorName', '==', userName)
+      ref.where('actorName', '==', userName)
     ).snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data:any = a.payload.doc.data();
+      map(actions => actions.map((a: any) => {
+        const data: any = a.payload.doc.data();
         const id = a.payload.doc.id;
         return { id, ...data };
       }))
     );
-  } 
-  getWhatappNoRequestedDetails(userName){
-    
+  }
+  getWhatappNoRequestedDetails(userName) {
+
     return this.firestore.collection('whatsapp', ref =>
-    ref.where('requestedUserEmail', '==', userName)
+      ref.where('requestedUserEmail', '==', userName)
     ).snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data:any = a.payload.doc.data();
+      map(actions => actions.map((a: any) => {
+        const data: any = a.payload.doc.data();
         const id = a.payload.doc.id;
         return { id, ...data };
       }))
     );
-  } 
-  updateWhatsAppNotifiedStatus(docid,notifiedObj){     
+  }
+  updateWhatsAppNotifiedStatus(docid, notifiedObj) {
     this.firestore.doc('whatsapp/' + docid).update(notifiedObj);
   }
-  updateWhatsAppNoStatus(docid,status){
-    this.firestore.doc('whatsapp/' + docid).update({status:status,updateOn: moment().format('YYYY-MM-DD hh:mm:ss A').toString()});
+  updateWhatsAppNoStatus(docid, status) {
+    this.firestore.doc('whatsapp/' + docid).update({ status: status, updateOn: moment().format('YYYY-MM-DD hh:mm:ss A').toString() });
   }
-  getApprovedWhatappNo(usermail){    
+  getApprovedWhatappNo(usermail) {
     return this.firestore.collection('whatsapp', ref =>
-    ref.where('requestedUserEmail', '==', usermail).where('status', '==', 'A').where('notify_status', '==', 'A').orderBy('updateOn','desc')
+      ref.where('requestedUserEmail', '==', usermail).where('status', '==', 'A').where('notify_status', '==', 'A').orderBy('updateOn', 'desc')
     ).snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data:any = a.payload.doc.data();
+      map(actions => actions.map((a: any) => {
+        const data: any = a.payload.doc.data();
         const id = a.payload.doc.id;
         return { id, ...data };
       }))
     );
-  } 
+  }
   filterUsers(userName) {
- 
+
     return this.firestore.collection('users', ref =>
       ref.where('userName', '==', userName)
     );
   }
   filterPosts(storycreator) {
- 
+
     return this.firestore.collection('posts', ref =>
       ref.where('uploadedBy', '==', storycreator)
     );
   }
-  listOfApproveRejectStories(userName) { 
+  listOfApproveRejectStories(userName) {
     return this.firestore.collection('posts', ref =>
       ref.where('uploadedBy', '==', userName)
     );
   }
-  getUserByMailid(mailid:string){
+  getUserByMailid(mailid: string) {
     return this.firestore.collection('users', ref =>
-    ref.where('emailId', '==', mailid)
+      ref.where('emailId', '==', mailid)
     );
   }
-  filterPostByActorName(actorName){
-    return new Promise((resolve,reject) => {
+  filterPostByActorName(actorName) {
+    return new Promise((resolve, reject) => {
       this.ngFireAuth.currentUser.then(user => {
-        this.firestore.collection("posts").ref.where("uploadedBy","==",actorName).get().then(snap =>
-          {
-            if(snap.docs[0]) {
-              resolve(snap)
-            }else{
-              reject({message: "User Not Found"})
-            }
-          }).catch((err) => {
-            reject(err);
-          })
+        this.firestore.collection("posts").ref.where("uploadedBy", "==", actorName).get().then(snap => {
+          if (snap.docs[0]) {
+            resolve(snap)
+          } else {
+            reject({ message: "User Not Found" })
+          }
+        }).catch((err) => {
+          reject(err);
+        })
       }).catch((err) => {
         reject(err);
       })
     })
   }
-  readCommentsActors(actorId){
-    return new Promise((resolve,reject) => {
+  readCommentsActors(actorId) {
+    return new Promise((resolve, reject) => {
       this.ngFireAuth.currentUser.then(user => {
-        this.firestore.collection("actorComments").ref.where("actorId","==",actorId).get().then(snap =>
-          {
-            if(snap.docs[0]) {
-              resolve(snap)
-            }else{
-              reject({message: "User Not Found"})
-            }
-          }).catch((err) => {
-            reject(err);
-          })
+        this.firestore.collection("actorComments").ref.where("actorId", "==", actorId).get().then(snap => {
+          if (snap.docs[0]) {
+            resolve(snap)
+          } else {
+            reject({ message: "User Not Found" })
+          }
+        }).catch((err) => {
+          reject(err);
+        })
       }).catch((err) => {
         reject(err);
       })
     })
   }
-  filterActors(userName){
- 
-    return this.firestore.collection('actors', ref =>    
+  filterActors(userName) {
+
+    return this.firestore.collection('actors', ref =>
       ref.where('actorName', '==', userName)
- 
+
     );
   }
-  filterActorByName(name){
-    console.log("name from fibase:::",name);
-    return new Promise((resolve,reject) => {
-     // this.ngFireAuth.currentUser.then(user => {
-        this.firestore.collection("actors").ref.where("actorName","==",name).limit(1).get().then(snap =>
-          {
-            if(snap.docs[0]) {
-              resolve(snap)
-            }else{
-              reject({message: "User Not Found"})
-            }
-          }).catch((err) => {
-            reject(err);
-          })
+  filterActorByName(name) {
+    console.log("name from fibase:::", name);
+    return new Promise((resolve, reject) => {
+      // this.ngFireAuth.currentUser.then(user => {
+      this.firestore.collection("actors").ref.where("actorName", "==", name).limit(1).get().then(snap => {
+        if (snap.docs[0]) {
+          resolve(snap)
+        } else {
+          reject({ message: "User Not Found" })
+        }
+      }).catch((err) => {
+        reject(err);
+      })
       /** }).catch((err) => {
         reject(err);
       })*/
     })
   }
-  filterActorById(id){
-    return new Promise((resolve,reject) => {
+  filterActorById(id) {
+    return new Promise((resolve, reject) => {
       this.ngFireAuth.currentUser.then(user => {
-        this.firestore.collection("actors").ref.where("id","==",id).limit(1).get().then(snap =>
-          {
-            if(snap.docs[0]) {
-              resolve(snap)
-            }else{
-              reject({message: "User Not Found"})
-            }
-          }).catch((err) => {
-            reject(err);
-          })
+        this.firestore.collection("actors").ref.where("id", "==", id).limit(1).get().then(snap => {
+          if (snap.docs[0]) {
+            resolve(snap)
+          } else {
+            reject({ message: "User Not Found" })
+          }
+        }).catch((err) => {
+          reject(err);
+        })
       }).catch((err) => {
         reject(err);
       })
@@ -317,7 +337,7 @@ export class FireBaseService {
   updateActros(recordID, record) {
     this.firestore.doc('actors/' + recordID).update(record);
   }
-  
+
   createActor(actor: Actor) {
     this.actorRef = this.db.database.ref("actors/");
 
@@ -346,7 +366,7 @@ export class FireBaseService {
       ref.where('updatedBy', '==', userName)
     );
   }
-  
+
   // Create
   createUser(apt: User) {
     this.playersRef = this.db.database.ref("users/");
@@ -406,9 +426,9 @@ export class FireBaseService {
   deleteBooking(id: string) {
     this.user = this.db.object('/users/' + id);
     this.user.remove();
-  } 
+  }
   //Get ViFi notification to send global message to all
-  getVifiNotifications(){
+  getVifiNotifications() {
     return this.firestore.collection('vifiNotify').snapshotChanges();
   }
   createVifiNotifications(record) {
@@ -418,52 +438,91 @@ export class FireBaseService {
     this.firestore.doc('vifiNotify/' + recordId).delete();
     return;
   }
-  updateSynopsis(docid,obj){ 
+  updateSynopsis(docid, obj) {
     this.firestore.doc('posts/' + docid).update(obj);
   }
-  updateAdManagement(docid,obj){ 
+  updateAdManagement(docid, obj) {
     this.firestore.doc('adManagement/' + docid).update(obj);
   }
-  createSubscription(subscription){
+  createSubscription(subscription) {
     //this.firestore.doc('storySubscription/').update(subscription);
     return this.firestore.collection('storySubscription/').add(subscription);
   }
-  readAdManagement(){ 
+  readAdManagement() {
     return this.firestore.collection('adManagement').snapshotChanges();
   }
-  createActivity(activityObj){
-    return this.firestore.collection('activities/').add(activityObj);
+  async createActivity(activityObj) {
+    const activityInfoObj = await this.firestore.collection('activities/').add(activityObj);
+    activityObj['id'] = activityInfoObj.id;
+    return activityInfoObj.set(activityObj);
   }
-  updateSubscription(docid,subscription){ 
+  updateSubscription(docid, subscription) {
     this.firestore.doc('storySubscription/' + docid).update(subscription);
-   //return this.firestore.collection('storySubscription/').add(subscription);
+    //return this.firestore.collection('storySubscription/').add(subscription);
   }
-  filterSubscription(title){
+  filterSubscription(title) {
     return this.firestore.collection('storySubscription', ref =>
-    ref.where('storyTitle', '==', title)
-  );
+      ref.where('storyTitle', '==', title)
+    );
   }
 
-  filterSubscription1(title){
-    return new Promise((resolve,reject) => {
+  filterSubscription1(title) {
+    return new Promise((resolve, reject) => {
       this.ngFireAuth.currentUser.then(user => {
-        this.firestore.collection("storySubscription").ref.where("storyTitle","==",title).limit(1).get().then(snap =>
-          {
-            if(snap.docs[0]) {
-              resolve(snap)
-            }else{
-              reject({message: "Title not found"})
-            }
-          }).catch((err) => {
-            reject(err);
-          })
+        this.firestore.collection("storySubscription").ref.where("storyTitle", "==", title).limit(1).get().then(snap => {
+          if (snap.docs[0]) {
+            resolve(snap)
+          } else {
+            reject({ message: "Title not found" })
+          }
+        }).catch((err) => {
+          reject(err);
+        })
       }).catch((err) => {
         reject(err);
       })
     })
   }
 
-  getUsersCount(){
-      return this.firestore.collection('users').snapshotChanges();
-    }   
+  getUsersCount() {
+    return this.firestore.collection('users').snapshotChanges();
+  }
+
+  async addDeviceInfoFCM(record) {
+    const deviceInfoObj = await this.firestore.collection('devices').add(record);
+    record['id'] = deviceInfoObj.id;
+    return deviceInfoObj.set(record);
+    
+  }
+
+  updateDeviceInfoFCM(record, recordID) {
+    return this.firestore.doc('devices/' + recordID).update(record);
+  }
+
+  filterDeviceInfoByUserName(user) {
+    return new Promise((resolve, reject) => {
+      this.firestore.collection("devices").ref.where("userName", "==", user).limit(1).get().then(snap => {
+        if (snap.docs[0]) {
+          resolve(snap.docs[0].data())
+        } else {
+          resolve({id: null})
+        }
+      }).catch((err) => {
+        reject(err);
+      });
+    });
+  }
+
+  getAllDevicesInfo() {
+    return this.firestore.collection("devices").snapshotChanges();
+  }
+
+  sendNotificationToSingleDevice(reqObj) {
+    const fcmMessageUri = 'https://fcm.googleapis.com/fcm/send';
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'key=AAAAEUf-JM8:APA91bEVcd2rwiiFTxRZrbCMK3wV7AB7tRi6X7JP4MTY8CUp8iMeoIcWNrfejE93Bnjl41CXsPAGkN6zx0AVDLvUGTjPTsW5aaGdnMzf3isbaI_IO_8FCaThvA4UHtthxAirvlPOaZUk'
+    });
+    return this.httpClient.post(fcmMessageUri, reqObj, {headers: headers});
+  }
 }

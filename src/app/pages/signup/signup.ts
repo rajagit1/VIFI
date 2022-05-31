@@ -11,7 +11,9 @@ import { UserData } from '../../providers/user-data';
 import { ConferenceData } from '../../providers/conference-data';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as _ from "lodash";
-import { FCM } from '@ionic-native/fcm/ngx';
+import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
+import * as firebase from 'firebase';
+//import { FCM } from '@ionic-native/fcm/ngx';
 @Component({
   selector: 'page-signup',
   templateUrl: 'signup.html',
@@ -237,12 +239,7 @@ export class SignupPage {
         this.userData.isVifi=element['isVifi'];
         this.userData.isCertified=element['isCertified'];
         this.userData.userMob=element['mobile'];
-        this.fcm.getToken().then(token => {
-          console.log('firebase push notification token', token);
-          alert(token);
-          // Register your new token in your back-end if you want
-          // backend.registerToken(token);
-        });
+        this.getToken();
         this.router.navigateByUrl('/app/tabs/daily-activities');
         validUser=true;
         return true;
@@ -387,7 +384,7 @@ export class SignupPage {
     
     this.dbUsers = [];
     this.movieService.readUsers().subscribe(data => {
-      data.map(e => {
+      data.map((e: any) => {
         let docData = e.payload.doc.data();
         docData['id'] = e.payload.doc.id;
         this.dbUsers.push(docData);
@@ -459,6 +456,36 @@ export class SignupPage {
 
   openCustom() {
 
+  }
+
+  /***PUSH NOTIFICATION FUNCTION*/
+  async getToken() {
+    this.fcm.getToken().then(token => {
+      if (token) {
+        const deviceObj = {};
+        deviceObj['userName'] = this.userData.userName;
+        deviceObj['deviceRegistrationToken'] = token;
+        this.movieService.filterDeviceInfoByUserName(this.userData.userName).then((deviceInfo: any) => {
+          if(deviceInfo.id) {
+            this.movieService.updateDeviceInfoFCM(deviceObj, deviceInfo.id).then(res => {
+              this.presentToast(token, 'success');
+            });
+          } else {
+            this.movieService.addDeviceInfoFCM(deviceObj).then(res => {
+              this.presentToast(token, 'success');
+            });
+          }
+        });
+      } else {
+        this.presentToast('No registration token available. Request permission to generate one.', 'danger');
+      }
+    });
+    this.fcm
+      .onTokenRefresh()
+      .subscribe((newToken) => console.log('NEW TOKEN:', newToken));
+    this.fcm
+      .onNotification()
+      .subscribe((payload: object) => console.log('ON NOTIFICATION:', payload));
   }
 
 

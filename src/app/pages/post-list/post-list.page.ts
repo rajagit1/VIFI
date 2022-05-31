@@ -108,7 +108,7 @@ export class PostListPage implements OnInit {
     this.posts = [];
 
     this.firebaseService.readPosts().subscribe(data => {
-      data.map(e => {
+      data.map((e: any) => {
         let docData = e.payload.doc.data();
         docData['id'] = e.payload.doc.id;
         docData['totalFundedBy'] = e.payload.doc.data()['fundedBy'];

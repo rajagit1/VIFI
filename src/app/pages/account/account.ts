@@ -280,7 +280,7 @@ export class AccountPage {
     this.advStories = [];
     this.crimeStories = [];
     this.fireBaseService.readActors().subscribe(data => {
-      data.map(e => {
+      data.map((e: any) => {
         this.safeURLs  =[];
         let docData = e.payload.doc.data();
         docData['id'] = e.payload.doc.id;
@@ -433,6 +433,20 @@ export class AccountPage {
                               
                                       this.mobNoRequested = true;
                                       this.presentToast('WhatApp Number Request has been sent', 'toast-success');
+                                      this.fireBaseService.filterDeviceInfoByUserName(reqObj.actorName).then((deviceInfo: any) => {
+                                        if(deviceInfo.id) {
+                                          const notificationReqObj = {
+                                            'to':deviceInfo.deviceRegistrationToken,
+                                            'notification':{
+                                                  'body':`${this.username} has requested to view your WhatsApp number!`,
+                                                  'title':"VIFI"
+                                            }
+                                          }
+                                          this.fireBaseService.sendNotificationToSingleDevice(notificationReqObj).subscribe(res => {
+                                            console.log('Like notification response ------->', res);
+                                          });
+                                        }
+                                      });
                                     }
                                   })
                                     .catch(error => this.presentToast('Network/Server may slow.Please try after sometime..!', 'toast-danger'));

@@ -91,10 +91,10 @@ const routes: Routes = [
     path: 'musicDirector-dropdownRoute',
     loadChildren: () => import('./pages/create-actor/create-actor.module').then( m => m.CreateActorPageModule)
   },  
-  {
-    path: 'daily-activities',
-    loadChildren: () => import('./pages/daily-activities/daily-activities.module').then( m => m.DailyActivitiesPageModule)
-  },
+  // {
+  //   path: 'daily-activities',
+  //   loadChildren: () => import('./pages/daily-activities/daily-activities.module').then( m => m.DailyActivitiesPageModule)
+  // },
   {
     path: 'post-activities',
     loadChildren: () => import('./pages/post-activities/post-activities.module').then( m => m.PostActivitiesPageModule)
@@ -110,7 +110,8 @@ const routes: Routes = [
   {
     path: 'userdetails-popup',
     loadChildren: () => import('./pages/userdetails-popup/userdetails-popup.module').then( m => m.UserdetailsPopupPageModule)
-  },  {
+  },
+  {
     path: 'actordetails-popup',
     loadChildren: () => import('./pages/actordetails-popup/actordetails-popup.module').then( m => m.ActordetailsPopupPageModule)
   },

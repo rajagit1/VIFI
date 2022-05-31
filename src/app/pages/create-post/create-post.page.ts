@@ -299,6 +299,19 @@ export class CreatePostPage implements OnInit {
          
           if (creationResponse != null) {
             this.presentToastForPostsuccess('Posted successfully!', 'toast-success');
+            this.fireBaseService.getAllDevicesInfo().subscribe((deviceInfo: any) => {
+              const allRegistrationTokenArr = deviceInfo.map(e => e.payload.doc.data().deviceRegistrationToken);
+              const notificationReqObj = {
+                'registration_ids': allRegistrationTokenArr,
+                'notification':{
+                      'body':`${this.userData.userName} posted a story`,
+                      'title':"VIFI"
+                }
+              }
+              this.fireBaseService.sendNotificationToSingleDevice(notificationReqObj).subscribe(res => {
+                console.log('Story post notification response ------->', res);
+              });
+            });
             this.isPosted = true;
             this.loadingProgress.onWillDismiss();
             this.clearValues();
@@ -586,7 +599,7 @@ export class CreatePostPage implements OnInit {
     this.result = '';
     let postList: any = [];
     this.fireBaseService.readPosts().subscribe(data => {
-      data.map(e => {
+      data.map((e: any) => {
         let docData = e.payload.doc.data();
         docData['id'] = e.payload.doc.id;
         if (docData['title'].toLowerCase() == title.target.value.toLowerCase()) {

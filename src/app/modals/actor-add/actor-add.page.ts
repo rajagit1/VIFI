@@ -662,7 +662,7 @@ export class ActorAddPage implements OnInit {
 
     await loading.present();
     this.fireBaseService.readActors().subscribe(data => {
-      data.map(e => {
+      data.map((e: any) => {
         let docData = e.payload.doc.data();
         docData['id'] = e.payload.doc.id;
         docData['storyCount'] = e.payload.doc.data()['associatedStories'].length;
@@ -1325,6 +1325,7 @@ export class ActorAddPage implements OnInit {
             this.postData['actors'].push(e['id'] + '_' + this.username);
         }         
           this.fireBaseService.updateActros(e['id'], e);
+          this.notificationOnArtistMapping(e['actorName'], 'Actor');
         }
         if (this.selectedActress == e['id']) {
          this.userData.mappedCrews.push('actress'+'***@@@shirdi&&&saibaba@@@^^^!!!'+e['actorName']+'***@@@shirdi&&&saibaba@@@^^^!!!'+e['image']);
@@ -1349,6 +1350,7 @@ export class ActorAddPage implements OnInit {
              this.postData['actress'].push(e['id'] + '_' + this.username);          
         }         
           this.fireBaseService.updateActros(e['id'], e);
+          this.notificationOnArtistMapping(e['actorName'], 'Actress');
         }
         if(this.selectedMusic == e['id']){
           this.userData.mappedCrews.push('musicdirector'+'***@@@shirdi&&&saibaba@@@^^^!!!'+e['actorName']+'***@@@shirdi&&&saibaba@@@^^^!!!'+e['image']);
@@ -1573,6 +1575,23 @@ next() {
 
 prev() {
   this.ionSlides.slidePrev();
+}
+
+notificationOnArtistMapping(artistName, artistType) {
+  this.fireBaseService.filterDeviceInfoByUserName(artistName).then((deviceInfo: any) => {
+    if(deviceInfo.id) {
+      const notificationReqObj = {
+        'to':deviceInfo.deviceRegistrationToken,
+        'notification':{
+              'body':`${this.userData.userName} has mapped you in a story as ${artistType}`,
+              'title':"VIFI"
+        }
+      }
+      this.fireBaseService.sendNotificationToSingleDevice(notificationReqObj).subscribe(res => {
+        console.log('Like notification response ------->', res);
+      });
+    }
+  });
 }
 
 }

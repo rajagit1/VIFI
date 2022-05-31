@@ -397,8 +397,8 @@ export class PostActivitiesPage {
         this.fireBaseService.createActivity(activityObj);
         loading.dismiss();
         this.userThought ="";
-        activityObj['uploaderImg'] = "";
-        activityObj['mediaFile'] = "";
+        // activityObj['uploaderImg'] = "";
+        // activityObj['mediaFile'] = "";
         this.presentToastForPost('Posted successfully','toast-success');
         this.logout();
      // }

@@ -36,7 +36,9 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import {File} from "@ionic-native/file/ngx";
 import {Media} from "@ionic-native/media/ngx";
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { FCM } from '@ionic-native/fcm/ngx'
+//import { FCM } from '@ionic-native/fcm/ngx'
+import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
+import { VideoEditor } from '@ionic-native/video-editor/ngx';
  
  
 
@@ -64,7 +66,7 @@ import { FCM } from '@ionic-native/fcm/ngx'
   ],
   declarations: [AppComponent],
   providers: [InAppBrowser,SplashScreen,AdMobFree,LocalNotifications,YoutubeVideoPlayer, TitleCasePipe,StatusBar, 
-    LottieSplashScreen, FireBaseService,CallNumber,Network,AngularFirestoreModule,File,Media,SocialSharing, FCM],
+    LottieSplashScreen, FireBaseService,CallNumber,Network,AngularFirestoreModule,File,Media,SocialSharing, FCM, VideoEditor],
   bootstrap: [AppComponent]
 })
 export class AppModule {

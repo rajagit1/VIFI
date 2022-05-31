@@ -370,11 +370,15 @@ div.item {
      height: 100%;
     }    
    .activity-mediaFile{
-    width: 350px;
-    min-height: 281px;
+    width: 100%;
+    min-height: 250px;
     margin-left: 0px;
     margin-right: 0px;
     margin-top: 0px;
+    video {
+      height: 250px;
+      width: 100%;
+    }
    }
    ::ng-deep .ionlabel-postthoughts{
     margin-left: 10px;

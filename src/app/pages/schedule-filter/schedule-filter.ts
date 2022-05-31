@@ -59,7 +59,7 @@ export class ScheduleFilterPage {
 getUserDetailsData(){
   if(this.username !== undefined && this.username !== ''){
       this.fireBaseService.readActors().subscribe(data => {
-        data.map(e => {
+        data.map((e: any) => {
           let docData = e.payload.doc.data();
           docData['id'] = e.payload.doc.id;
           docData['storyCount'] = e.payload.doc.data()['associatedStories'].length;
@@ -129,7 +129,7 @@ getUserDetailsData(){
         
       
       this.fireBaseService.readNoify().subscribe(data => {
-        data.map(e => {
+        data.map((e: any) => {
           let docData = e.payload.doc.data();
           docData['id'] = e.payload.doc.id;
           this.notify.push(docData);
@@ -152,7 +152,7 @@ getUserDetailsData(){
   }
   getVifiNotifications(){
     this.fireBaseService.getVifiNotifications().subscribe(data => {
-                data.map(e => {    
+                data.map((e: any) => {    
                   let docData =e.payload.doc.data();
                   if(e.payload.doc.data()['video-link'] !=="") { 
                      let profile= e.payload.doc.data()['video-link']?e.payload.doc.data()['video-link'].split('=')[1]:e.payload.doc.data()['video-link'];

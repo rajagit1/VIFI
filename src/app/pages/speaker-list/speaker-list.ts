@@ -237,7 +237,7 @@ export class SpeakerListPage {
     this.advStories = [];
     this.crimeStories = [];
     this.fireBaseService.readPosts().subscribe(data => {
-      data.map(e => {
+      data.map((e: any) => {
         let docData = e.payload.doc.data();
         docData['id'] = e.payload.doc.id;
         this.posts.push(docData);
@@ -305,7 +305,7 @@ export class SpeakerListPage {
     this.advStories = [];
     this.crimeStories = [];
     this.fireBaseService.readPosts().subscribe(data => {
-      data.map(e => {
+      data.map((e: any) => {
         let docData = e.payload.doc.data();
         docData['id'] = e.payload.doc.id;
         this.posts.push(docData);
